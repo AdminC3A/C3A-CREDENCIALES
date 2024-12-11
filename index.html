@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Credenciales</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
@@ -13,22 +13,18 @@
     </header>
     <main>
         <form id="credential-form">
-            <label for="name">Nombre Completo:</label>
-            <input type="text" id="name" required>
-
-            <label for="position">Puesto:</label>
-            <input type="text" id="position" required>
-
-            <button type="submit">Generar Credencial</button>
+            <label for="excelFile">Cargar Archivo Excel:</label>
+            <input type="file" id="excelFile" accept=".xlsx" required>
+            <br><br>
+            <label for="company">Empresa:</label>
+            <input type="text" id="company" placeholder="Ingrese la empresa" required>
+            <br><br>
+            <button type="button" id="generateAll">Generar Credenciales</button>
         </form>
-
-        <div id="credential-container" style="display: none;">
-            <canvas id="credential" width="400" height="600"></canvas>
-            <button id="download">Descargar Credencial</button>
-        </div>
+        <div id="output"></div>
     </main>
     <footer>
-        <p>Elemento Arquitectura Interior © 2024</p>
+        <p>© 2024 Elemento Arquitectura Interior</p>
     </footer>
     <script src="script.js"></script>
 </body>
