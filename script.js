@@ -1,82 +1,87 @@
-const form = document.getElementById("credential-form");
-const canvas = document.getElementById("credential");
-const ctx = canvas.getContext("2d");
-const credentialContainer = document.getElementById("credential-container");
-const downloadButton = document.getElementById("download");
+document.getElementById('generateAll').addEventListener('click', function () {
+    const fileInput = document.getElementById('excelFile');
+    const company = document.getElementById('company').value;
 
-// Ruta del logotipo
-const logoSrc = "./Logo Elemento .png";
+    if (!fileInput.files.length || !company) {
+        alert('Por favor, carga un archivo Excel y proporciona el nombre de la empresa.');
+        return;
+    }
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    const file = fileInput.files[0];
+    const reader = new FileReader();
 
-    // Obtener datos
-    const name = document.getElementById("name").value.trim();
-    const position = document.getElementById("position").value.trim();
+    reader.onload = function (event) {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
 
-    // Generar QR
-    const qrData = `${name}_${position}`;
-    generateQRCode(qrData, (qrImage) => {
-        drawCredential(name, position, qrImage);
-    });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet);
 
-    // Mostrar credencial
-    credentialContainer.style.display = "block";
+        rows.forEach((row, index) => {
+            const name = row['Nombre Completo'];
+            const position = row['Puesto'];
+
+            if (!name || !position) {
+                console.warn(`Fila ${index + 1} incompleta, saltando...`);
+                return;
+            }
+
+            const qrCode = generateQRCode(name, position, company);
+            createCredential(name, position, company, qrCode, index + 1);
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
 });
 
-function drawCredential(name, position, qrImage) {
-    const cardWidth = canvas.width;
-    const cardHeight = canvas.height;
+function generateQRCode(name, position, company) {
+    const data = `${name}|${position}|${company}`;
+    const canvas = document.createElement('canvas');
+    const qr = new QRious({
+        element: canvas,
+        value: data,
+        size: 100,
+    });
+    return canvas.toDataURL('image/png');
+}
 
-    // Fondo
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, cardWidth, cardHeight);
+function createCredential(name, position, company, qrCode, index) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1000;
+    canvas.height = 600;
+    const ctx = canvas.getContext('2d');
 
-    // Dibujar logotipo
+    // Fondo blanco
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Logo
     const logo = new Image();
-    logo.src = logoSrc;
-    logo.onload = () => {
-        const logoWidth = 150;
-        const logoHeight = 75;
-        ctx.drawImage(logo, (cardWidth - logoWidth) / 2, 20, logoWidth, logoHeight);
+    logo.src = 'logo.png'; // Cambia a la ruta de tu logo
+    logo.onload = function () {
+        ctx.drawImage(logo, 30, 30, 150, 150);
 
-        // Encabezado
-        ctx.fillStyle = "#333";
-        ctx.font = "bold 18px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("CASA TRES AGUAS", cardWidth / 2, 120);
+        // Texto
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 40px Arial';
+        ctx.fillText('Credencial de Acceso', 200, 70);
+        ctx.font = '30px Arial';
+        ctx.fillText(`Nombre: ${name}`, 200, 150);
+        ctx.fillText(`Puesto: ${position}`, 200, 200);
+        ctx.fillText(`Empresa: ${company}`, 200, 250);
 
-        // Nombre y Puesto
-        ctx.font = "16px Arial";
-        ctx.fillText(name.toUpperCase(), cardWidth / 2, 160);
-        ctx.fillText(position, cardWidth / 2, 190);
+        // QR Code
+        const qrImg = new Image();
+        qrImg.src = qrCode;
+        qrImg.onload = function () {
+            ctx.drawImage(qrImg, 750, 100, 200, 200);
 
-        // Dibujar QR
-        const qrSize = 150;
-        ctx.drawImage(qrImage, (cardWidth - qrSize) / 2, 220, qrSize, qrSize);
-
-        // Pie de página
-        ctx.font = "12px Arial";
-        ctx.fillStyle = "#333";
-        ctx.fillText("Elemento Arquitectura Interior", cardWidth / 2, cardHeight - 30);
+            // Descargar
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `credencial_${index}.png`;
+            link.click();
+        };
     };
 }
-
-// Generar código QR
-function generateQRCode(data, callback) {
-    const qrCanvas = document.createElement("canvas");
-    QRCode.toCanvas(qrCanvas, data, { width: 150, height: 150 }, (error) => {
-        if (error) console.error(error);
-        const qrImage = new Image();
-        qrImage.src = qrCanvas.toDataURL();
-        qrImage.onload = () => callback(qrImage);
-    });
-}
-
-// Descargar credencial
-downloadButton.addEventListener("click", () => {
-    const link = document.createElement("a");
-    link.download = "credencial.png";
-    link.href = canvas.toDataURL();
-    link.click();
-});
