@@ -5,57 +5,80 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f7f7f7;
-    color: #333;
+    background-color: #f4f4f4;
+    color: #333333;
 }
 
 header, footer {
-    background-color: #333;
-    color: #fff;
+    background-color: #333333;
+    color: #ffffff;
     text-align: center;
     width: 100%;
     padding: 15px 0;
 }
 
-header h1 {
+header h1, footer p {
     margin: 0;
     font-size: 24px;
 }
 
 main {
-    padding: 20px;
-    width: 100%;
-    max-width: 600px;
-}
-
-#credential-form {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
 }
 
-label {
-    font-weight: bold;
+section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
 }
 
-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #555;
+section h2 {
+    margin: 10px 0;
 }
 
 #output {
     margin-top: 20px;
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
 
-footer p {
-    margin: 0;
-    font-size: 14px;
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #555555;
+}
+
+canvas {
+    border: 1px solid #ccc;
+    margin: 10px;
 }
