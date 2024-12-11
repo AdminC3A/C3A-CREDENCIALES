@@ -5,27 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Credenciales</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
         <h1>Generador de Credenciales</h1>
     </header>
     <main>
-        <form id="credential-form">
-            <label for="excelFile">Cargar Archivo Excel:</label>
-            <input type="file" id="excelFile" accept=".xlsx" required>
-            <br><br>
-            <label for="company">Empresa:</label>
-            <input type="text" id="company" placeholder="Ingrese la empresa" required>
-            <br><br>
-            <button type="button" id="generateAll">Generar Credenciales</button>
-        </form>
+        <section>
+            <h2>Generar Credenciales Individualmente</h2>
+            <div>
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
+            </div>
+            <div>
+                <label for="puesto">Puesto:</label>
+                <input type="text" id="puesto" placeholder="Ingresa el puesto">
+            </div>
+            <div>
+                <label for="empresa">Empresa:</label>
+                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
+            </div>
+            <button id="generarUno">Generar Credencial</button>
+        </section>
+
+        <section>
+            <h2>Generar Credenciales con Archivo Excel/CSV</h2>
+            <div>
+                <label for="fileInput">Subir archivo Excel/CSV:</label>
+                <input type="file" id="fileInput" accept=".xlsx, .csv">
+            </div>
+            <button id="generarArchivo">Generar Credenciales</button>
+        </section>
+
+        <p id="status">Por favor, llena los datos o sube un archivo para comenzar.</p>
         <div id="output"></div>
     </main>
     <footer>
         <p>© 2024 Elemento Arquitectura Interior</p>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
