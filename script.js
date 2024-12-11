@@ -1,55 +1,3 @@
-document.getElementById("generarUno").addEventListener("click", generateOneCredential);
-document.getElementById("generarArchivo").addEventListener("click", handleFile);
-
-function generateOneCredential() {
-    const name = document.getElementById("nombre").value.trim();
-    const position = document.getElementById("puesto").value.trim();
-    const company = document.getElementById("empresa").value.trim();
-
-    if (!name || !position || !company) {
-        alert("Por favor, llena todos los campos.");
-        return;
-    }
-
-    const qrCode = `${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)}`;
-    generateCredential(name, position, company, qrCode, 0);
-}
-
-function handleFile() {
-    const fileInput = document.getElementById("fileInput").files[0];
-    if (!fileInput) {
-        alert("Por favor, carga un archivo Excel o CSV.");
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet);
-
-        if (rows.length === 0) {
-            alert("El archivo está vacío.");
-            return;
-        }
-
-        rows.forEach((row, index) => {
-            const name = row["Nombre Completo"];
-            const position = row["Puesto"];
-            const company = row["Empresa"] || "Elemento Arquitectura Interior";
-            const qrCode = `${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)}`;
-            generateCredential(name, position, company, qrCode, index);
-        });
-
-        alert("Credenciales generadas.");
-    };
-
-    reader.readAsArrayBuffer(fileInput);
-}
-
 function generateCredential(name, position, company, qrCode, index) {
     const canvas = document.createElement("canvas");
     canvas.width = 600; // Formato vertical
@@ -60,45 +8,63 @@ function generateCredential(name, position, company, qrCode, index) {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Marco negro para la foto
-    ctx.fillStyle = "#000";
-    ctx.fillRect(225, 100, 150, 200);
+    // Logo centrado arriba
+    const logo = new Image();
+    logo.src = "logo.png"; // Ruta del logo (asegúrate de que este archivo esté en la raíz)
+    logo.onload = function () {
+        ctx.drawImage(logo, canvas.width / 2 - 75, 30, 150, 150); // Ajusta el tamaño del logo (150x150)
 
-    // Texto centrado
-    ctx.fillStyle = "#333";
-    ctx.font = "bold 30px Arial";
-    ctx.textAlign = "center";
+        // Texto del título centrado debajo del logo
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 30px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("Credencial de Acceso", canvas.width / 2, 200);
 
-    ctx.fillText("Nombre:", canvas.width / 2, 350);
-    ctx.font = "20px Arial";
-    ctx.fillText(name, canvas.width / 2, 380);
+        // Marco negro con centro blanco para la foto
+        ctx.lineWidth = 3; // Grosor del borde
+        ctx.strokeStyle = "#000"; // Color del borde
+        ctx.strokeRect(225, 220, 150, 200); // Dibuja el marco
+        ctx.fillStyle = "#fff"; // Fondo blanco del marco
+        ctx.fillRect(225 + 3, 220 + 3, 150 - 6, 200 - 6); // Rellena con blanco dejando espacio para el borde
 
-    ctx.fillText("Puesto:", canvas.width / 2, 420);
-    ctx.fillText(position, canvas.width / 2, 450);
+        // Texto centrado (nombre, puesto, empresa)
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("Nombre:", canvas.width / 2, 450);
+        ctx.font = "normal 18px Arial";
+        ctx.fillText(name, canvas.width / 2, 480);
 
-    ctx.fillText("Empresa:", canvas.width / 2, 490);
-    ctx.fillText(company, canvas.width / 2, 520);
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("Puesto:", canvas.width / 2, 510);
+        ctx.font = "normal 18px Arial";
+        ctx.fillText(position, canvas.width / 2, 540);
 
-    // Generar QR y colocarlo abajo
-    const qrCanvas = document.createElement("canvas");
-    new QRCode(qrCanvas, {
-        text: qrCode,
-        width: 150,
-        height: 150,
-    });
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("Empresa:", canvas.width / 2, 570);
+        ctx.font = "normal 18px Arial";
+        ctx.fillText(company, canvas.width / 2, 600);
 
-    const qrImg = new Image();
-    qrImg.src = qrCanvas.toDataURL("image/png");
-    qrImg.onload = function () {
-        ctx.drawImage(qrImg, canvas.width / 2 - 75, 700, 150, 150);
+        // Generar QR y colocarlo abajo
+        const qrCanvas = document.createElement("canvas");
+        new QRCode(qrCanvas, {
+            text: qrCode,
+            width: 150,
+            height: 150,
+        });
 
-        // Descargar automáticamente
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = `credencial_${index + 1}.png`;
-        link.click();
+        const qrImg = new Image();
+        qrImg.src = qrCanvas.toDataURL("image/png");
+        qrImg.onload = function () {
+            ctx.drawImage(qrImg, canvas.width / 2 - 75, 700, 150, 150);
 
-        // Mostrar credencial generada en la página
-        document.getElementById("output").appendChild(canvas);
+            // Descargar automáticamente
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `credencial_${index + 1}.png`;
+            link.click();
+
+            // Mostrar credencial generada en la página
+            document.getElementById("output").appendChild(canvas);
+        };
     };
 }
