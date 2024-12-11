@@ -4,15 +4,18 @@ function generateCredential(name, position, company, qrCode, index) {
     canvas.height = 1000;
     const ctx = canvas.getContext("2d");
 
+    console.log("Iniciando generación de credencial...");
+
     // Fondo blanco
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Logo centrado arriba
     const logo = new Image();
-    logo.src = "logo.png"; // Ruta del logo (asegúrate de que este archivo esté en la raíz)
+    logo.src = "logo.png"; // Ruta del logo
     logo.onload = function () {
-        ctx.drawImage(logo, canvas.width / 2 - 75, 30, 150, 150); // Ajusta el tamaño del logo (150x150)
+        console.log("Logo cargado correctamente.");
+        ctx.drawImage(logo, canvas.width / 2 - 75, 30, 150, 150); // Ajustar tamaño y posición
 
         // Texto del título centrado debajo del logo
         ctx.fillStyle = "#333";
@@ -21,30 +24,31 @@ function generateCredential(name, position, company, qrCode, index) {
         ctx.fillText("Credencial de Acceso", canvas.width / 2, 200);
 
         // Marco negro con centro blanco para la foto
-        ctx.lineWidth = 3; // Grosor del borde
-        ctx.strokeStyle = "#000"; // Color del borde
-        ctx.strokeRect(225, 220, 150, 200); // Dibuja el marco
-        ctx.fillStyle = "#fff"; // Fondo blanco del marco
-        ctx.fillRect(225 + 3, 220 + 3, 150 - 6, 200 - 6); // Rellena con blanco dejando espacio para el borde
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#000";
+        ctx.strokeRect(225, 220, 150, 200); // Dibuja el marco negro
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(228, 223, 144, 194); // Fondo blanco dentro del marco
 
         // Texto centrado (nombre, puesto, empresa)
         ctx.fillStyle = "#333";
         ctx.font = "bold 20px Arial";
         ctx.fillText("Nombre:", canvas.width / 2, 450);
         ctx.font = "normal 18px Arial";
-        ctx.fillText(name, canvas.width / 2, 480);
+        ctx.fillText(name || "N/A", canvas.width / 2, 480);
 
         ctx.font = "bold 20px Arial";
         ctx.fillText("Puesto:", canvas.width / 2, 510);
         ctx.font = "normal 18px Arial";
-        ctx.fillText(position, canvas.width / 2, 540);
+        ctx.fillText(position || "N/A", canvas.width / 2, 540);
 
         ctx.font = "bold 20px Arial";
         ctx.fillText("Empresa:", canvas.width / 2, 570);
         ctx.font = "normal 18px Arial";
-        ctx.fillText(company, canvas.width / 2, 600);
+        ctx.fillText(company || "Elemento Arquitectura Interior", canvas.width / 2, 600);
 
         // Generar QR y colocarlo abajo
+        console.log("Generando QR...");
         const qrCanvas = document.createElement("canvas");
         new QRCode(qrCanvas, {
             text: qrCode,
@@ -55,6 +59,7 @@ function generateCredential(name, position, company, qrCode, index) {
         const qrImg = new Image();
         qrImg.src = qrCanvas.toDataURL("image/png");
         qrImg.onload = function () {
+            console.log("QR cargado correctamente.");
             ctx.drawImage(qrImg, canvas.width / 2 - 75, 700, 150, 150);
 
             // Descargar automáticamente
@@ -65,6 +70,11 @@ function generateCredential(name, position, company, qrCode, index) {
 
             // Mostrar credencial generada en la página
             document.getElementById("output").appendChild(canvas);
+            console.log("Credencial generada correctamente.");
         };
+    };
+
+    logo.onerror = function () {
+        console.error("Error al cargar el logo. Verifica la ruta.");
     };
 }
