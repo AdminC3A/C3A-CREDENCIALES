@@ -1,10 +1,30 @@
 function generateCredential(name, position, company, qrCode, index) {
+    console.log("Generando QR...");
+
     const canvas = document.createElement("canvas");
-    canvas.width = 600; // Formato vertical
+    canvas.width = 600;
     canvas.height = 1000;
     const ctx = canvas.getContext("2d");
 
-    console.log("Iniciando generación de credencial...");
+    // Prueba generar el QR
+    const qrCanvas = document.createElement("canvas");
+    try {
+        new QRCode(qrCanvas, {
+            text: qrCode || "Texto por defecto",
+            width: 150,
+            height: 150,
+        });
+        const qrImg = new Image();
+        qrImg.src = qrCanvas.toDataURL("image/png");
+        qrImg.onload = function () {
+            console.log("QR generado correctamente.");
+            ctx.drawImage(qrImg, canvas.width / 2 - 75, 700, 150, 150);
+            document.body.appendChild(canvas); // Mostrar el resultado para prueba
+        };
+    } catch (error) {
+        console.error("Error al generar QR en el proyecto:", error);
+    }
+}
 
     // Fondo blanco
     ctx.fillStyle = "#fff";
