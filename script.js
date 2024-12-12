@@ -8,26 +8,21 @@ generarQRBtn.addEventListener('click', () => {
     const puesto = document.getElementById('puesto').value.trim();
     const empresa = document.getElementById('empresa').value.trim();
 
-    // Validar que los campos requeridos estén completos
     if (!nombreCompleto || !puesto || !empresa) {
         alert('Por favor, completa todos los campos: Nombre, Puesto y Empresa.');
         return;
     }
 
-    // Generar un QR constante basado en una combinación de datos
     const nombres = nombreCompleto.split(' ');
-    const primerNombre = nombres[0] || ''; // Primera palabra del nombre
-    const primerApellido = puesto.charAt(0) || ''; // Primera letra del puesto
-    const segundaLetra = empresa.charAt(0) || ''; // Primera letra de la empresa
+    const primerNombre = nombres[0] || '';
+    const primerApellido = puesto.charAt(0) || '';
+    const segundaLetra = empresa.charAt(0) || '';
 
-    const primeraLetraNombre = primerNombre.charAt(0) || ''; // Primera letra del primer nombre
+    const primeraLetraNombre = primerNombre.charAt(0) || '';
     const codigoBase = `${primeraLetraNombre}${primerApellido}${segundaLetra}`.toUpperCase();
-
-    // Generar un código único con código ASCII, ceros y letras
     const codigoASCII = primeraLetraNombre.charCodeAt(0).toString();
     let codigoQRFinal = (codigoBase + codigoASCII.padStart(3, '0')).padEnd(8, '0').substring(0, 8);
 
-    // Escribir el código QR generado en el campo QR opcional
     const codigoQRInput = document.getElementById('codigoQR');
     codigoQRInput.value = codigoQRFinal;
 
@@ -75,9 +70,9 @@ generarCredencialBtn.addEventListener('click', () => {
         ctx.font = 'bold 24px Arial';
         ctx.fillText('CASA TRES AGUAS', canvas.width / 2, 260);
 
-        // Dibujar cuadro negro
-        ctx.fillStyle = '#000';
-        ctx.fillRect(50, 280, canvas.width - 100, 150);
+        // Dibujar cuadro negro vacío debajo de "CASA TRES AGUAS"
+        ctx.fillStyle = '#000'; // Color del cuadro
+        ctx.fillRect(200, 280, 200, 100); // Posición y tamaño del cuadro (ajustable)
 
         // Nombre, puesto y empresa
         ctx.fillStyle = '#333';
