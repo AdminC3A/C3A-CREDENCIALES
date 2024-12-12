@@ -1,40 +1,50 @@
-const generarCredencialBtn = document.getElementById('generarCredencial');
+function generateCredential(name, position, company, qrCode, index) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 600; // Formato vertical
+    canvas.height = 1000;
+    const ctx = canvas.getContext("2d");
 
-generarCredencialBtn.addEventListener('click', () => {
-    // Obtener los valores de los campos del formulario
-    const nombre = document.getElementById('nombre').value;
-    const puesto = document.getElementById('puesto').value;
-    const empresa = document.getElementById('empresa').value;
-    const codigoQR = document.getElementById('codigoQR').value;
+    // Fondo blanco
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Construir el texto del código QR (puedes personalizar esto)
-    const textoQR = `Nombre: ${nombre}\nPuesto: ${puesto}\nEmpresa: ${empresa}`;
+    // Logo centrado arriba
+    const logo = new Image();
+    logo.src = "logo.png";
+    logo.onload = function () {
+        ctx.drawImage(logo, canvas.width / 2 - 75, 30, 150, 150);
 
-    // Crear un elemento canvas para el código QR
-    const qrCanvas = document.createElement('canvas');
-    qrCanvas.id = 'qr-canvas';
-    qrCanvas.width = 200; // Ajusta el tamaño del canvas según tus necesidades
-    qrCanvas.height = 200;
+        // Texto centrado
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 30px Arial";
+        ctx.textAlign = "center";
 
-    // Generar el código QR
-    new QRCode(qrCanvas, {
-        text: textoQR,
-        width: qrCanvas.width,
-        height: qrCanvas.height,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H // Nivel de corrección de errores
-    });
+        ctx.fillText("Credencial de Acceso", canvas.width / 2, 220);
+        ctx.font = "20px Arial";
+        ctx.fillText(Nombre: ${name}, canvas.width / 2, 300);
+        ctx.fillText(Puesto: ${position}, canvas.width / 2, 350);
+        ctx.fillText(Empresa: ${company}, canvas.width / 2, 400);
 
-    // Mostrar el canvas con el código QR
-    const contenedorQR = document.getElementById('contenedor-qr');
-    contenedorQR.innerHTML = ''; // Limpiar el contenedor antes de agregar el nuevo QR
-    contenedorQR.appendChild(qrCanvas);
+        // Generar QR y colocarlo abajo
+        const qrCanvas = document.createElement("canvas");
+        new QRCode(qrCanvas, {
+            text: qrCode,
+            width: 150,
+            height: 150,
+        });
 
-    // Opción para descargar el código QR
-    const downloadLink = document.createElement('a');
-    downloadLink.href = qrCanvas.toDataURL();
-    downloadLink.download = 'codigoQR.png';
-    downloadLink.textContent = 'Descargar QR';
-    contenedorQR.appendChild(downloadLink);
-});
+        const qrImg = new Image();
+        qrImg.src = qrCanvas.toDataURL("image/png");
+        qrImg.onload = function () {
+            ctx.drawImage(qrImg, canvas.width / 2 - 75, canvas.height - 200, 150, 150);
+
+            // Descargar automáticamente
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = credencial_${index + 1}.png;
+            link.click();
+
+            document.getElementById("output").appendChild(canvas);
+        };
+    };
+}
