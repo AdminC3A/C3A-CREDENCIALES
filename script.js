@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
-                    imagenSeleccionada = img;
+                    imagenSeleccionada = img; // Sustituir la imagen actual
                     alert("Imagen cargada correctamente. Ahora puedes generar la credencial.");
                 };
                 img.src = e.target.result;
@@ -86,9 +86,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     const img = new Image();
                     img.onload = () => {
-                        imagenSeleccionada = img;
+                        imagenSeleccionada = img; // Sustituir la imagen actual
                         alert("Imagen capturada correctamente. Ahora puedes generar la credencial.");
                         stream.getTracks().forEach(track => track.stop()); // Detener la cámara
+                        document.body.removeChild(video);
+                        document.body.removeChild(captureButton);
                     };
                     img.src = canvas.toDataURL();
                 });
