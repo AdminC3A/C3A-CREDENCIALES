@@ -1,17 +1,19 @@
-// Define the function globally
+// Función para generar el código QR
 function generarCodigoQR(nombreCompleto) {
-  // ... (your code to generate the QR code)
+  const nombre = nombreCompleto.split(' ')[0]; // Obtener el primer nombre
+  const inicial = nombre.charAt(0); 
+  const codigoAscii = nombre.charCodeAt(0).toString().padStart(8, '0');
+  const qrCodeData = inicial + codigoAscii; 
+
+  return qrCodeData;
 }
 
-// Call the function
-function generarCredencial() {
-  const nombre = nombreInput.value;
-  const puesto = puestoInput.value;
-  const empresa = empresaInput.value;
-  const qrCode = generarCodigoQR(nombre); 
-
-  // ... (rest of your code)
-}
+// Función para generar una credencial
+function generateCredential(name, position, company, index) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 600;
+  canvas.height = 1000;
+  const ctx = canvas.getContext("2d");
 
   // Fondo blanco
   ctx.fillStyle = "#fff";
@@ -66,7 +68,7 @@ function generarCredencial() {
     qrImg.onload = function () {
       ctx.drawImage(qrImg, canvas.width / 2 - 75, 700, 150, 150);
 
-      // Descargar automáticamente
+      // Descargar automáticamente (opcional)
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
       link.download = `credencial_${index + 1}.png`;
@@ -83,7 +85,6 @@ function generarCredencial() {
 }
 
 // Ejemplo de uso:
-// Suponiendo que tienes una función generarCodigoQR(nombre) que devuelve el código QR
 const nombre = "Juan Pérez";
 const puesto = "Supervisor";
 const empresa = "Elemento Arquitectura Interior";
