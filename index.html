@@ -13,48 +13,56 @@
         <h1>Generador de Credenciales</h1>
     </header>
     <main>
-    <section class="card">
-        <h2>Generar Credenciales Individualmente</h2>
-        <div class="form-group">
-            <label for="nombre">Nombre Completo:</label>
-            <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
-        </div>
-        <div class="form-group">
-            <label for="puesto">Puesto:</label>
-            <input type="text" id="puesto" placeholder="Ingresa el puesto">
-        </div>
-        <div class="form-group">
-            <label for="nss">NSS (Número de Seguridad Social):</label>
-            <input type="text" id="nss" placeholder="Ingresa el NSS">
-        </div>
-        <div class="form-group">
-            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-            <input type="date" id="fechaNacimiento">
-        </div>
-        <div class="form-group">
-            <label for="empresa">Empresa:</label>
-            <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
-        </div>
-        <div class="form-group">
-            <label for="codigoQR">Código QR (opcional):</label>
-            <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
-        </div>
+        <section class="card">
+            <h2>Generar Credenciales Individualmente</h2>
+            <div class="form-group">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
+            </div>
+            <div class="form-group">
+                <label for="puesto">Puesto:</label>
+                <input type="text" id="puesto" placeholder="Ingresa el puesto">
+            </div>
+            <div class="form-group">
+                <label for="nss">NSS (Número de Seguridad Social):</label>
+                <input type="text" id="nss" placeholder="Ingresa el NSS">
+            </div>
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento">
+            </div>
+            <div class="form-group">
+                <label for="empresa">Empresa:</label>
+                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
+            </div>
+            <div class="form-group">
+                <label for="codigoQR">Código QR (opcional):</label>
+                <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
+            </div>
 
-        <!-- Botones numerados -->
-        <div class="button-group">
-            <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
-            <button id="generarCredencial" class="btn btn-secondary">2. Generar Credencial</button>
-            <button id="agregarFoto" class="btn btn-warning">3. Agregar Foto</button>
-            <button id="autorizarDescargar" class="btn btn-success">4. Autorizar y Descargar</button>
-        </div>
+            <!-- Botones principales -->
+            <div class="button-group">
+                <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
+                <button id="generarCredencial" class="btn btn-secondary">2. Generar Credencial</button>
+                <button id="autorizarDescargar" class="btn btn-success">3. Autorizar y Descargar</button>
+            </div>
 
-        <!-- Espacio para mostrar el QR y la credencial -->
-        <div id="imagenQRPreview" class="qr-preview">Aquí aparecerá el QR</div>
-        <canvas id="credencialCanvas" class="credencial-preview"></canvas>
-    </section>
+            <!-- Opcional: Botones para cargar imágenes -->
+            <div class="optional-section">
+                <h3>Opcional: Agregar Foto</h3>
+                <div class="button-group">
+                    <button id="cargarFotoArchivo" class="btn btn-warning">Cargar Foto desde Archivo</button>
+                    <button id="cargarFotoCamara" class="btn btn-warning">Cargar Foto desde Cámara</button>
+                </div>
+            </div>
 
-    <p id="status">Por favor, llena los datos para continuar.</p>
-</main>
+            <!-- Espacio para mostrar el QR y la credencial -->
+            <div id="imagenQRPreview" class="qr-preview">Aquí aparecerá el QR</div>
+            <canvas id="credencialCanvas" class="credencial-preview"></canvas>
+        </section>
+
+        <p id="status">Por favor, llena los datos para continuar.</p>
+    </main>
     <footer>
         <p>© 2024 Elemento Arquitectura Interior</p>
     </footer>
