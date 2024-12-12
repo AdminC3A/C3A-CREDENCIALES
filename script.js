@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Botón 2: Generar Credencial
   generarCredencialBtn.addEventListener("click", () => {
     // Ajustar tamaño del canvas para el díptico abierto
-    credencialCanvas.width = 874; // Ancho del díptico completo
-    credencialCanvas.height = 2480; // Alto del díptico completo
+    credencialCanvas.width = 874; // Ancho total (7.4 cm x 300 DPI)
+    credencialCanvas.height = 2480; // Alto total (21 cm x 300 DPI)
 
     const ctx = credencialCanvas.getContext("2d");
     ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height); // Limpiar el canvas antes de dibujar
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    // Borde negro
+    // Dibujar borde negro
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 2;
     ctx.strokeRect(0, 0, credencialCanvas.width, credencialCanvas.height);
@@ -76,57 +76,57 @@ document.addEventListener("DOMContentLoaded", () => {
     // **Mitad izquierda**
     const leftX = 0; // Inicio de la mitad izquierda
     const leftWidth = 874; // Ancho de la mitad izquierda
+    const leftHeight = 1240; // Altura de la mitad izquierda
+
+    // Dibujar fondo blanco para la mitad izquierda
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(leftX, 0, leftWidth, leftHeight);
 
     // Espacio para perforación manual
     ctx.fillStyle = "#fff";
-    ctx.fillRect(leftX + 337, 30, 200, 20); // Ajustar posición según diseño
+    ctx.fillRect(leftX + 337, 20, 200, 20); // Ajustar posición según diseño
 
     // Dibujar logo
     const logo = new Image();
     logo.src = "logo.png"; // Ruta de tu logo
     logo.onload = () => {
-        ctx.drawImage(logo, leftX + 262, 60, 350, 350); // Ajustar posición y tamaño del logo
+        ctx.drawImage(logo, leftX + 250, 60, 350, 350); // Ajustar posición y tamaño del logo
 
         // Títulos
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
-        ctx.font = "bold 50px Arial";
+        ctx.font = "bold 30px Arial";
         ctx.fillText("Credencial de Acceso", leftX + leftWidth / 2, 450);
 
-        ctx.font = "bold 40px Arial";
-        ctx.fillText("CASA TRES AGUAS", leftX + leftWidth / 2, 520);
+        ctx.font = "bold 25px Arial";
+        ctx.fillText("CASA TRES AGUAS", leftX + leftWidth / 2, 500);
 
         // Recuadro para la foto o espacio central
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 1;
-        ctx.strokeRect(leftX + 237, 600, 400, 500);
+        ctx.strokeRect(leftX + 237, 550, 400, 400);
 
         // Información del usuario
         ctx.textAlign = "left";
-        ctx.font = "30px Arial";
-        ctx.fillText(`Nombre: ${nombre}`, leftX + 50, 1150);
-        ctx.fillText(`Puesto: ${puesto}`, leftX + 50, 1200);
-        ctx.fillText(`Empresa: ${empresa}`, leftX + 50, 1250);
-        ctx.fillText(`NSS: ${nss}`, leftX + 50, 1300);
-        ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, leftX + 50, 1350);
+        ctx.font = "20px Arial";
+        ctx.fillText(`Nombre: ${nombre}`, leftX + 50, 1000);
+        ctx.fillText(`Puesto: ${puesto}`, leftX + 50, 1050);
+        ctx.fillText(`Empresa: ${empresa}`, leftX + 50, 1100);
+        ctx.fillText(`NSS: ${nss}`, leftX + 50, 1150);
+        ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, leftX + 50, 1200);
 
         // Dibujar el QR
         const qrImage = new Image();
         qrImage.src = qrContainer.querySelector("img").src; // Usar el QR generado previamente
         qrImage.onload = () => {
-            ctx.drawImage(qrImage, leftX + 262, 1450, 350, 350); // Ajustar posición y tamaño del QR
+            ctx.drawImage(qrImage, leftX + 262, 1300, 350, 350); // Ajustar posición y tamaño del QR
         };
     };
 
-    // **Mitad derecha (instrucciones futura)**
-    const rightX = leftX + leftWidth; // Inicio de la mitad derecha
-    const rightWidth = leftWidth;
-
-    // Fondo blanco para instrucciones
+    // **Mitad derecha (en blanco por ahora)**
+    const rightX = leftWidth; // Inicio de la mitad derecha
     ctx.fillStyle = "#fff";
-    ctx.fillRect(rightX, 0, rightWidth, credencialCanvas.height);
-
-    // Por ahora, dejamos esta sección en blanco para futuras instrucciones.
+    ctx.fillRect(rightX, 0, leftWidth, credencialCanvas.height); // Mantener en blanco
 });
 
     // Botón 3: Autorizar y Descargar
