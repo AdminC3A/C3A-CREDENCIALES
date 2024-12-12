@@ -43,16 +43,23 @@
             <!-- Botones numerados -->
             <div class="button-group">
                 <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
-                <button id="generarCredencial" class="btn btn-secondary">2. Generar Credencial</button>
                 <div class="optional-buttons">
                     <button id="cargarFotoArchivo" class="btn btn-secondary">Cargar Foto Archivo</button>
                     <button id="cargarFotoCamara" class="btn btn-secondary">Cargar Foto Cámara</button>
                 </div>
+                <button id="generarCredencial" class="btn btn-secondary">2. Generar Credencial</button>
                 <button id="autorizarDescargar" class="btn btn-success">3. Autorizar y Descargar</button>
             </div>
 
-            <!-- Espacio para mostrar el QR y la credencial -->
-            <div id="imagenQRPreview" class="qr-preview">Aquí aparecerá el QR</div>
+            <!-- Espacios reservados -->
+            <div id="imagenQRPreview" class="qr-preview">
+                <!-- Espacio reservado para el QR -->
+                <p>Aquí aparecerá el QR</p>
+            </div>
+            <div id="imagenFotoPreview" class="photo-preview">
+                <!-- Espacio reservado para la foto cargada -->
+                <p>Aquí aparecerá la Foto</p>
+            </div>
             <canvas id="credencialCanvas" class="credencial-preview"></canvas>
         </section>
 
