@@ -1,16 +1,18 @@
-// Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
+    const generarQRBtn = document.getElementById('generarQR');
     const generarCredencialBtn = document.getElementById('generarUno');
     const outputDiv = document.getElementById('output');
 
-    // Evento para generar la credencial y el QR
-    generarCredencialBtn.addEventListener('click', () => {
-        const nombre = document.getElementById('nombre').value.trim();
+    let qrGenerado = false; // Variable para controlar si el QR ya fue generado
+
+    // Evento para generar el QR
+    generarQRBtn.addEventListener('click', () => {
+        const nombreCompleto = document.getElementById('nombre').value.trim();
         const puesto = document.getElementById('puesto').value.trim();
         const empresa = document.getElementById('empresa').value.trim();
         const codigoQRInput = document.getElementById('codigoQR');
 
-        if (!nombre || !puesto || !empresa) {
+        if (!nombreCompleto || !puesto || !empresa) {
             alert('Por favor, completa todos los campos: Nombre, Puesto y Empresa.');
             return;
         }
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Generar el código QR si el campo está vacío o no tiene 8 dígitos
         let codigoQR = codigoQRInput.value.trim();
         if (!codigoQR || codigoQR.length !== 8) {
-            const nombres = nombre.split(' ');
+            const nombres = nombreCompleto.split(' ');
             const primerNombre = nombres[0] || '';
             const primerApellido = puesto.charAt(0) || '';
             const segundaLetra = empresa.charAt(0) || '';
@@ -42,13 +44,27 @@ document.addEventListener('DOMContentLoaded', () => {
         qrImg.style.marginTop = '20px';
         outputDiv.appendChild(qrImg); // Mostrar la imagen del QR
 
-        // Crear la credencial con el QR
+        qrGenerado = true; // Indicar que el QR ya fue generado
+    });
+
+    // Evento para generar la credencial
+    generarCredencialBtn.addEventListener('click', () => {
+        const nombre = document.getElementById('nombre').value.trim();
+        const puesto = document.getElementById('puesto').value.trim();
+        const empresa = document.getElementById('empresa').value.trim();
+        const codigoQR = document.getElementById('codigoQR').value.trim();
+
+        // Validar si el QR fue generado
+        if (!qrGenerado || !codigoQR) {
+            alert('No se puede descargar la credencial sin un QR generado. Por favor, genera un QR primero.');
+            return;
+        }
+
         const canvas = document.createElement('canvas');
         canvas.width = 600;
         canvas.height = 1000;
         const ctx = canvas.getContext('2d');
 
-        // Dibujar la credencial
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = '#000';
@@ -80,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Dibujar el código QR en la credencial
             const qrImgForCanvas = new Image();
-            qrImgForCanvas.src = qrCanvas.toDataURL('image/png');
+            qrImgForCanvas.src = outputDiv.querySelector('img').src; // Obtener el QR generado
             qrImgForCanvas.onload = function () {
                 ctx.drawImage(qrImgForCanvas, canvas.width / 2 - 75, 750, 150, 150);
 
@@ -90,8 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.download = `Credencial-${codigoQR}.png`;
                 link.click();
 
-                outputDiv.appendChild(canvas); // Mostrar la credencial generada
+                alert('Credencial generada y descargada correctamente.');
             };
         };
-    });
-});
