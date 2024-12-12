@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const img = new Image();
                 img.onload = () => {
                     imagenSeleccionada = img;
-                    alert("Imagen cargada correctamente.");
+                    alert("Imagen cargada correctamente. Ahora puedes generar la credencial.");
                 };
                 img.src = e.target.result;
             };
