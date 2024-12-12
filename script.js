@@ -1,8 +1,17 @@
-function generateCredential(name, position, company, qrCode, index) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 600;
-  canvas.height = 1000;
-  const ctx = canvas.getContext("2d");
+// Define the function globally
+function generarCodigoQR(nombreCompleto) {
+  // ... (your code to generate the QR code)
+}
+
+// Call the function
+function generarCredencial() {
+  const nombre = nombreInput.value;
+  const puesto = puestoInput.value;
+  const empresa = empresaInput.value;
+  const qrCode = generarCodigoQR(nombre); 
+
+  // ... (rest of your code)
+}
 
   // Fondo blanco
   ctx.fillStyle = "#fff";
