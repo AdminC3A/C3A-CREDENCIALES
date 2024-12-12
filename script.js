@@ -191,3 +191,94 @@ generarCredencialBtn.addEventListener("click", () => {
         link.click();
     });
 });
+/**
+ * Módulo 6: Descargar Parte Trasera
+ * Genera y descarga la parte trasera de la credencial.
+ */
+function descargarParteTrasera() {
+    const traseraCanvas = document.createElement("canvas");
+    traseraCanvas.width = 744; // 7.4 cm en px
+    traseraCanvas.height = 1050; // 10.5 cm en px
+    const ctx = traseraCanvas.getContext("2d");
+
+    // Fondo blanco
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, traseraCanvas.width, traseraCanvas.height);
+
+    // Captura de datos del formulario
+    const imss = document.getElementById("nss").value.trim(); // Reutilizamos el campo NSS como número de IMSS
+    const folio = document.getElementById("codigoQR").value.trim(); // Reutilizamos el QR como folio
+    const fechaExpedicion = new Date();
+    const fechaValidaDesde = `${fechaExpedicion.getDate().toString().padStart(2, "0")}/${(fechaExpedicion.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}/${fechaExpedicion.getFullYear()}`;
+    const fechaValidaHasta = new Date(
+        fechaExpedicion.setMonth(fechaExpedicion.getMonth() + 6)
+    )
+        .toLocaleDateString("es-ES");
+
+    // Texto informativo de uso obligatorio
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(
+        "El Gafete de seguridad deberá portarse todo el tiempo",
+        traseraCanvas.width / 2,
+        50
+    );
+    ctx.fillText(
+        "y de manera visible durante el tiempo que se permanezca en obra.",
+        traseraCanvas.width / 2,
+        80
+    );
+    ctx.fillText(
+        "En caso de incumplimiento, la persona será expulsada y se tomarán las",
+        traseraCanvas.width / 2,
+        110
+    );
+    ctx.fillText(
+        "medidas disciplinarias necesarias.",
+        traseraCanvas.width / 2,
+        140
+    );
+
+    // Número de IMSS y Folio
+    ctx.textAlign = "left";
+    ctx.font = "18px Arial";
+    ctx.fillText(`No. IMSS: ${imss}`, 50, 200);
+    ctx.fillText(`Folio: ${folio}`, 50, 230);
+
+    // Vigencia
+    ctx.fillText(`Válido desde: ${fechaValidaDesde}`, 50, 280);
+    ctx.fillText(`Válido hasta: ${fechaValidaHasta}`, 50, 310);
+
+    // Firma del empleado
+    ctx.textAlign = "center";
+    ctx.font = "bold 18px Arial";
+    ctx.fillText("Firma del Portador", traseraCanvas.width / 2, 400);
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 1;
+    ctx.moveTo(150, 420);
+    ctx.lineTo(594, 420);
+    ctx.stroke();
+
+    // Descargar la parte trasera
+    const link = document.createElement("a");
+    link.href = traseraCanvas.toDataURL("image/png");
+    link.download = `Credencial-Parte-Trasera-${folio}.png`;
+    link.click();
+}
+
+/**
+ * Agregar Evento al Botón
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    const descargarParteTraseraBtn = document.createElement("button");
+    descargarParteTraseraBtn.textContent = "Descargar Parte Trasera";
+    descargarParteTraseraBtn.classList.add("btn", "btn-secondary");
+    descargarParteTraseraBtn.addEventListener("click", descargarParteTrasera);
+
+    const buttonGroup = document.querySelector(".button-group");
+    buttonGroup.appendChild(descargarParteTraseraBtn);
+});
+
