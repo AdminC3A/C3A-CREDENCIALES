@@ -11,6 +11,9 @@ function dibujarCredencial(canvas, nombre, puesto, empresa, qrCode) {
   };
 }
 
+// Asegúrate de incluir la biblioteca qrcode.min.js en tu HTML
+<script src="qrcode.min.js"></script>
+
 // Función para generar una credencial
 function generateCredential() {
   const nombre = document.getElementById("nombre").value;
@@ -18,11 +21,29 @@ function generateCredential() {
   const empresa = document.getElementById("empresa").value;
   const codigoQR = document.getElementById("codigoQR").value;
 
-  // Validar que se haya proporcionado un código QR
+  // Validación para asegurarte de que el usuario haya ingresado un valor para el código QR
   if (!codigoQR) {
-    alert("Por favor, ingresa un código QR válido.");
+    alert("Por favor, ingresa un valor para el código QR.");
     return;
   }
+
+  // Crear un elemento canvas para dibujar el código QR
+  const qrCanvas = document.createElement('canvas');
+  qrCanvas.id = 'qr-canvas';
+  document.body.appendChild(qrCanvas);
+
+  // Utilizar la biblioteca qrcode.js para generar el código QR
+  new QRCode(document.getElementById('qr-canvas'), {
+    text: codigoQR,
+    width: 128,
+    height: 128,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
+
+  // ... Resto del código para dibujar la credencial en el canvas y descargarla ...
+}
 
   const canvas = document.createElement('canvas');
   canvas.width = 500; // Ajusta el tamaño según tu diseño
