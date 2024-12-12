@@ -22,6 +22,26 @@ function generateCredential() {
   // ... (configurar el tamaño del canvas)
   dibujarCredencial(canvas, nombre, puesto, empresa, qrCode);
 
+  function procesarArchivo(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = e.target.result;
+    const workbook = XLSX.read(data, { type: 'binary' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = XLSX.utils.sheet_to_json(worksheet);
+
+    // Iterar sobre los datos y generar las credenciales
+    data.forEach(row => {
+      const nombre = row.nombre;
+      const puesto = row.puesto;
+      const empresa = row.empresa;
+      generateCredential(nombre, puesto, empresa);
+    });
+  };
+  reader.readAsBinaryString(file);
+}
+
   // Descargar automáticamente la imagen
   const link = document.createElement("a");
   link.href = canvas.toDataURL("image/png");
