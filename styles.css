@@ -47,8 +47,9 @@ input {
 
 .button-group {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
+    justify-content: space-between;
     margin-top: 10px;
 }
 
@@ -57,6 +58,13 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+button:hover, button:focus {
+    background-color: #0056b3; /* Cambia ligeramente el color */
+    color: #fff;
+    outline: none; /* Elimina el contorno predeterminado */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Agrega un efecto sutil */
 }
 
 .btn-primary {
@@ -74,7 +82,7 @@ button {
     color: #fff;
 }
 
-.qr-preview {
+.qr-preview, .preview-container {
     margin-top: 20px;
     padding: 10px;
     border: 1px dashed #ccc;
@@ -87,31 +95,39 @@ button {
     color: #aaa;
 }
 
-#status {
-    margin-top: 20px;
-    color: #666;
-}
 .credencial-preview {
     margin-top: 20px;
     border: 1px solid #ddd;
     background-color: #fff;
     display: block;
     margin: 0 auto;
-    width: 600px;
-    height: 400px;
+    width: 744px; /* Tamaño ajustado a 7.4 cm */
+    height: 1050px; /* Tamaño ajustado a 10.5 cm */
 }
+
 .preview-container {
     text-align: center;
     margin-top: 10px;
+}
+
+.preview-box {
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ccc; /* Línea delgada */
+    background-color: #f9f9f9;
+    border-radius: 8px; /* Mantener bordes redondeados */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Asegura que las imágenes se ajusten */
 }
 
 .preview-box img {
     max-width: 100%; /* La imagen no excederá el tamaño del contenedor */
     max-height: 100%; /* Ajuste dentro del alto */
     object-fit: cover; /* Rellena el cuadro respetando proporciones */
-    border-radius: 8px; /* Mantener bordes redondeados si aplica */
+    border-radius: 50%; /* Hace que las imágenes sean circulares */
 }
-
 
 .optional-buttons {
     display: flex;
@@ -121,11 +137,4 @@ button {
 
 .optional-buttons button {
     margin-right: 10px;
-}
-
-.button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: space-between;
 }
