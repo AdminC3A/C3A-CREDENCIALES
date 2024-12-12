@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const generarQRBtn = document.getElementById("generarQR");
     const generarCredencialBtn = document.getElementById("generarCredencial");
-    const agregarFotoBtn = document.getElementById("agregarFoto");
+    const cargarFotoArchivoBtn = document.getElementById("cargarFotoArchivo");
+    const cargarFotoCamaraBtn = document.getElementById("cargarFotoCamara");
     const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
     const qrContainer = document.getElementById("imagenQRPreview");
     const credencialCanvas = document.getElementById("credencialCanvas");
@@ -46,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // **Evento para agregar la foto**
-    agregarFotoBtn.addEventListener("click", () => {
+    // **Evento para cargar la foto desde archivo**
+    cargarFotoArchivoBtn.addEventListener("click", () => {
         imagenInput.click(); // Abrir el selector de archivos
     });
 
@@ -65,6 +66,38 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             reader.readAsDataURL(file);
         }
+    });
+
+    // **Evento para cargar la foto desde la cámara**
+    cargarFotoCamaraBtn.addEventListener("click", () => {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                const video = document.createElement("video");
+                video.srcObject = stream;
+                video.play();
+
+                const captureButton = document.createElement("button");
+                captureButton.textContent = "Capturar";
+                captureButton.addEventListener("click", () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 400;
+                    canvas.height = 400;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const img = new Image();
+                    img.onload = () => {
+                        imagenSeleccionada = img;
+                        alert("Imagen capturada correctamente. Ahora puedes generar la credencial.");
+                        stream.getTracks().forEach(track => track.stop()); // Detener la cámara
+                    };
+                    img.src = canvas.toDataURL();
+                });
+
+                document.body.append(video, captureButton);
+            })
+            .catch((error) => {
+                console.error("Error al acceder a la cámara:", error);
+            });
     });
 
     // **Evento para generar la credencial**
@@ -93,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const logo = new Image();
         logo.src = "logo.png";
         logo.onload = () => {
-            ctx.drawImage(logo, 172, 20, 400, 400); // Ajustar posición y tamaño del logo
+            ctx.drawImage(logo, 172, 20, 400, 400);
 
             ctx.fillStyle = "#000";
             ctx.textAlign = "center";
