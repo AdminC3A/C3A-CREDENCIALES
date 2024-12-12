@@ -3,29 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Código QR</title>
+    <title>Generador de Credenciales</title>
     <link rel="stylesheet" href="styles.css"> <!-- Archivo CSS -->
     <script src="js/qrcode.min.js"></script> <!-- Biblioteca QR -->
-    <script src="script.js" defer></script> <!-- Archivo JavaScript -->
+    <script src="script.js" defer></script> <!-- Archivo JS -->
 </head>
 <body>
     <header>
-        <h1>Generador de Código QR</h1>
+        <h1>Generador de Credenciales</h1>
     </header>
     <main>
-        <!-- Formulario para generar iniciales y el QR -->
-        <form id="qrForm" class="form-container">
-            <label for="nombre">Nombre Completo:</label>
-            <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
+        <!-- Generación Individual -->
+        <section class="card">
+            <h2>Generar Credenciales Individualmente</h2>
+            <div class="form-group">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
+            </div>
+            <div class="form-group">
+                <label for="puesto">Puesto:</label>
+                <input type="text" id="puesto" placeholder="Ingresa el puesto">
+            </div>
+            <div class="form-group">
+                <label for="empresa">Empresa:</label>
+                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
+            </div>
+            <div class="form-group">
+                <label for="codigoQR">Código QR (opcional):</label>
+                <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
+            </div>
 
-            <label for="empresa">Empresa:</label>
-            <input type="text" id="empresa" placeholder="Ingresa la empresa" required>
+            <!-- Botones numerados -->
+            <div class="button-group">
+                <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
+                <button id="imagenQR" class="btn btn-secondary">2. Imagen QR</button>
+                <button id="generarCredencial" class="btn btn-success">3. Generar Credencial</button>
+            </div>
 
-            <button type="button" id="generarQR" class="btn">Generar QR</button>
-        </form>
+            <!-- Espacio para mostrar la imagen QR -->
+            <div id="imagenQRPreview" class="qr-preview">Aquí aparecerá la imagen del QR</div>
+        </section>
 
-        <!-- Contenedor para el QR generado -->
-        <div id="qrcode" class="qr-container">Aquí aparecerá tu QR</div>
+        <!-- Mensaje de estado -->
+        <p id="status">Por favor, llena los datos o genera un código QR para continuar.</p>
     </main>
+    <footer>
+        <p>© 2024 Elemento Arquitectura Interior</p>
+    </footer>
 </body>
 </html>
