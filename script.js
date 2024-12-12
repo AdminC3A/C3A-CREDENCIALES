@@ -1,5 +1,6 @@
 // Escucha el botón para generar el QR automáticamente
 const generarQRBtn = document.getElementById('generarQR');
+const generarCredencialBtn = document.getElementById('generarUno');
 
 generarQRBtn.addEventListener('click', () => {
     // Obtener los valores de los campos del formulario
@@ -32,12 +33,8 @@ generarQRBtn.addEventListener('click', () => {
     const codigoQRInput = document.getElementById('codigoQR');
     codigoQRInput.value = codigoQRFinal;
 
-    // Mensaje opcional para el usuario
     alert('Código QR generado automáticamente. Puedes usarlo o editarlo manualmente.');
 });
-
-// Escucha el botón para generar la credencial
-const generarCredencialBtn = document.getElementById('generarUno');
 
 generarCredencialBtn.addEventListener('click', () => {
     // Obtener los valores del formulario
@@ -87,5 +84,10 @@ generarCredencialBtn.addEventListener('click', () => {
         link.href = canvas.toDataURL('image/png');
         link.download = 'credencial.png';
         link.click();
+
+        // Mostrar la credencial generada en pantalla
+        const outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = ''; // Limpiar contenido anterior
+        outputDiv.appendChild(canvas);
     };
 });
