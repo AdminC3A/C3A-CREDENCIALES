@@ -14,20 +14,26 @@ generarQRBtn.addEventListener('click', () => {
         return;
     }
 
-    // Generar el código QR basado en los valores ingresados
+    // Generar las primeras letras del código basado en el nombre, puesto y empresa
     const nombres = nombreCompleto.split(' ');
     const primerNombre = nombres[0] || ''; // Previene errores si no hay espacios
-    const primeraLetraNombre = primerNombre.charAt(0) || ''; // Previene errores si está vacío
+    const primerApellido = puesto.charAt(0) || ''; // Primera letra del puesto
+    const segundaLetra = empresa.charAt(0) || ''; // Primera letra de la empresa
 
     // Validar que haya al menos una letra en el nombre
-    if (!primeraLetraNombre) {
+    if (!primerNombre) {
         alert('El campo "Nombre Completo" debe contener al menos una palabra.');
         return;
     }
 
+    const primeraLetraNombre = primerNombre.charAt(0) || ''; // Primera letra del primer nombre
+    const codigoBase = `${primeraLetraNombre}${primerApellido}${segundaLetra}`.toUpperCase();
+
+    // Generar el código ASCII de la primera letra del nombre
     const codigoASCII = primeraLetraNombre.charCodeAt(0).toString();
-    const textoQR = primeraLetraNombre + puesto.charAt(0);
-    const codigoQRFinal = textoQR.padEnd(2, 'X') + codigoASCII.padStart(10, '0');
+
+    // Completar el código QR hasta 8 caracteres
+    let codigoQRFinal = (codigoBase + codigoASCII).padEnd(8, '0').substring(0, 8);
 
     // Escribir el código QR generado en el campo QR opcional
     const codigoQRInput = document.getElementById('codigoQR');
