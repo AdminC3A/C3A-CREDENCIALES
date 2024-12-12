@@ -120,9 +120,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch((error) => console.error("Error al acceder a la cámara:", error));
     });
 
-   // Módulo 4: Generar la credencial
+  /**
+ * Modulo 4: Generar la credencial
+ * Este módulo ajusta el tamaño del canvas y posiciona correctamente los elementos en la credencial.
+ */
 generarCredencialBtn.addEventListener("click", () => {
-    // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
+    // Tamaño de la credencial ajustado a 7.4 x 10.5 cm (744 x 1050 px)
     credencialCanvas.width = 744;
     credencialCanvas.height = 1050;
 
@@ -133,9 +136,11 @@ generarCredencialBtn.addEventListener("click", () => {
     const nombre = document.getElementById("nombre").value.trim();
     const puesto = document.getElementById("puesto").value.trim();
     const empresa = document.getElementById("empresa").value.trim();
+    const nss = document.getElementById("nss").value.trim();
+    const fechaNacimiento = document.getElementById("fechaNacimiento").value.trim();
     const codigoQR = document.getElementById("codigoQR").value.trim();
 
-    if (!nombre || !puesto || !empresa || !codigoQR) {
+    if (!nombre || !puesto || !empresa || !nss || !fechaNacimiento || !codigoQR) {
         alert("Por favor, completa todos los campos.");
         return;
     }
@@ -144,34 +149,47 @@ generarCredencialBtn.addEventListener("click", () => {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    // Dibujar el logo (2x2 cm -> 200x200 px)
+    // Dibujar el logo
     const logo = new Image();
-    logo.src = "logo.png"; // Asegúrate de que el logo esté en el directorio correcto
+    logo.src = "logo.png"; // Asegúrate de tener este archivo en el directorio correcto
     logo.onload = () => {
-        ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente (744 - 200)/2 = 272
+        ctx.drawImage(logo, 172, 125, 400, 100); // Desplazado 1 cm más abajo
 
-        // Dibujar la foto (2x2 cm -> 200x200 px)
-        if (imagenSeleccionada) {
-            ctx.drawImage(imagenSeleccionada, 272, 250, 200, 200); // Centrado horizontalmente
-        } else {
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(272, 250, 200, 200); // Cuadro vacío para la foto
-        }
-
-        // Dibujar los datos personales (centrados)
+        // Títulos
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
-        ctx.font = "20px Arial";
-        ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 500);
-        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 530);
-        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 560);
+        ctx.font = "bold 28px Arial";
+        ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 380); // Bajado 1 cm
+        ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 420); // Bajado 1 cm
 
-        // Dibujar el QR (3x3 cm -> 300x300 px)
+        // Foto cargada o cuadro vacío
+        if (imagenSeleccionada) {
+            // Insertar la imagen cargada o capturada
+            ctx.beginPath();
+            ctx.arc(372, 550, 150, 0, Math.PI * 2, true); // Crear un círculo
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(imagenSeleccionada, 222, 450, 300, 300); // Desplazado 1 cm
+            ctx.restore();
+        } else {
+            // Dibujar un cuadro para la foto
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(222, 450, 300, 300); // Desplazado 1 cm
+        }
+
+        // Datos personales
+        ctx.textAlign = "left";
+        ctx.font = "20px Arial";
+        ctx.fillText(`Nombre: ${nombre}`, 50, 700); // Bajado 1 cm
+        ctx.fillText(`Puesto: ${puesto}`, 50, 740); // Bajado 1 cm
+        ctx.fillText(`Empresa: ${empresa}`, 50, 780); // Bajado 1 cm
+
+        // Generar QR
         const qrImage = new Image();
-        qrImage.src = qrContainer.querySelector("img")?.src || "";
+        qrImage.src = qrContainer.querySelector("img")?.src || ""; // Obtener el QR generado
         qrImage.onload = () => {
-            ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
+            ctx.drawImage(qrImage, 272, 820, 200, 200); // Bajado 1 cm
             console.log("Credencial generada correctamente.");
         };
 
@@ -180,6 +198,7 @@ generarCredencialBtn.addEventListener("click", () => {
         };
     };
 });
+
 
     /**
      * Módulo 5: Descargar la credencial
