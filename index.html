@@ -3,50 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Credenciales</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Archivo de estilos -->
-    <script src="js/qrcode.min.js"></script> <!-- Biblioteca QR -->
+    <title>Generar QR</title>
+    <script src="js/qrcode.min.js"></script> <!-- Enlace al archivo local -->
 </head>
 <body>
-    <header>
-        <h1>Generador de Credenciales</h1>
-    </header>
-    <main>
-        <section class="card">
-            <h2>Generar Credenciales Individualmente</h2>
-            <div class="form-group">
-                <label for="nombre">Nombre Completo:</label>
-                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
-            </div>
-            <div class="form-group">
-                <label for="puesto">Puesto:</label>
-                <input type="text" id="puesto" placeholder="Ingresa el puesto">
-            </div>
-            <div class="form-group">
-                <label for="empresa">Empresa:</label>
-                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
-            </div>
-            <div class="form-group">
-                <label for="codigoQR">Código QR (opcional):</label>
-                <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
-            </div>
+    <h1>Generador de Código QR</h1>
+    <div id="qrcode" style="margin: 20px;"></div>
 
-            <!-- Botones numerados -->
-            <div class="button-group">
-                <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
-                <button id="imagenQR" class="btn btn-secondary">2. Imagen QR</button>
-                <button id="generarUno" class="btn btn-success">3. Generar Credencial</button>
-            </div>
+    <!-- Formulario para generar iniciales y el QR -->
+    <form id="qrForm">
+        <label for="nombre">Nombre Completo:</label>
+        <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
 
-            <!-- Espacio para mostrar la imagen QR -->
-            <div id="imagenQRPreview" class="qr-preview">Aquí aparecerá la imagen del QR</div>
-        </section>
+        <label for="empresa">Empresa:</label>
+        <input type="text" id="empresa" placeholder="Ingresa la empresa" required>
 
-        <div id="output"></div>
-    </main>
-    <footer>
-        <p>© 2024 Elemento Arquitectura Interior</p>
-    </footer>
-    <script src="script.js"></script> <!-- Archivo JS -->
+        <button type="button" id="generarQR">Generar QR</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const qrContainer = document.getElementById("qrcode");
+            const generarQRBtn = document.getElementById("generarQR");
+
+            generarQRBtn.addEventListener("click", () => {
+                const nombre = document.getElementById("nombre").value.trim();
+                const empresa = document.getElementById("empresa").value.trim();
+
+                if (!nombre || !empresa) {
+                    alert("Por favor, completa todos los campos.");
+                    return;
+                }
+
+                // Generar las iniciales y el código QR
+                const nombres = nombre.split(" ");
+                const primerNombre = nombres[0] || "";
+                const primerApellido = nombres[1] || "";
+                const primeraLetraEmpresa = empresa.charAt(0) || "";
+
+                const iniciales = `${primerNombre.charAt(0)}${primerApellido.charAt(0)}${primeraLetraEmpresa}`.toUpperCase();
+                const codigoASCII = primerNombre.charCodeAt(0).toString(); // Código ASCII de la primera letra del nombre
+
+                // Formato 0000DE68
+                const codigoQR = `${iniciales}${codigoASCII.padStart(5, "0")}`.substring(0, 8);
+
+                // Limpiar QR anterior
+                qrContainer.innerHTML = "";
+
+                // Generar nuevo QR
+                try {
+                    new QRCode(qrContainer, {
+                        text: codigoQR,
+                        width: 150,
+                        height: 150,
+                    });
+                    console.log(`Código QR generado: ${codigoQR}`);
+                } catch (error) {
+                    console.error("Error al generar el QR:", error);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
