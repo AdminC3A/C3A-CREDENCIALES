@@ -105,13 +105,13 @@ button {
     margin-top: 10px;
 }
 
-.preview-box {
-    border: 1px solid #ccc; /* Línea delgada */
-    width: 150px;
-    height: 150px;
-    margin: 10px auto; /* Centramos el canvas */
-    background-color: #f9f9f9;
+.preview-box img {
+    max-width: 100%; /* La imagen no excederá el tamaño del contenedor */
+    max-height: 100%; /* Ajuste dentro del alto */
+    object-fit: cover; /* Rellena el cuadro respetando proporciones */
+    border-radius: 8px; /* Mantener bordes redondeados si aplica */
 }
+
 
 .optional-buttons {
     display: flex;
