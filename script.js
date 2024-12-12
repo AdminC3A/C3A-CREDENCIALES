@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Botón 2: Generar Credencial
-    generarCredencialBtn.addEventListener("click", () => {
+   generarCredencialBtn.addEventListener("click", () => {
     const ctx = credencialCanvas.getContext("2d");
     ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height); // Limpia el canvas antes de dibujar
 
@@ -60,53 +60,60 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Dibujar la credencial
-    ctx.fillStyle = "#fff"; // Fondo blanco
+    // Ajustar tamaño del canvas para formato vertical
+    credencialCanvas.width = 400;
+    credencialCanvas.height = 600;
+
+    // Fondo blanco
+    ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    ctx.strokeStyle = "#000"; // Borde negro
-    ctx.lineWidth = 5;
+    // Borde negro
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
     ctx.strokeRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    // Dibujar el logo en la parte superior
+    // Espacio para perforación manual
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(150, 10, 100, 20); // Espacio rectangular en la parte superior
+
+    // Dibujar logo
     const logo = new Image();
     logo.src = "logo.png"; // Ruta de tu logo
     logo.onload = () => {
-        ctx.drawImage(logo, 125, 10, 150, 150); // Ajusta las coordenadas y tamaño según el diseño
+        ctx.drawImage(logo, 125, 40, 150, 150); // Ajustar posición y tamaño del logo
 
-        // Dibujar texto en la credencial
+        // Texto principal
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
-
         ctx.font = "bold 20px Arial";
-        ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 180);
+        ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 220);
 
         ctx.font = "bold 18px Arial";
-        ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 210);
+        ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 250);
 
-        // Dibujar cuadro negro del diseño (marco vacío)
+        // Recuadro para foto o espacio central
         ctx.strokeStyle = "#000";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(100, 230, 200, 250);
+        ctx.lineWidth = 1;
+        ctx.strokeRect(100, 270, 200, 250); // Posición y dimensiones del cuadro
 
-        // Datos del usuario
+        // Información del usuario
         ctx.textAlign = "left";
         ctx.font = "16px Arial";
-        ctx.fillText(`Nombre: ${nombre}`, 20, 520);
-        ctx.fillText(`Puesto: ${puesto}`, 20, 550);
-        ctx.fillText(`Empresa: ${empresa}`, 20, 580);
-        ctx.fillText(`NSS: ${nss}`, 20, 610);
-        ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 20, 640);
+        ctx.fillText(`Nombre: ${nombre}`, 20, 550);
+        ctx.fillText(`Puesto: ${puesto}`, 20, 580);
+        ctx.fillText(`Empresa: ${empresa}`, 20, 610);
+        ctx.fillText(`NSS: ${nss}`, 20, 640);
+        ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 20, 670);
 
-        // Dibujar el QR en la parte inferior del canvas
+        // Código QR
         const qrImage = new Image();
-        qrImage.src = qrContainer.querySelector("img").src; // Usar la imagen generada en el QR
+        qrImage.src = qrContainer.querySelector("img").src; // Usar el QR generado previamente
         qrImage.onload = () => {
-            ctx.drawImage(qrImage, 125, 660, 150, 150); // Ajusta las coordenadas y tamaño
+            ctx.drawImage(qrImage, 125, 700, 150, 150); // Ajustar posición y tamaño del QR
         };
     };
 });
-
 
     // Botón 3: Autorizar y Descargar
     autorizarDescargarBtn.addEventListener("click", () => {
