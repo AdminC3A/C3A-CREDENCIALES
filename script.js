@@ -1,34 +1,3 @@
-// Escucha el botón para generar el QR automáticamente
-const generarQRBtn = document.getElementById('generarQR');
-const generarCredencialBtn = document.getElementById('generarUno');
-
-// Generar QR constante basado en los datos
-generarQRBtn.addEventListener('click', () => {
-    const nombreCompleto = document.getElementById('nombre').value.trim();
-    const puesto = document.getElementById('puesto').value.trim();
-    const empresa = document.getElementById('empresa').value.trim();
-
-    if (!nombreCompleto || !puesto || !empresa) {
-        alert('Por favor, completa todos los campos: Nombre, Puesto y Empresa.');
-        return;
-    }
-
-    const nombres = nombreCompleto.split(' ');
-    const primerNombre = nombres[0] || '';
-    const primerApellido = puesto.charAt(0) || '';
-    const segundaLetra = empresa.charAt(0) || '';
-
-    const primeraLetraNombre = primerNombre.charAt(0) || '';
-    const codigoBase = `${primeraLetraNombre}${primerApellido}${segundaLetra}`.toUpperCase();
-    const codigoASCII = primeraLetraNombre.charCodeAt(0).toString();
-    let codigoQRFinal = (codigoBase + codigoASCII.padStart(3, '0')).padEnd(8, '0').substring(0, 8);
-
-    const codigoQRInput = document.getElementById('codigoQR');
-    codigoQRInput.value = codigoQRFinal;
-
-    alert('Código QR generado automáticamente. Puedes usarlo o editarlo manualmente.');
-});
-
 // Generar la credencial
 generarCredencialBtn.addEventListener('click', () => {
     const nombre = document.getElementById('nombre').value.trim();
@@ -83,29 +52,31 @@ generarCredencialBtn.addEventListener('click', () => {
         ctx.fillText(`Puesto: ${puesto}`, 60, 640);
         ctx.fillText(`Empresa: ${empresa}`, 60, 680);
 
-        // Generar QR y dibujarlo
-        const qrCanvas = document.createElement('canvas');
-        new QRCode(qrCanvas, {
+        // Generar el código QR directamente en el lienzo
+        new QRCode(document.createElement('div'), {
             text: codigoQR,
             width: 150,
             height: 150,
+            correctLevel: QRCode.CorrectLevel.H, // Nivel de corrección de errores
+            callback: function (qrCanvas) {
+                const qrImg = new Image();
+                qrImg.src = qrCanvas.toDataURL('image/png'); // Convertir QR a imagen
+                qrImg.onload = function () {
+                    // Dibujar el QR en el lienzo principal
+                    ctx.drawImage(qrImg, canvas.width / 2 - 75, 750, 150, 150);
+
+                    // Descargar credencial
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = `Credencial-${codigoQR}.png`; // Nombre del archivo dinámico
+                    link.click();
+
+                    // Mostrar la credencial generada en pantalla
+                    const outputDiv = document.getElementById('output');
+                    outputDiv.innerHTML = ''; // Limpiar contenido anterior
+                    outputDiv.appendChild(canvas);
+                };
+            },
         });
-
-        const qrImg = new Image();
-        qrImg.src = qrCanvas.toDataURL('image/png');
-        qrImg.onload = function () {
-            ctx.drawImage(qrImg, 225, 750, 150, 150);
-
-            // Descargar credencial
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = `Credencial-${codigoQR}.png`; // Nombre del archivo dinámico
-            link.click();
-
-            // Mostrar la credencial generada en pantalla
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = ''; // Limpiar contenido anterior
-            outputDiv.appendChild(canvas);
-        };
     };
 });
