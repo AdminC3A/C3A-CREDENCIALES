@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const generarQRBtn = document.getElementById("generarQR");
-    const qrContainer = document.getElementById("imagenQRPreview");
     const generarCredencialBtn = document.getElementById("generarCredencial");
     const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
+    const qrContainer = document.getElementById("imagenQRPreview");
     const credencialCanvas = document.getElementById("credencialCanvas");
     let codigoQR = ""; // Variable global para almacenar el código QR
 
@@ -20,32 +20,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const palabrasNombre = nombre.split(" ");
         const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
         const inicialPuesto = puesto.charAt(0).toUpperCase();
-
-        // Limitar las iniciales a un máximo de 3 caracteres
         const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
 
         // Calcular el código ASCII de la primera letra del nombre
         const codigoASCII = nombre.charCodeAt(0).toString();
-
-        // Calcular el número de ceros necesarios
         const totalLength = 8;
         const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
 
         // Construir el código QR
         codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
-
-        // Mostrar el QR generado en el campo correspondiente
         document.getElementById("codigoQR").value = codigoQR;
 
         // Generar el QR visual
-        qrContainer.innerHTML = ""; // Limpiar el contenedor anterior
+        qrContainer.innerHTML = "";
         try {
             new QRCode(qrContainer, {
                 text: codigoQR,
                 width: 150,
                 height: 150,
             });
-            console.log(`Código QR generado: ${codigoQR}`);
         } catch (error) {
             console.error("Error al generar el QR:", error);
         }
@@ -78,8 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillText(`NSS: ${nss}`, 20, 200);
         ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 20, 250);
         ctx.fillText(`Código QR: ${codigoQR}`, 20, 300);
-
-        console.log("Credencial generada.");
     });
 
     // Botón 3: Autorizar y Descargar
@@ -95,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Datos a enviar a Google Sheets
+        // Datos a enviar
         const data = {
             Nombre: nombre,
             Puesto: puesto,
@@ -106,26 +97,18 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         // Enviar a Google Sheets
-        fetch("URL_DE_TU_HOJA_DE_CALCULO", {
+        fetch("URL_DE_TU_WEB_APP", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         })
-            .then(response => {
-                console.log("Datos enviados a Google Sheets:", response);
-                alert("Datos enviados y credencial descargada.");
+            .then(() => {
+                const link = document.createElement("a");
+                link.href = credencialCanvas.toDataURL("image/png");
+                link.download = `Credencial-${codigoQR}.png`;
+                link.click();
+                alert("Credencial autorizada y descargada.");
             })
-            .catch(error => {
-                console.error("Error al enviar los datos:", error);
-                alert("Error al enviar los datos.");
-            });
-
-        // Descargar credencial
-        const link = document.createElement("a");
-        link.href = credencialCanvas.toDataURL("image/png");
-        link.download = `Credencial-${codigoQR}.png`;
-        link.click();
+            .catch(error => console.error("Error:", error));
     });
 });
