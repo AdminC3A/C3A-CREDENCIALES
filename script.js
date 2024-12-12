@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // **Evento para generar la credencial**
     generarCredencialBtn.addEventListener("click", () => {
-        credencialCanvas.width = 874;
-        credencialCanvas.height = 2480;
+        credencialCanvas.width = 744; // Ajustado para 7.4 cm
+        credencialCanvas.height = 1050; // Ajustado para 10.5 cm
 
         const ctx = credencialCanvas.getContext("2d");
         ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
@@ -93,38 +93,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const logo = new Image();
         logo.src = "logo.png";
         logo.onload = () => {
-            ctx.drawImage(logo, 237, 60, 400, 400);
+            ctx.drawImage(logo, 172, 20, 400, 400); // Ajustar posición y tamaño del logo
 
             ctx.fillStyle = "#000";
             ctx.textAlign = "center";
-            ctx.font = "bold 30px Arial";
-            ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 500);
-            ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 550);
+            ctx.font = "bold 24px Arial";
+            ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 450);
+            ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 500);
 
             if (imagenSeleccionada) {
-                ctx.drawImage(imagenSeleccionada, 237, 600, 400, 400);
+                ctx.drawImage(imagenSeleccionada, 172, 550, 400, 400);
             } else {
                 ctx.strokeStyle = "#000";
                 ctx.lineWidth = 2;
-                ctx.strokeRect(237, 600, 400, 400);
+                ctx.strokeRect(172, 550, 400, 400);
             }
 
             ctx.textAlign = "left";
-            ctx.font = "20px Arial";
-            ctx.fillText(`Nombre: ${nombre}`, 50, 1050);
-            ctx.fillText(`Puesto: ${puesto}`, 50, 1100);
-            ctx.fillText(`Empresa: ${empresa}`, 50, 1150);
-            ctx.fillText(`NSS: ${nss}`, 50, 1200);
-            ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 50, 1250);
+            ctx.font = "18px Arial";
+            ctx.fillText(`Nombre: ${nombre}`, 50, 1000);
+            ctx.fillText(`Puesto: ${puesto}`, 50, 1050);
+            ctx.fillText(`Empresa: ${empresa}`, 50, 1100);
+            ctx.fillText(`NSS: ${nss}`, 50, 1150);
+            ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 50, 1200);
 
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("img").src;
             qrImage.onload = () => {
-                ctx.drawImage(qrImage, 237, 1350, 400, 400);
+                ctx.drawImage(qrImage, 172, 1250, 400, 400);
             };
         };
     });
 
+    // **Evento para autorizar y descargar**
     autorizarDescargarBtn.addEventListener("click", () => {
         const link = document.createElement("a");
         link.href = credencialCanvas.toDataURL("image/png");
