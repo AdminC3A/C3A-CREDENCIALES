@@ -32,8 +32,8 @@ generarQRBtn.addEventListener('click', () => {
     // Generar el código ASCII de la primera letra del nombre
     const codigoASCII = primeraLetraNombre.charCodeAt(0).toString();
 
-    // Completar el código QR hasta 8 caracteres
-    let codigoQRFinal = (codigoBase + codigoASCII).padEnd(8, '0').substring(0, 8);
+    // Completar el código QR hasta 8 caracteres con ceros antes del código ASCII
+    let codigoQRFinal = (codigoBase + codigoASCII.padStart(5, '0')).padEnd(8, '0').substring(0, 8);
 
     // Escribir el código QR generado en el campo QR opcional
     const codigoQRInput = document.getElementById('codigoQR');
@@ -57,43 +57,63 @@ generarCredencialBtn.addEventListener('click', () => {
 
     // Generar y mostrar la credencial
     const canvas = document.createElement('canvas');
-    canvas.width = 1000;
-    canvas.height = 600;
+    canvas.width = 600;
+    canvas.height = 1000;
     const ctx = canvas.getContext('2d');
 
     // Dibujar la credencial
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = '#333';
-    ctx.font = 'bold 40px Arial';
-    ctx.fillText('Credencial de Acceso', 30, 50);
-    ctx.font = '30px Arial';
-    ctx.fillText(`Nombre: ${nombre}`, 30, 100);
-    ctx.fillText(`Puesto: ${puesto}`, 30, 150);
-    ctx.fillText(`Empresa: ${empresa}`, 30, 200);
+    // Dibujar borde negro
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 5;
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-    // Generar QR y dibujarlo
-    const qrCanvas = document.createElement('canvas');
-    new QRCode(qrCanvas, {
-        text: codigoQR,
-        width: 150,
-        height: 150,
-    });
-    const qrImg = new Image();
-    qrImg.src = qrCanvas.toDataURL('image/png');
-    qrImg.onload = function () {
-        ctx.drawImage(qrImg, 800, 50, 150, 150);
+    // Añadir logo
+    const logo = new Image();
+    logo.src = 'logo.png'; // Asegúrate de tener el logo en tu directorio
+    logo.onload = function () {
+        ctx.drawImage(logo, 225, 30, 150, 150);
 
-        // Descargar credencial
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = `Credencial-${codigoQR}.png`; // Nombre dinámico del archivo
-        link.click();
+        // Añadir textos
+        ctx.fillStyle = '#333';
+        ctx.textAlign = 'center';
 
-        // Mostrar la credencial generada en pantalla
-        const outputDiv = document.getElementById('output');
-        outputDiv.innerHTML = ''; // Limpiar contenido anterior
-        outputDiv.appendChild(canvas);
+        ctx.font = 'bold 30px Arial';
+        ctx.fillText('Credencial de Acceso', canvas.width / 2, 220);
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText('CASA TRES AGUAS', canvas.width / 2, 260);
+
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Nombre: ${nombre}`, 50, 320);
+        ctx.fillText(`Puesto: ${puesto}`, 50, 360);
+        ctx.fillText(`Empresa: ${empresa}`, 50, 400);
+
+        // Generar QR y dibujarlo
+        const qrCanvas = document.createElement('canvas');
+        new QRCode(qrCanvas, {
+            text: codigoQR,
+            width: 150,
+            height: 150,
+        });
+
+        const qrImg = new Image();
+        qrImg.src = qrCanvas.toDataURL('image/png');
+        qrImg.onload = function () {
+            ctx.drawImage(qrImg, 225, 450, 150, 150);
+
+            // Descargar credencial
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `Credencial-${codigoQR}.png`; // Nombre dinámico del archivo
+            link.click();
+
+            // Mostrar la credencial generada en pantalla
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = ''; // Limpiar contenido anterior
+            outputDiv.appendChild(canvas);
+        };
     };
 });
