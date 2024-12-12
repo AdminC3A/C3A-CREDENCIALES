@@ -195,77 +195,83 @@ generarCredencialBtn.addEventListener("click", () => {
  * Módulo 6: Generar Parte Trasera de la Credencial
  * Este módulo genera la parte trasera con el formato ajustado.
  */
-document.getElementById("descargarParteTrasera").addEventListener("click", () => {
-    const canvasTrasera = document.createElement("canvas");
-    canvasTrasera.width = 744; // 7.4 cm
-    canvasTrasera.height = 1050; // 10.5 cm
+function generarParteTrasera() {
+    const parteTraseraCanvas = document.createElement("canvas");
+    parteTraseraCanvas.width = 744; // Tamaño ajustado a 7.4 cm
+    parteTraseraCanvas.height = 1050; // Tamaño ajustado a 10.5 cm
+    const ctx = parteTraseraCanvas.getContext("2d");
 
-    const ctx = canvasTrasera.getContext("2d");
-    ctx.clearRect(0, 0, canvasTrasera.width, canvasTrasera.height);
+    ctx.clearRect(0, 0, parteTraseraCanvas.width, parteTraseraCanvas.height);
 
     // Fondo blanco
     ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, canvasTrasera.width, canvasTrasera.height);
+    ctx.fillRect(0, 0, parteTraseraCanvas.width, parteTraseraCanvas.height);
 
-    // Texto principal
+    // Texto de advertencia
     ctx.fillStyle = "#000";
+    ctx.font = "18px Arial";
     ctx.textAlign = "center";
-    ctx.font = "16px Arial";
     ctx.fillText(
         "El Gafete de seguridad deberá portarse todo el tiempo",
-        canvasTrasera.width / 2,
-        50
+        parteTraseraCanvas.width / 2,
+        100
     );
     ctx.fillText(
         "y de manera visible durante el tiempo que se permanezca en obra.",
-        canvasTrasera.width / 2,
-        80
+        parteTraseraCanvas.width / 2,
+        130
     );
     ctx.fillText(
         "En caso de incumplimiento, la persona será expulsada y se tomarán las",
-        canvasTrasera.width / 2,
-        110
+        parteTraseraCanvas.width / 2,
+        160
     );
     ctx.fillText(
         "medidas disciplinarias necesarias.",
-        canvasTrasera.width / 2,
-        140
+        parteTraseraCanvas.width / 2,
+        190
     );
 
-    // Información del IMSS y Folio
-    ctx.textAlign = "left";
-    const numeroIMSS = document.getElementById("nss").value.trim();
-    const numeroIMSSFormateado =
-        numeroIMSS.length === 11
-            ? `${numeroIMSS.slice(0, -1)}-${numeroIMSS.slice(-1)}`
-            : numeroIMSS;
+    // No. IMSS
+    ctx.textAlign = "center";
+    ctx.font = "20px Arial";
+    const numeroIMSS = "No. IMSS: 2296790174-9"; // Ajustar el número IMSS
+    ctx.fillText(numeroIMSS, parteTraseraCanvas.width / 2, 250);
 
-    ctx.fillText(`No. IMSS: ${numeroIMSSFormateado}`, 50, 200);
-    ctx.fillText(`Folio: ${document.getElementById("codigoQR").value}`, 50, 230);
-
-    // Espacio para la firma
-    ctx.beginPath();
-    ctx.moveTo(50, 400); // Línea para la firma
-    ctx.lineTo(canvasTrasera.width - 50, 400);
+    // Línea de firma
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(100, 700);
+    ctx.lineTo(parteTraseraCanvas.width - 100, 700);
     ctx.stroke();
-    ctx.closePath();
-    ctx.fillText("Firma del Portador", canvasTrasera.width / 2, 420);
 
-    // Fechas de validez
-    const fechaActual = new Date();
-    const fechaDesde = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
-    const fechaHasta = new Date();
-    fechaHasta.setMonth(fechaHasta.getMonth() + 6);
-    const fechaHastaFormateada = `${fechaHasta.getDate()}/${fechaHasta.getMonth() + 1}/${fechaHasta.getFullYear()}`;
+    // Texto de firma
+    ctx.font = "18px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 730);
 
-    ctx.fillText(`Válido desde: ${fechaDesde}`, 50, 500);
-    ctx.fillText(`Válido hasta: ${fechaHastaFormateada}`, 50, 530);
+    // Segunda línea de firma
+    ctx.beginPath();
+    ctx.moveTo(100, 770);
+    ctx.lineTo(parteTraseraCanvas.width - 100, 770);
+    ctx.stroke();
 
-    // Descargar como imagen
+    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 800);
+
+    // Válidos
+    const validoDesde = "Válido desde: 12/12/2024";
+    const validoHasta = "Válido hasta: 12/6/2025";
+    ctx.font = "16px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText(validoDesde, 50, parteTraseraCanvas.height - 80);
+    ctx.fillText(validoHasta, 50, parteTraseraCanvas.height - 50);
+
+    // Descargar parte trasera
     const link = document.createElement("a");
-    link.href = canvasTrasera.toDataURL("image/png");
-    link.download = `Credencial-Parte-Trasera-${document.getElementById("codigoQR").value}.png`;
+    link.href = parteTraseraCanvas.toDataURL("image/png");
+    link.download = "Parte-Trasera-Credencial.png";
+    link.click();
+}
     link.click();
 });
