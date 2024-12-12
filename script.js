@@ -4,16 +4,23 @@ function generarCodigoQR(nombreCompleto) {
   return qrCode; // Asegúrate de retornar el código QR generado
 }
 
+// Función para dibujar la credencial en un canvas
+function dibujarCredencial(canvas, nombre, puesto, empresa, qrCode) {
+  const ctx = canvas.getContext('2d');
+  // ... (código para dibujar en el canvas)
+}
+
 // Función para generar una credencial
 function generateCredential() {
-  const nombre = document.getElementById("nombreInput").value;
-  const puesto = document.getElementById("puestoInput").value;
-  const empresa = document.getElementById("empresaInput").value;
+  const nombre = document.getElementById("nombre").value;
+  const puesto = document.getElementById("puesto").value;
+  const empresa = document.getElementById("empresa").value;
 
-  // Generar el código QR
   const qrCode = generarCodigoQR(nombre);
 
-  // Resto del código para dibujar en el canvas...
+  const canvas = document.createElement('canvas');
+  // ... (configurar el tamaño del canvas)
+  dibujarCredencial(canvas, nombre, puesto, empresa, qrCode);
 
   // Descargar automáticamente la imagen
   const link = document.createElement("a");
@@ -24,7 +31,3 @@ function generateCredential() {
   // Mostrar credencial generada en la página
   document.getElementById("credentials-container").appendChild(canvas);
 }
-
-// Asignar el evento click a un botón
-const generarBoton = document.getElementById("generarBoton");
-generarBoton.addEventListener("click", generateCredential);
