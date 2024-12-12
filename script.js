@@ -1,11 +1,11 @@
 // Función para dibujar la credencial en un canvas
-function dibujarCredencial(canvas, nombre, puesto, empresa, qrCode) {
+function dibujarCredencial(canvas, nombre, puesto, empresa, qrCanvas) {
     const ctx = canvas.getContext('2d');
     // ... (tu código para dibujar en el canvas, adaptando las coordenadas y estilos a tu diseño)
 
-    // Agregar el código QR a la imagen (asumiendo que qrCode es una URL de imagen)
+    // Obtener la imagen del código QR desde el canvas generado
     const qrImage = new Image();
-    qrImage.src = qrCode;
+    qrImage.src = qrCanvas.toDataURL();
     qrImage.onload = () => {
         ctx.drawImage(qrImage, 100, 300); // Ajusta las coordenadas según tu diseño
     };
@@ -43,7 +43,7 @@ function generateCredential() {
     const canvas = document.createElement('canvas');
     canvas.width = 500;
     canvas.height = 700;
-    dibujarCredencial(canvas, nombre, puesto, empresa, qrCanvas.toDataURL());
+    dibujarCredencial(canvas, nombre, puesto, empresa, qrCanvas);
 
     // Descargar automáticamente la imagen
     const link = document.createElement("a");
@@ -51,7 +51,7 @@ function generateCredential() {
     link.download = `credencial_${nombre.replace(/\s+/g, '_')}.png`;
     link.click();
 
-    // Mostrar credencial generada en la página
+    // Mostrar credencial generada en la página (opcional)
     document.getElementById("credentials-container").appendChild(canvas);
 }
 
