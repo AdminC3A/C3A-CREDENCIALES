@@ -45,9 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Botón 2: Generar Credencial
-   generarCredencialBtn.addEventListener("click", () => {
+  generarCredencialBtn.addEventListener("click", () => {
+    // Ajustar tamaño del canvas para el díptico abierto
+    credencialCanvas.width = 874; // Ancho del díptico completo
+    credencialCanvas.height = 2480; // Alto del díptico completo
+
     const ctx = credencialCanvas.getContext("2d");
-    ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height); // Limpia el canvas antes de dibujar
+    ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height); // Limpiar el canvas antes de dibujar
 
     const nombre = document.getElementById("nombre").value.trim();
     const puesto = document.getElementById("puesto").value.trim();
@@ -60,11 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Ajustar tamaño del canvas para formato vertical
-    credencialCanvas.width = 400;
-    credencialCanvas.height = 600;
-
-    // Fondo blanco
+    // Fondo blanco para todo el díptico
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
@@ -73,46 +73,60 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = 2;
     ctx.strokeRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
+    // **Mitad izquierda**
+    const leftX = 0; // Inicio de la mitad izquierda
+    const leftWidth = 874; // Ancho de la mitad izquierda
+
     // Espacio para perforación manual
     ctx.fillStyle = "#fff";
-    ctx.fillRect(150, 10, 100, 20); // Espacio rectangular en la parte superior
+    ctx.fillRect(leftX + 337, 30, 200, 20); // Ajustar posición según diseño
 
     // Dibujar logo
     const logo = new Image();
     logo.src = "logo.png"; // Ruta de tu logo
     logo.onload = () => {
-        ctx.drawImage(logo, 125, 40, 150, 150); // Ajustar posición y tamaño del logo
+        ctx.drawImage(logo, leftX + 262, 60, 350, 350); // Ajustar posición y tamaño del logo
 
-        // Texto principal
+        // Títulos
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
-        ctx.font = "bold 20px Arial";
-        ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 220);
+        ctx.font = "bold 50px Arial";
+        ctx.fillText("Credencial de Acceso", leftX + leftWidth / 2, 450);
 
-        ctx.font = "bold 18px Arial";
-        ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 250);
+        ctx.font = "bold 40px Arial";
+        ctx.fillText("CASA TRES AGUAS", leftX + leftWidth / 2, 520);
 
-        // Recuadro para foto o espacio central
+        // Recuadro para la foto o espacio central
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 1;
-        ctx.strokeRect(100, 270, 200, 250); // Posición y dimensiones del cuadro
+        ctx.strokeRect(leftX + 237, 600, 400, 500);
 
         // Información del usuario
         ctx.textAlign = "left";
-        ctx.font = "16px Arial";
-        ctx.fillText(`Nombre: ${nombre}`, 20, 550);
-        ctx.fillText(`Puesto: ${puesto}`, 20, 580);
-        ctx.fillText(`Empresa: ${empresa}`, 20, 610);
-        ctx.fillText(`NSS: ${nss}`, 20, 640);
-        ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 20, 670);
+        ctx.font = "30px Arial";
+        ctx.fillText(`Nombre: ${nombre}`, leftX + 50, 1150);
+        ctx.fillText(`Puesto: ${puesto}`, leftX + 50, 1200);
+        ctx.fillText(`Empresa: ${empresa}`, leftX + 50, 1250);
+        ctx.fillText(`NSS: ${nss}`, leftX + 50, 1300);
+        ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, leftX + 50, 1350);
 
-        // Código QR
+        // Dibujar el QR
         const qrImage = new Image();
         qrImage.src = qrContainer.querySelector("img").src; // Usar el QR generado previamente
         qrImage.onload = () => {
-            ctx.drawImage(qrImage, 125, 700, 150, 150); // Ajustar posición y tamaño del QR
+            ctx.drawImage(qrImage, leftX + 262, 1450, 350, 350); // Ajustar posición y tamaño del QR
         };
     };
+
+    // **Mitad derecha (instrucciones futura)**
+    const rightX = leftX + leftWidth; // Inicio de la mitad derecha
+    const rightWidth = leftWidth;
+
+    // Fondo blanco para instrucciones
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(rightX, 0, rightWidth, credencialCanvas.height);
+
+    // Por ahora, dejamos esta sección en blanco para futuras instrucciones.
 });
 
     // Botón 3: Autorizar y Descargar
