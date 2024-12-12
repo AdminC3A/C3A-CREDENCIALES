@@ -64,7 +64,7 @@ function generateCredential(name, position, company, qrCode, index) {
       link.click();
 
       // Mostrar credencial generada en la página
-      document.getElementById("output").appendChild(canvas);
+      document.getElementById("output").appendChild(canvas); 
     };
   };
 
@@ -72,3 +72,11 @@ function generateCredential(name, position, company, qrCode, index) {
     console.error("Error al cargar el logo. Verifica la ruta.");
   };
 }
+
+// Ejemplo de uso:
+// Suponiendo que tienes una función generarCodigoQR(nombre) que devuelve el código QR
+const nombre = "Juan Pérez";
+const puesto = "Supervisor";
+const empresa = "Elemento Arquitectura Interior";
+const qrCode = generarCodigoQR(nombre); 
+generateCredential(nombre, puesto, empresa, qrCode, 0);
