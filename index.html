@@ -5,53 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Credenciales</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
 <body>
     <header>
         <h1>Generador de Credenciales</h1>
     </header>
     <main>
-        <section>
-            <h2>Generar Credenciales Individualmente</h2>
-            <div>
-                <label for="nombre">Nombre Completo:</label>
-                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
-            </div>
-            <div>
-                <label for="puesto">Puesto:</label>
-                <input type="text" id="puesto" placeholder="Ingresa el puesto">
-            </div>
-            <div>
-                <label for="empresa">Empresa:</label>
-                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
-            </div>
-              <div>
-               <label for="codigoQR">Código QR (opcional):</label>
-                <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
-              </div>
-            <button id="generarUno" onclick="generateCredential()">Generar Credencial</button>
-        </section>
+        <form id="credential-form">
+            <label for="name">Nombre Completo:</label>
+            <input type="text" id="name" required>
 
-        <section>
-            <h2>Generar Credenciales con Archivo Excel/CSV</h2>
-            <div>
-                <label for="fileInput">Subir archivo Excel/CSV:</label>
-                <input type="file" id="fileInput" accept=".xlsx, .csv">
-            </div>
-            <button id="generarArchivo">Generar Credenciales</button>
-        </section>
+            <label for="position">Puesto:</label>
+            <input type="text" id="position" required>
 
-        <p id="status">Por favor, llena los datos o sube un archivo para comenzar.</p>
+            <button type="submit">Generar Credencial</button>
+        </form>
 
-        <div id="credentials-container"> 
+        <div id="credential-container" style="display: none;">
+            <canvas id="credential" width="400" height="600"></canvas>
+            <button id="download">Descargar Credencial</button>
         </div>
-
     </main>
     <footer>
-        <p>© 2024 Elemento Arquitectura Interior</p>
+        <p>Elemento Arquitectura Interior © 2024</p>
     </footer>
-    <script src="js/xlsx.full.min.js"></script>
-    <script src="js/qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
