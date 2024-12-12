@@ -11,7 +11,7 @@ function generateOneCredential() {
         return;
     }
 
-    const qrCode = ${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)};
+    const qrCode = `${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)}`;
     generateCredential(name, position, company, qrCode, 0);
 }
 
@@ -40,7 +40,7 @@ function handleFile() {
             const name = row["Nombre Completo"];
             const position = row["Puesto"];
             const company = row["Empresa"] || "Elemento Arquitectura Interior";
-            const qrCode = ${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)};
+            const qrCode = `${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)}`;
             generateCredential(name, position, company, qrCode, index);
         });
 
@@ -56,11 +56,12 @@ function generateCredential(name, position, company, qrCode, index) {
     canvas.height = 600;
     const ctx = canvas.getContext("2d");
 
+    // Fondo blanco
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const logo = new Image();
-    logo.src = "logo.png";
+    logo.src = "logo.png"; // Asegúrate de que el logo está en la carpeta correcta
     logo.onload = function () {
         ctx.drawImage(logo, 30, 30, 150, 150);
 
@@ -68,10 +69,11 @@ function generateCredential(name, position, company, qrCode, index) {
         ctx.font = "bold 40px Arial";
         ctx.fillText("Credencial de Acceso", 200, 70);
         ctx.font = "30px Arial";
-        ctx.fillText(Nombre: ${name}, 200, 150);
-        ctx.fillText(Puesto: ${position}, 200, 200);
-        ctx.fillText(Empresa: ${company}, 200, 250);
+        ctx.fillText(`Nombre: ${name}`, 200, 150);
+        ctx.fillText(`Puesto: ${position}`, 200, 200);
+        ctx.fillText(`Empresa: ${company}`, 200, 250);
 
+        // Generar QR
         const qrCanvas = document.createElement("canvas");
         new QRCode(qrCanvas, {
             text: qrCode,
@@ -80,16 +82,4 @@ function generateCredential(name, position, company, qrCode, index) {
         });
 
         const qrImg = new Image();
-        qrImg.src = qrCanvas.toDataURL("image/png");
-        qrImg.onload = function () {
-            ctx.drawImage(qrImg, 750, 100, 150, 150);
-
-            const link = document.createElement("a");
-            link.href = canvas.toDataURL("image/png");
-            link.download = credencial_${index + 1}.png;
-            link.click();
-
-            document.getElementById("output").appendChild(canvas);
-        };
-    };
-}
+        qrImg.src = qrCanvas.toDataURL("
