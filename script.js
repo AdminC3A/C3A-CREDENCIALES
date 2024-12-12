@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const generarQRBtn = document.getElementById("generarQR");
     const generarCredencialBtn = document.getElementById("generarCredencial");
+    const agregarFotoBtn = document.getElementById("agregarFoto");
     const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
     const qrContainer = document.getElementById("imagenQRPreview");
     const credencialCanvas = document.getElementById("credencialCanvas");
@@ -20,23 +21,19 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Generar iniciales y el código QR
         const palabrasNombre = nombre.split(" ");
         const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
         const inicialPuesto = puesto.charAt(0).toUpperCase();
         const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
 
-        // Código ASCII y ceros intermedios
         const codigoASCII = nombre.charCodeAt(0).toString();
         const totalLength = 8;
         const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
         const codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
 
-        // Mostrar el QR generado
         document.getElementById("codigoQR").value = codigoQR;
-        qrContainer.innerHTML = ""; // Limpiar el contenedor del QR anterior
+        qrContainer.innerHTML = "";
 
-        // Generar el QR visual
         try {
             new QRCode(qrContainer, {
                 text: codigoQR,
@@ -49,9 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // **Evento para cargar la imagen al recuadro**
-    qrContainer.addEventListener("dblclick", () => {
-        imagenInput.click(); // Abrir selector de archivo al hacer doble clic
+    // **Evento para agregar la foto**
+    agregarFotoBtn.addEventListener("click", () => {
+        imagenInput.click(); // Abrir el selector de archivos
     });
 
     imagenInput.addEventListener("change", (event) => {
@@ -72,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // **Evento para generar la credencial**
     generarCredencialBtn.addEventListener("click", () => {
-        credencialCanvas.width = 874; // Ancho de la credencial (7.4 cm a 300 DPI)
-        credencialCanvas.height = 2480; // Altura del díptico abierto (21 cm a 300 DPI)
+        credencialCanvas.width = 874;
+        credencialCanvas.height = 2480;
 
         const ctx = credencialCanvas.getContext("2d");
         ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
@@ -90,33 +87,28 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Fondo blanco
         ctx.fillStyle = "#fff";
         ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-        // Dibujar el logo
         const logo = new Image();
         logo.src = "logo.png";
         logo.onload = () => {
             ctx.drawImage(logo, 237, 60, 400, 400);
 
-            // Títulos
             ctx.fillStyle = "#000";
             ctx.textAlign = "center";
             ctx.font = "bold 30px Arial";
             ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 500);
             ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 550);
 
-            // Recuadro para la foto
             if (imagenSeleccionada) {
                 ctx.drawImage(imagenSeleccionada, 237, 600, 400, 400);
             } else {
                 ctx.strokeStyle = "#000";
                 ctx.lineWidth = 2;
-                ctx.strokeRect(237, 600, 400, 400); // Recuadro si no hay imagen
+                ctx.strokeRect(237, 600, 400, 400);
             }
 
-            // Información del usuario
             ctx.textAlign = "left";
             ctx.font = "20px Arial";
             ctx.fillText(`Nombre: ${nombre}`, 50, 1050);
@@ -125,18 +117,15 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillText(`NSS: ${nss}`, 50, 1200);
             ctx.fillText(`Fecha de Nacimiento: ${fechaNacimiento}`, 50, 1250);
 
-            // Dibujar el QR generado
             const qrImage = new Image();
-            qrImage.src = qrContainer.querySelector("img").src; // Obtener el QR generado
+            qrImage.src = qrContainer.querySelector("img").src;
             qrImage.onload = () => {
                 ctx.drawImage(qrImage, 237, 1350, 400, 400);
             };
         };
     });
 
-    // **Evento para autorizar y descargar**
     autorizarDescargarBtn.addEventListener("click", () => {
-        // Descarga de la credencial generada
         const link = document.createElement("a");
         link.href = credencialCanvas.toDataURL("image/png");
         link.download = `Credencial-${document.getElementById("codigoQR").value}.png`;
