@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
         const logo = new Image();
-        logo.src = 'logo.png';
+        logo.src = 'logo.png'; // Asegúrate de tener el logo en tu directorio
         logo.onload = function () {
             ctx.drawImage(logo, 225, 30, 150, 150);
 
