@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     imagenInput.accept = "image/*";
 
     let imagenSeleccionada = null; // Variable para almacenar la imagen cargada
+    let qrGenerado = null; // Variable para almacenar el QR generado
 
     // **Evento para generar el código QR**
     generarQRBtn.addEventListener("click", () => {
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
 
         document.getElementById("codigoQR").value = codigoQR;
+        qrGenerado = codigoQR;
         qrContainer.innerHTML = "";
 
         try {
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // **Evento para cargar la foto desde archivo**
     cargarFotoArchivoBtn.addEventListener("click", () => {
-        imagenInput.click(); // Abrir el selector de archivos
+        imagenInput.click(); // Abrir selector de archivos
     });
 
     imagenInput.addEventListener("change", (event) => {
