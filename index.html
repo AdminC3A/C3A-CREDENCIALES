@@ -31,21 +31,18 @@
                 <label for="codigoQR">Código QR (opcional):</label>
                 <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
             </div>
-            <button id="generarQR" class="btn btn-primary">Generar QR</button>
-            <button id="generarUno" class="btn btn-success">Generar Credencial</button>
-        </section>
 
-        <!-- Generación por Archivo -->
-        <section class="card">
-            <h2>Generar Credenciales con Archivo Excel/CSV</h2>
-            <div class="form-group">
-                <label for="fileInput">Subir archivo Excel/CSV:</label>
-                <input type="file" id="fileInput" accept=".xlsx, .csv">
+            <!-- Botones numerados -->
+            <div class="button-group">
+                <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
+                <button id="imagenQR" class="btn btn-secondary">2. Imagen QR</button>
+                <button id="generarUno" class="btn btn-success">3. Generar Credencial</button>
             </div>
-            <button id="generarArchivo" class="btn btn-dark">Generar Credenciales</button>
+
+            <!-- Espacio para mostrar la imagen QR -->
+            <div id="imagenQRPreview" class="qr-preview"></div>
         </section>
 
-        <p id="status" class="text-muted">Por favor, llena los datos o sube un archivo para comenzar.</p>
         <div id="output"></div>
     </main>
     <footer>
