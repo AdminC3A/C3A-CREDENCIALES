@@ -15,71 +15,90 @@ document.addEventListener("DOMContentLoaded", () => {
     let imagenSeleccionada = null; // Variable para almacenar la imagen cargada o capturada
 
     /**
-     * Módulo 2: Generar Código QR
-     * Genera un código QR y lo muestra en el cuadro designado.
-     */
-    generarQRBtn.addEventListener("click", () => {
-        const nombre = document.getElementById("nombre").value.trim();
-        const puesto = document.getElementById("puesto").value.trim();
+ * Modulo 2: Cargar foto desde archivo
+ */
+cargarFotoArchivoBtn.addEventListener("click", () => {
+    const imagenInput = document.createElement("input");
+    imagenInput.type = "file";
+    imagenInput.accept = "image/*";
+    imagenInput.click();
 
-        if (!nombre || !puesto) {
-            alert("Por favor, completa los campos de Nombre y Puesto.");
-            return;
-        }
-
-        // Generar el código QR basado en iniciales y ASCII
-        const palabrasNombre = nombre.split(" ");
-        const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
-        const inicialPuesto = puesto.charAt(0).toUpperCase();
-        const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
-        const codigoASCII = nombre.charCodeAt(0).toString();
-        const totalLength = 8;
-        const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
-        const codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
-
-        document.getElementById("codigoQR").value = codigoQR;
-        qrContainer.innerHTML = ""; // Limpiar contenido anterior
-
-        try {
-            new QRCode(qrContainer, {
-                text: codigoQR,
-                width: 150,
-                height: 150,
-            });
-            console.log(`Código QR generado: ${codigoQR}`);
-        } catch (error) {
-            console.error("Error al generar el QR:", error);
-        }
-    });
-
-    /**
-     * Módulo 3: Cargar foto desde archivo
-     * Permite al usuario cargar una foto desde su dispositivo.
-     */
-    cargarFotoArchivoBtn.addEventListener("click", () => {
-        const imagenInput = document.createElement("input");
-        imagenInput.type = "file";
-        imagenInput.accept = "image/*";
-        imagenInput.click();
-
-        imagenInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        imagenSeleccionada = img; // Guardar la imagen
-                        fotoContainer.innerHTML = ""; // Limpiar contenedor anterior
-                        fotoContainer.appendChild(img); // Mostrar imagen en cuadro
-                        alert("Imagen cargada correctamente.");
-                    };
-                    img.src = e.target.result;
+    imagenInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    imagenSeleccionada = img; // Guardar la imagen
+                    fotoContainer.innerHTML = ""; // Limpiar contenedor anterior
+                    const canvasFoto = document.createElement("canvas");
+                    canvasFoto.width = 150;
+                    canvasFoto.height = 150;
+                    const ctx = canvasFoto.getContext("2d");
+                    ctx.clearRect(0, 0, canvasFoto.width, canvasFoto.height);
+                    ctx.beginPath();
+                    ctx.arc(75, 75, 75, 0, Math.PI * 2, true);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(img, 0, 0, 150, 150);
+                    fotoContainer.appendChild(canvasFoto); // Mostrar la previsualización circular
+                    alert("Imagen cargada correctamente. Ahora puedes generar la credencial.");
                 };
-                reader.readAsDataURL(file);
-            }
-        });
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     });
+});
+
+/**
+ * Modulo 3: Cargar foto desde cámara
+ */
+cargarFotoCamaraBtn.addEventListener("click", () => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            const video = document.createElement("video");
+            video.srcObject = stream;
+            video.play();
+
+            const captureButton = document.createElement("button");
+            captureButton.textContent = "Capturar";
+            document.body.append(video, captureButton);
+
+            captureButton.addEventListener("click", () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = 400;
+                canvas.height = 400;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const img = new Image();
+                img.onload = () => {
+                    imagenSeleccionada = img; // Guardar la imagen
+                    fotoContainer.innerHTML = ""; // Limpiar contenedor anterior
+                    const canvasFoto = document.createElement("canvas");
+                    canvasFoto.width = 150;
+                    canvasFoto.height = 150;
+                    const ctxPreview = canvasFoto.getContext("2d");
+                    ctxPreview.clearRect(0, 0, canvasFoto.width, canvasFoto.height);
+                    ctxPreview.beginPath();
+                    ctxPreview.arc(75, 75, 75, 0, Math.PI * 2, true);
+                    ctxPreview.closePath();
+                    ctxPreview.clip();
+                    ctxPreview.drawImage(img, 0, 0, 150, 150);
+                    fotoContainer.appendChild(canvasFoto); // Mostrar la previsualización circular
+                    alert("Imagen capturada correctamente. Ahora puedes generar la credencial.");
+                };
+                img.src = canvas.toDataURL();
+                stream.getTracks().forEach(track => track.stop()); // Detener la cámara
+                video.remove();
+                captureButton.remove();
+            });
+        })
+        .catch((error) => {
+            console.error("Error al acceder a la cámara:", error);
+        });
+});
 
     /**
  * Modulo 4: Generar la credencial
