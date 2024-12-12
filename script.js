@@ -9,6 +9,18 @@ function generateCredential() {
   const nombre = document.getElementById("nombreInput").value;
   const puesto = document.getElementById("puestoInput").value;
   const empresa = document.getElementById("empresaInput").value;
+   // Mostrar el código QR y el mensaje
+    const qrContainer = document.createElement("div");
+    qrContainer.classList.add("qr-container"); // Agrega una clase CSS para personalizar el estilo
+
+    const qrMessage = document.createElement("p");
+    qrMessage.textContent = "QR GENERADO";
+    qrContainer.appendChild(qrMessage);
+
+    qrContainer.appendChild(qrCanvas); // Agrega el canvas con el código QR al contenedor
+
+    document.getElementById("credentials-container").appendChild(qrContainer);
+}
 
   // Generar el código QR
   const qrCode = generarCodigoQR(nombre);
