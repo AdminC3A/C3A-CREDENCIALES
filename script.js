@@ -1,22 +1,22 @@
 // Espera a que el DOM esté completamente cargado
-// Este módulo contiene las funciones principales para generar QR, cargar fotos y generar la credencial.
 document.addEventListener("DOMContentLoaded", () => {
     /**
-     * Selección de elementos del DOM
+     * Módulo 1: Selección de elementos del DOM
+     * Selecciona todos los elementos que se utilizarán para realizar las acciones.
      */
     const generarQRBtn = document.getElementById("generarQR");
     const generarCredencialBtn = document.getElementById("generarCredencial");
     const cargarFotoArchivoBtn = document.getElementById("cargarFotoArchivo");
     const cargarFotoCamaraBtn = document.getElementById("cargarFotoCamara");
     const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
-    const qrContainer = document.getElementById("imagenQRPreview");
-    const fotoContainer = document.getElementById("fotoPreview");
-    const credencialCanvas = document.getElementById("credencialCanvas");
-
+    const qrContainer = document.getElementById("qrCanvas"); // Donde aparece el QR
+    const fotoContainer = document.getElementById("fotoCanvas"); // Donde aparece la foto cargada
+    const credencialCanvas = document.getElementById("credencialCanvas"); // Canvas para dibujar la credencial
     let imagenSeleccionada = null; // Variable para almacenar la imagen cargada o capturada
 
     /**
-     * Modulo 1: Generar Código QR
+     * Módulo 2: Generar Código QR
+     * Genera un código QR y lo muestra en el cuadro designado.
      */
     generarQRBtn.addEventListener("click", () => {
         const nombre = document.getElementById("nombre").value.trim();
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Generar el código QR basado en las iniciales y código ASCII
+        // Generar el código QR basado en iniciales y ASCII
         const palabrasNombre = nombre.split(" ");
         const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
         const inicialPuesto = puesto.charAt(0).toUpperCase();
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
 
         document.getElementById("codigoQR").value = codigoQR;
-        qrContainer.innerHTML = ""; // Limpiar contenedor anterior
+        qrContainer.innerHTML = ""; // Limpiar contenido anterior
 
         try {
             new QRCode(qrContainer, {
@@ -53,7 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Modulo 2: Cargar foto desde archivo
+     * Módulo 3: Cargar foto desde archivo
+     * Permite al usuario cargar una foto desde su dispositivo.
      */
     cargarFotoArchivoBtn.addEventListener("click", () => {
         const imagenInput = document.createElement("input");
@@ -69,9 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const img = new Image();
                     img.onload = () => {
                         imagenSeleccionada = img; // Guardar la imagen
-                        fotoContainer.innerHTML = "";
-                        fotoContainer.appendChild(img); // Mostrar en el cuadro
-                        alert("Imagen cargada correctamente. Ahora puedes generar la credencial.");
+                        fotoContainer.innerHTML = ""; // Limpiar contenedor anterior
+                        fotoContainer.appendChild(img); // Mostrar imagen en cuadro
+                        alert("Imagen cargada correctamente.");
                     };
                     img.src = e.target.result;
                 };
@@ -81,7 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Modulo 3: Cargar foto desde cámara
+     * Módulo 4: Cargar foto desde cámara
+     * Accede a la cámara del dispositivo, permite capturar una foto y la muestra.
      */
     cargarFotoCamaraBtn.addEventListener("click", () => {
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -92,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const captureButton = document.createElement("button");
                 captureButton.textContent = "Capturar";
-
                 captureButton.addEventListener("click", () => {
                     const canvas = document.createElement("canvas");
                     canvas.width = 400;
@@ -101,10 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     const img = new Image();
                     img.onload = () => {
-                        imagenSeleccionada = img; // Guardar la imagen
-                        fotoContainer.innerHTML = "";
-                        fotoContainer.appendChild(img); // Mostrar en el cuadro
-                        alert("Imagen capturada correctamente. Ahora puedes generar la credencial.");
+                        imagenSeleccionada = img; // Guardar imagen
+                        fotoContainer.innerHTML = ""; // Limpiar contenedor anterior
+                        fotoContainer.appendChild(img); // Mostrar imagen capturada
+                        alert("Imagen capturada correctamente.");
                         stream.getTracks().forEach(track => track.stop()); // Detener la cámara
                         document.body.removeChild(video);
                         document.body.removeChild(captureButton);
@@ -120,11 +121,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Modulo 4: Generar la credencial
+     * Módulo 5: Generar credencial
+     * Dibuja todos los elementos (QR, foto, texto) en el canvas de la credencial.
      */
     generarCredencialBtn.addEventListener("click", () => {
-        credencialCanvas.width = 744; // Ajustado para 7.4 cm
-        credencialCanvas.height = 1050; // Ajustado para 10.5 cm
+        credencialCanvas.width = 744; // 7.4 cm
+        credencialCanvas.height = 1050; // 10.5 cm
 
         const ctx = credencialCanvas.getContext("2d");
         ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
@@ -141,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Fondo blanco
+        // Dibujar fondo blanco
         ctx.fillStyle = "#fff";
         ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
@@ -185,7 +187,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Modulo 5: Autorizar y descargar
+     * Módulo 6: Autorizar y descargar
+     * Permite descargar la credencial generada como una imagen PNG.
      */
     autorizarDescargarBtn.addEventListener("click", () => {
         const link = document.createElement("a");
