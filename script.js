@@ -88,7 +88,7 @@ generarCredencialBtn.addEventListener('click', () => {
         // Descargar credencial
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
-        link.download = 'credencial.png';
+        link.download = `Credencial-${codigoQR}.png`; // Nombre dinámico del archivo
         link.click();
 
         // Mostrar la credencial generada en pantalla
