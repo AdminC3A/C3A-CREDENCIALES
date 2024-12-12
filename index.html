@@ -3,66 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar QR</title>
-    <script src="js/qrcode.min.js"></script> <!-- Enlace al archivo local -->
+    <title>Generador de Código QR</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Archivo CSS -->
+    <script src="js/qrcode.min.js"></script> <!-- Biblioteca QR -->
+    <script src="script.js" defer></script> <!-- Archivo JavaScript -->
 </head>
 <body>
-    <h1>Generador de Código QR</h1>
-    <div id="qrcode" style="margin: 20px;"></div>
+    <header>
+        <h1>Generador de Código QR</h1>
+    </header>
+    <main>
+        <!-- Formulario para generar iniciales y el QR -->
+        <form id="qrForm" class="form-container">
+            <label for="nombre">Nombre Completo:</label>
+            <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
 
-    <!-- Formulario para generar iniciales y el QR -->
-    <form id="qrForm">
-        <label for="nombre">Nombre Completo:</label>
-        <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
+            <label for="empresa">Empresa:</label>
+            <input type="text" id="empresa" placeholder="Ingresa la empresa" required>
 
-        <label for="empresa">Empresa:</label>
-        <input type="text" id="empresa" placeholder="Ingresa la empresa" required>
+            <button type="button" id="generarQR" class="btn">Generar QR</button>
+        </form>
 
-        <button type="button" id="generarQR">Generar QR</button>
-    </form>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const qrContainer = document.getElementById("qrcode");
-            const generarQRBtn = document.getElementById("generarQR");
-
-            generarQRBtn.addEventListener("click", () => {
-                const nombre = document.getElementById("nombre").value.trim();
-                const empresa = document.getElementById("empresa").value.trim();
-
-                if (!nombre || !empresa) {
-                    alert("Por favor, completa todos los campos.");
-                    return;
-                }
-
-                // Generar las iniciales y el código QR
-                const nombres = nombre.split(" ");
-                const primerNombre = nombres[0] || "";
-                const primerApellido = nombres[1] || "";
-                const primeraLetraEmpresa = empresa.charAt(0) || "";
-
-                const iniciales = `${primerNombre.charAt(0)}${primerApellido.charAt(0)}${primeraLetraEmpresa}`.toUpperCase();
-                const codigoASCII = primerNombre.charCodeAt(0).toString(); // Código ASCII de la primera letra del nombre
-
-                // Formato 0000DE68
-                const codigoQR = `${iniciales}${codigoASCII.padStart(5, "0")}`.substring(0, 8);
-
-                // Limpiar QR anterior
-                qrContainer.innerHTML = "";
-
-                // Generar nuevo QR
-                try {
-                    new QRCode(qrContainer, {
-                        text: codigoQR,
-                        width: 150,
-                        height: 150,
-                    });
-                    console.log(`Código QR generado: ${codigoQR}`);
-                } catch (error) {
-                    console.error("Error al generar el QR:", error);
-                }
-            });
-        });
-    </script>
+        <!-- Contenedor para el QR generado -->
+        <div id="qrcode" class="qr-container">Aquí aparecerá tu QR</div>
+    </main>
 </body>
 </html>
