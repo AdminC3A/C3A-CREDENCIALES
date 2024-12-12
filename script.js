@@ -1,21 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
     const generarQRBtn = document.getElementById("generarQR");
+    const generarCredencialBtn = document.getElementById("generarCredencial");
     const cargarFotoArchivoBtn = document.getElementById("cargarFotoArchivo");
     const cargarFotoCamaraBtn = document.getElementById("cargarFotoCamara");
-    const generarCredencialBtn = document.getElementById("generarCredencial");
     const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
-
-    const qrCanvas = document.getElementById("qrCanvas");
-    const fotoCanvas = document.getElementById("fotoCanvas");
+    const qrContainer = document.getElementById("imagenQRPreview");
+    const fotoContainer = document.getElementById("imagenFotoPreview");
     const credencialCanvas = document.getElementById("credencialCanvas");
+    const imagenInput = document.createElement("input");
+    imagenInput.type = "file";
+    imagenInput.accept = "image/*";
 
+    let codigoQR = ""; // Variable global para el QR
     let imagenSeleccionada = null; // Variable para la imagen cargada
 
     // **Generar QR**
     generarQRBtn.addEventListener("click", () => {
-        const qrContext = qrCanvas.getContext("2d");
-        qrContext.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
-
         const nombre = document.getElementById("nombre").value.trim();
         const puesto = document.getElementById("puesto").value.trim();
 
@@ -24,46 +24,51 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const codigoQR = `${nombre.charAt(0)}${puesto.charAt(0)}0000`;
-        const qrCode = new QRCode(document.createElement("div"), {
-            text: codigoQR,
-            width: 150,
-            height: 150,
-        });
+        const palabrasNombre = nombre.split(" ");
+        const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
+        const inicialPuesto = puesto.charAt(0).toUpperCase();
+        const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
 
-        qrCode._el.children[0].toBlob((blob) => {
-            const img = new Image();
-            img.onload = () => {
-                qrContext.drawImage(img, 0, 0, 150, 150);
-            };
-            img.src = URL.createObjectURL(blob);
-        });
+        const codigoASCII = nombre.charCodeAt(0).toString();
+        const totalLength = 8;
+        const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
+        codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
+        document.getElementById("codigoQR").value = codigoQR;
+
+        qrContainer.innerHTML = "";
+        try {
+            new QRCode(qrContainer, {
+                text: codigoQR,
+                width: 150,
+                height: 150,
+            });
+            console.log(`Código QR generado: ${codigoQR}`);
+        } catch (error) {
+            console.error("Error al generar el QR:", error);
+        }
     });
 
     // **Cargar Foto desde Archivo**
     cargarFotoArchivoBtn.addEventListener("click", () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-        input.click();
+        imagenInput.click(); // Abrir selector de archivos
+    });
 
-        input.onchange = (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const fotoContext = fotoCanvas.getContext("2d");
-                        fotoContext.clearRect(0, 0, fotoCanvas.width, fotoCanvas.height);
-                        fotoContext.drawImage(img, 0, 0, 150, 150);
-                        imagenSeleccionada = img;
-                    };
-                    img.src = e.target.result;
+    imagenInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    imagenSeleccionada = img;
+                    fotoContainer.innerHTML = "";
+                    fotoContainer.appendChild(img); // Mostrar imagen
+                    alert("Imagen cargada correctamente.");
                 };
-                reader.readAsDataURL(file);
-            }
-        };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     });
 
     // **Cargar Foto desde Cámara**
@@ -71,21 +76,27 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 const video = document.createElement("video");
-                const captureButton = document.createElement("button");
                 video.srcObject = stream;
                 video.play();
 
+                const captureButton = document.createElement("button");
                 captureButton.textContent = "Capturar";
-                captureButton.onclick = () => {
-                    const fotoContext = fotoCanvas.getContext("2d");
-                    fotoContext.clearRect(0, 0, fotoCanvas.width, fotoCanvas.height);
-                    fotoContext.drawImage(video, 0, 0, 150, 150);
-                    imagenSeleccionada = fotoCanvas;
-
-                    stream.getTracks().forEach(track => track.stop());
-                    video.remove();
-                    captureButton.remove();
-                };
+                captureButton.addEventListener("click", () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 150;
+                    canvas.height = 150;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const img = new Image();
+                    img.onload = () => {
+                        imagenSeleccionada = img;
+                        fotoContainer.innerHTML = "";
+                        fotoContainer.appendChild(img);
+                        stream.getTracks().forEach(track => track.stop()); // Detener cámara
+                        alert("Imagen capturada correctamente.");
+                    };
+                    img.src = canvas.toDataURL();
+                });
 
                 document.body.append(video, captureButton);
             })
@@ -94,20 +105,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // **Generar Credencial**
     generarCredencialBtn.addEventListener("click", () => {
-        // Dibuja QR y foto en credencial
-        const credencialContext = credencialCanvas.getContext("2d");
-        credencialContext.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
-        credencialContext.drawImage(qrCanvas, 50, 50, 150, 150);
-        if (imagenSeleccionada) {
-            credencialContext.drawImage(imagenSeleccionada, 50, 250, 150, 150);
+        credencialCanvas.width = 744; // 7.4 cm
+        credencialCanvas.height = 1050; // 10.5 cm
+
+        const ctx = credencialCanvas.getContext("2d");
+        ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const puesto = document.getElementById("puesto").value.trim();
+        const empresa = document.getElementById("empresa").value.trim();
+        const nss = document.getElementById("nss").value.trim();
+        const fechaNacimiento = document.getElementById("fechaNacimiento").value.trim();
+
+        if (!nombre || !puesto || !empresa || !nss || !fechaNacimiento || !codigoQR) {
+            alert("Por favor, completa todos los campos.");
+            return;
         }
+
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+
+        const logo = new Image();
+        logo.src = "logo.png";
+        logo.onload = () => {
+            ctx.drawImage(logo, 172, 20, 400, 400);
+
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "center";
+            ctx.font = "bold 24px Arial";
+            ctx.fillText("Credencial de Acceso", credencialCanvas.width / 2, 450);
+            ctx.fillText("CASA TRES AGUAS", credencialCanvas.width / 2, 500);
+
+            if (imagenSeleccionada) {
+                ctx.drawImage(imagenSeleccionada, 172, 550, 400, 400);
+            } else {
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(172, 550, 400, 400);
+            }
+
+            const qrImage = new Image();
+            qrImage.src = qrContainer.querySelector("img").src;
+            qrImage.onload = () => {
+                ctx.drawImage(qrImage, 172, 1000, 400, 400);
+            };
+        };
     });
 
     // **Autorizar y Descargar**
     autorizarDescargarBtn.addEventListener("click", () => {
+        if (!codigoQR) {
+            alert("Genera un código QR antes de descargar la credencial.");
+            return;
+        }
         const link = document.createElement("a");
         link.href = credencialCanvas.toDataURL("image/png");
-        link.download = "Credencial.png";
+        link.download = `Credencial-${codigoQR}.png`;
         link.click();
     });
 });
