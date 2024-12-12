@@ -1,65 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Credenciales</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.0.0/qrcode.min.js"></script>
-    <style>
-        #contenedor-qr {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form id="formulario">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" required>
-        <label for="puesto">Puesto:</label>
-        <input type="text" id="puesto" required>
-        <label for="empresa">Empresa:</label>
-        <input type="text" id="empresa" required>
-        <label for="codigoQR">Código QR:</label>
-        <input type="text" id="codigoQR" required>
-        <button type="button" id="generarCredencial">Generar Credencial</button>
-    </form>
-    <div id="contenedor-qr"></div>
+    <header>
+        <h1>Generador de Credenciales</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Generar Credenciales Individualmente</h2>
+            <div>
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
+            </div>
+            <div>
+                <label for="puesto">Puesto:</label>
+                <input type="text" id="puesto" placeholder="Ingresa el puesto">
+            </div>
+            <div>
+                <label for="empresa">Empresa:</label>
+                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
+            </div>
+            <button id="generarUno">Generar Credencial</button>
+        </section>
 
-    <script>
-        const generarCredencialBtn = document.getElementById('generarCredencial');
-        generarCredencialBtn.addEventListener('click', () => {
-            const nombre = document.getElementById('nombre').value;
-            const puesto = document.getElementById('puesto').value;
-            const empresa = document.getElementById('empresa').value;
-            const codigoQR = document.getElementById('codigoQR').value;
+        <section>
+            <h2>Generar Credenciales con Archivo Excel/CSV</h2>
+            <div>
+                <label for="fileInput">Subir archivo Excel/CSV:</label>
+                <input type="file" id="fileInput" accept=".xlsx, .csv">
+            </div>
+            <button id="generarArchivo">Generar Credenciales</button>
+        </section>
 
-            // Construir el texto del código QR (puedes personalizar esto)
-            const textoQR = `Nombre: ${nombre}\nPuesto: ${puesto}\nEmpresa: ${empresa}`;
-
-            // Crear un elemento canvas para el código QR
-            const qrCanvas = document.createElement('canvas');
-            qrCanvas.id = 'qr-canvas';
-            document.body.appendChild(qrCanvas);
-
-            // Generar el código QR
-            new QRCode(qrCanvas, {
-                text: textoQR,
-                width: 200,
-                height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-            });
-
-            // Mostrar el canvas con el código QR
-            const contenedorQR = document.getElementById('contenedor-qr');
-            contenedorQR.innerHTML = ''; // Limpiar el contenedor antes de agregar el nuevo QR
-            contenedorQR.appendChild(qrCanvas);
-
-            // Opción para descargar el código QR
-            const downloadLink = document.createElement('a');
-            downloadLink.href = qrCanvas.toDataURL();
-            downloadLink.download = 'codigoQR.png';
-            downloadLink.textContent = 'Descargar QR';
-            contenedorQR.appendChild(downloadLink);
-        });
-    </script>
+        <p id="status">Por favor, llena los datos o sube un archivo para comenzar.</p>
+        <div id="output"></div>
+    </main>
+    <footer>
+        <p>© 2024 Elemento Arquitectura Interior</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
