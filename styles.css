@@ -91,3 +91,12 @@ button {
     margin-top: 20px;
     color: #666;
 }
+.credencial-preview {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    display: block;
+    margin: 0 auto;
+    width: 600px;
+    height: 400px;
+}
