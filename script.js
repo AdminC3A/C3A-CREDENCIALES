@@ -1,41 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const qrContainer = document.getElementById("qrcode");
+    const qrContainer = document.getElementById("imagenQRPreview");
     const generarQRBtn = document.getElementById("generarQR");
+    const codigoQRInput = document.getElementById("codigoQR");
 
     generarQRBtn.addEventListener("click", () => {
         const nombre = document.getElementById("nombre").value.trim();
+        const puesto = document.getElementById("puesto").value.trim();
         const empresa = document.getElementById("empresa").value.trim();
 
-        if (!nombre || !empresa) {
+        if (!nombre || !puesto || !empresa) {
             alert("Por favor, completa todos los campos.");
             return;
         }
 
-        // Generar las iniciales y el código QR
+        // Generar iniciales y código QR
         const nombres = nombre.split(" ");
-        const primerNombre = nombres[0] || "";
-        const primerApellido = nombres[1] || "";
-        const primeraLetraEmpresa = empresa.charAt(0) || "";
+        const iniciales = `${nombres[0]?.charAt(0) || ""}${nombres[1]?.charAt(0) || ""}${empresa.charAt(0) || ""}`.toUpperCase();
+        const codigoASCII = nombres[0]?.charCodeAt(0)?.toString() || "0";
 
-        const iniciales = `${primerNombre.charAt(0)}${primerApellido.charAt(0)}${primeraLetraEmpresa}`.toUpperCase();
-        const codigoASCII = primerNombre.charCodeAt(0).toString(); // Código ASCII de la primera letra del nombre
+        // Formato: 0000DE68
+        const codigoQR = `${"0000"}${iniciales}${codigoASCII.slice(-2)}`.slice(0, 8);
 
-        // Formato 0000DE68
-        const codigoQR = `${iniciales}${codigoASCII.padStart(5, "0")}`.substring(0, 8);
+        // Mostrar en el campo opcional
+        codigoQRInput.value = codigoQR;
 
-        // Limpiar QR anterior
+        // Generar QR visual
         qrContainer.innerHTML = "";
-
-        // Generar nuevo QR
-        try {
-            new QRCode(qrContainer, {
-                text: codigoQR,
-                width: 150,
-                height: 150,
-            });
-            console.log(`Código QR generado: ${codigoQR}`);
-        } catch (error) {
-            console.error("Error al generar el QR:", error);
-        }
+        new QRCode(qrContainer, {
+            text: codigoQR,
+            width: 150,
+            height: 150,
+        });
     });
 });
