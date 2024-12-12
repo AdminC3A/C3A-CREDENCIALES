@@ -1,85 +1,91 @@
-document.getElementById("generarUno").addEventListener("click", generateOneCredential);
-document.getElementById("generarArchivo").addEventListener("click", handleFile);
+// Escucha el botón para generar el QR automáticamente
+const generarQRBtn = document.getElementById('generarQR');
 
-function generateOneCredential() {
-    const name = document.getElementById("nombre").value.trim();
-    const position = document.getElementById("puesto").value.trim();
-    const company = document.getElementById("empresa").value.trim();
+generarQRBtn.addEventListener('click', () => {
+    // Obtener los valores de los campos del formulario
+    const nombreCompleto = document.getElementById('nombre').value.trim();
+    const puesto = document.getElementById('puesto').value.trim();
+    const empresa = document.getElementById('empresa').value.trim();
 
-    if (!name || !position || !company) {
-        alert("Por favor, llena todos los campos.");
+    // Validar que los campos requeridos estén completos
+    if (!nombreCompleto || !puesto || !empresa) {
+        alert('Por favor, completa todos los campos: Nombre, Puesto y Empresa.');
         return;
     }
 
-    const qrCode = `${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)}`;
-    generateCredential(name, position, company, qrCode, 0);
-}
+    // Generar el código QR basado en los valores ingresados
+    const nombres = nombreCompleto.split(' ');
+    const primerNombre = nombres[0] || ''; // Previene errores si no hay espacios
+    const primeraLetraNombre = primerNombre.charAt(0) || ''; // Previene errores si está vacío
 
-function handleFile() {
-    const fileInput = document.getElementById("fileInput").files[0];
-    if (!fileInput) {
-        alert("Por favor, carga un archivo Excel o CSV.");
+    // Validar que haya al menos una letra en el nombre
+    if (!primeraLetraNombre) {
+        alert('El campo "Nombre Completo" debe contener al menos una palabra.');
         return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
+    const codigoASCII = primeraLetraNombre.charCodeAt(0).toString();
+    const textoQR = primeraLetraNombre + puesto.charAt(0);
+    const codigoQRFinal = textoQR.padEnd(2, 'X') + codigoASCII.padStart(10, '0');
 
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const rows = XLSX.utils.sheet_to_json(sheet);
+    // Escribir el código QR generado en el campo QR opcional
+    const codigoQRInput = document.getElementById('codigoQR');
+    codigoQRInput.value = codigoQRFinal;
 
-        if (rows.length === 0) {
-            alert("El archivo está vacío.");
-            return;
-        }
+    // Mensaje opcional para el usuario
+    alert('Código QR generado automáticamente. Puedes usarlo o editarlo manualmente.');
+});
 
-        rows.forEach((row, index) => {
-            const name = row["Nombre Completo"];
-            const position = row["Puesto"];
-            const company = row["Empresa"] || "Elemento Arquitectura Interior";
-            const qrCode = `${name.split(" ").map(w => w[0]).join("")}${Math.random().toString().slice(2, 8)}`;
-            generateCredential(name, position, company, qrCode, index);
-        });
+// Escucha el botón para generar la credencial
+const generarCredencialBtn = document.getElementById('generarUno');
 
-        alert("Credenciales generadas.");
-    };
+generarCredencialBtn.addEventListener('click', () => {
+    // Obtener los valores del formulario
+    const nombre = document.getElementById('nombre').value.trim();
+    const puesto = document.getElementById('puesto').value.trim();
+    const empresa = document.getElementById('empresa').value.trim();
+    const codigoQR = document.getElementById('codigoQR').value.trim();
 
-    reader.readAsArrayBuffer(fileInput);
-}
+    // Validar que todos los campos estén completos
+    if (!nombre || !puesto || !empresa || !codigoQR) {
+        alert('Por favor, completa todos los campos, incluido el Código QR.');
+        return;
+    }
 
-function generateCredential(name, position, company, qrCode, index) {
-    const canvas = document.createElement("canvas");
+    // Generar y mostrar la credencial
+    const canvas = document.createElement('canvas');
     canvas.width = 1000;
     canvas.height = 600;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
 
-    // Fondo blanco
-    ctx.fillStyle = "#fff";
+    // Dibujar la credencial
+    ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const logo = new Image();
-    logo.src = "logo.png"; // Asegúrate de que el logo está en la carpeta correcta
-    logo.onload = function () {
-        ctx.drawImage(logo, 30, 30, 150, 150);
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 40px Arial';
+    ctx.fillText('Credencial de Acceso', 30, 50);
+    ctx.font = '30px Arial';
+    ctx.fillText(`Nombre: ${nombre}`, 30, 100);
+    ctx.fillText(`Puesto: ${puesto}`, 30, 150);
+    ctx.fillText(`Empresa: ${empresa}`, 30, 200);
 
-        ctx.fillStyle = "#333";
-        ctx.font = "bold 40px Arial";
-        ctx.fillText("Credencial de Acceso", 200, 70);
-        ctx.font = "30px Arial";
-        ctx.fillText(`Nombre: ${name}`, 200, 150);
-        ctx.fillText(`Puesto: ${position}`, 200, 200);
-        ctx.fillText(`Empresa: ${company}`, 200, 250);
+    // Generar QR y dibujarlo
+    const qrCanvas = document.createElement('canvas');
+    new QRCode(qrCanvas, {
+        text: codigoQR,
+        width: 150,
+        height: 150,
+    });
+    const qrImg = new Image();
+    qrImg.src = qrCanvas.toDataURL('image/png');
+    qrImg.onload = function () {
+        ctx.drawImage(qrImg, 800, 50, 150, 150);
 
-        // Generar QR
-        const qrCanvas = document.createElement("canvas");
-        new QRCode(qrCanvas, {
-            text: qrCode,
-            width: 150,
-            height: 150,
-        });
-
-        const qrImg = new Image();
-        qrImg.src = qrCanvas.toDataURL("
+        // Descargar credencial
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'credencial.png';
+        link.click();
+    };
+});
