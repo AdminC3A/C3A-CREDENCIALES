@@ -24,10 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!codigoQR || codigoQR.length !== 8) {
             const nombres = nombreCompleto.split(' ');
             const primerNombre = nombres[0] || '';
-            const primerApellido = puesto.charAt(0) || '';
-            const segundaLetra = empresa.charAt(0) || '';
-            const codigoBase = `${primerNombre[0]}${primerApellido}${segundaLetra}`.toUpperCase();
-            codigoQR = (codigoBase + primerNombre.charCodeAt(0).toString().padStart(3, '0')).padEnd(8, '0');
+            const primerApellido = nombres[1] || '';
+            const primeraLetraEmpresa = empresa.charAt(0) || '';
+
+            // Tomar las iniciales y el código ASCII de la primera letra del nombre
+            const iniciales = `${primerNombre.charAt(0)}${primerApellido.charAt(0)}${primeraLetraEmpresa}`.toUpperCase();
+            const codigoASCII = primerNombre.charCodeAt(0).toString(); // ASCII de la primera letra
+
+            // Generar el QR con las iniciales, ASCII y ceros a la izquierda
+            codigoQR = (iniciales + codigoASCII).padStart(8, '0');
+
+            // Actualizar el campo QR con el código generado
             codigoQRInput.value = codigoQR;
         }
     });
@@ -50,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Evento para generar la credencial
     generarCredencialBtn.addEventListener('click', () => {
-        if (!codigoQR) {
+        if (!qrPreviewDiv.querySelector('img')) {
             alert('Por favor, genera y visualiza el QR primero.');
             return;
         }
