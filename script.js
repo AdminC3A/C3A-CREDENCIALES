@@ -13,23 +13,29 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Generar iniciales y código QR
+        // Generar las iniciales del nombre y apellido
         const nombres = nombre.split(" ");
-        const iniciales = `${nombres[0]?.charAt(0) || ""}${nombres[1]?.charAt(0) || ""}${empresa.charAt(0) || ""}`.toUpperCase();
-        const codigoASCII = nombres[0]?.charCodeAt(0)?.toString() || "0";
+        const primerNombre = nombres[0]?.charAt(0) || ""; // Primera letra del nombre
+        const primerApellido = nombres[1]?.charAt(0) || ""; // Primera letra del apellido
+        const iniciales = `${primerNombre}${primerApellido}`.toUpperCase();
 
-        // Formato: 0000DE68
-        const codigoQR = `${"0000"}${iniciales}${codigoASCII.slice(-2)}`.slice(0, 8);
+        // Generar el código ASCII de la primera letra del nombre
+        const codigoASCII = primerNombre.charCodeAt(0)?.toString() || "0";
 
-        // Mostrar en el campo opcional
+        // Combinar las iniciales y el código ASCII para formar el QR
+        const codigoQR = `${iniciales}${codigoASCII.padStart(6, "0")}`.slice(0, 8);
+
+        // Mostrar el código QR en el campo opcional
         codigoQRInput.value = codigoQR;
 
-        // Generar QR visual
-        qrContainer.innerHTML = "";
+        // Generar el QR visual automáticamente
+        qrContainer.innerHTML = ""; // Limpiar cualquier QR anterior
         new QRCode(qrContainer, {
             text: codigoQR,
             width: 150,
             height: 150,
         });
+
+        console.log(`Código QR generado: ${codigoQR}`);
     });
 });
