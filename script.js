@@ -61,7 +61,7 @@ generarCredencialBtn.addEventListener('click', () => {
     logo.onload = function () {
         ctx.drawImage(logo, 225, 30, 150, 150);
 
-        // Título y cuadro negro
+        // Título y cuadro negro vacío
         ctx.fillStyle = '#333';
         ctx.textAlign = 'center';
         ctx.font = 'bold 30px Arial';
@@ -70,17 +70,18 @@ generarCredencialBtn.addEventListener('click', () => {
         ctx.font = 'bold 24px Arial';
         ctx.fillText('CASA TRES AGUAS', canvas.width / 2, 260);
 
-        // Dibujar cuadro negro vacío debajo de "CASA TRES AGUAS"
-        ctx.fillStyle = '#000'; // Color del cuadro
-        ctx.fillRect(200, 280, 200, 100); // Posición y tamaño del cuadro (ajustable)
+        // Dibujar cuadro negro como marco (sin relleno)
+        ctx.strokeStyle = '#000'; // Borde negro
+        ctx.lineWidth = 2; // Línea delgada
+        ctx.strokeRect(200, 280, 200, 280); // Posición (x, y) y dimensiones (ancho, alto)
 
         // Nombre, puesto y empresa
         ctx.fillStyle = '#333';
         ctx.textAlign = 'left';
         ctx.font = '20px Arial';
-        ctx.fillText(`Nombre: ${nombre}`, 60, 470);
-        ctx.fillText(`Puesto: ${puesto}`, 60, 510);
-        ctx.fillText(`Empresa: ${empresa}`, 60, 550);
+        ctx.fillText(`Nombre: ${nombre}`, 60, 600);
+        ctx.fillText(`Puesto: ${puesto}`, 60, 640);
+        ctx.fillText(`Empresa: ${empresa}`, 60, 680);
 
         // Generar QR y dibujarlo
         const qrCanvas = document.createElement('canvas');
@@ -93,7 +94,7 @@ generarCredencialBtn.addEventListener('click', () => {
         const qrImg = new Image();
         qrImg.src = qrCanvas.toDataURL('image/png');
         qrImg.onload = function () {
-            ctx.drawImage(qrImg, 225, 600, 150, 150);
+            ctx.drawImage(qrImg, 225, 750, 150, 150);
 
             // Descargar credencial
             const link = document.createElement('a');
