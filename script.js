@@ -1,82 +1,43 @@
-// Generar la credencial
-generarCredencialBtn.addEventListener('click', () => {
-    const nombre = document.getElementById('nombre').value.trim();
-    const puesto = document.getElementById('puesto').value.trim();
-    const empresa = document.getElementById('empresa').value.trim();
-    const codigoQR = document.getElementById('codigoQR').value.trim();
-
-    if (!nombre || !puesto || !empresa || !codigoQR) {
-        alert('Por favor, completa todos los campos, incluido el Código QR.');
-        return;
-    }
-
-    // Generar el canvas para la credencial
-    const canvas = document.createElement('canvas');
-    canvas.width = 600;
-    canvas.height = 1000;
-    const ctx = canvas.getContext('2d');
-
-    // Fondo blanco y borde negro
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 5;
-    ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-    // Añadir logo
-    const logo = new Image();
-    logo.src = 'logo.png'; // Coloca el archivo "logo.png" en tu directorio
-    logo.onload = function () {
-        ctx.drawImage(logo, 225, 30, 150, 150);
-
-        // Título y cuadro negro vacío
-        ctx.fillStyle = '#333';
-        ctx.textAlign = 'center';
-        ctx.font = 'bold 30px Arial';
-        ctx.fillText('Credencial de Acceso', canvas.width / 2, 220);
-
-        ctx.font = 'bold 24px Arial';
-        ctx.fillText('CASA TRES AGUAS', canvas.width / 2, 260);
-
-        // Dibujar cuadro negro como marco (sin relleno)
-        ctx.strokeStyle = '#000'; // Borde negro
-        ctx.lineWidth = 2; // Línea delgada
-        ctx.strokeRect(200, 280, 200, 280); // Posición (x, y) y dimensiones (ancho, alto)
-
-        // Nombre, puesto y empresa
-        ctx.fillStyle = '#333';
-        ctx.textAlign = 'left';
-        ctx.font = '20px Arial';
-        ctx.fillText(`Nombre: ${nombre}`, 60, 600);
-        ctx.fillText(`Puesto: ${puesto}`, 60, 640);
-        ctx.fillText(`Empresa: ${empresa}`, 60, 680);
-
-        // Generar el código QR directamente en el lienzo
-        new QRCode(document.createElement('div'), {
-            text: codigoQR,
-            width: 150,
-            height: 150,
-            correctLevel: QRCode.CorrectLevel.H, // Nivel de corrección de errores
-            callback: function (qrCanvas) {
-                const qrImg = new Image();
-                qrImg.src = qrCanvas.toDataURL('image/png'); // Convertir QR a imagen
-                qrImg.onload = function () {
-                    // Dibujar el QR en el lienzo principal
-                    ctx.drawImage(qrImg, canvas.width / 2 - 75, 750, 150, 150);
-
-                    // Descargar credencial
-                    const link = document.createElement('a');
-                    link.href = canvas.toDataURL('image/png');
-                    link.download = `Credencial-${codigoQR}.png`; // Nombre del archivo dinámico
-                    link.click();
-
-                    // Mostrar la credencial generada en pantalla
-                    const outputDiv = document.getElementById('output');
-                    outputDiv.innerHTML = ''; // Limpiar contenido anterior
-                    outputDiv.appendChild(canvas);
-                };
-            },
-        });
-    };
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Credenciales</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Generador de Credenciales</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Generar Credenciales Individualmente</h2>
+            <div>
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" placeholder="Ingresa el nombre completo">
+            </div>
+            <div>
+                <label for="puesto">Puesto:</label>
+                <input type="text" id="puesto" placeholder="Ingresa el puesto">
+            </div>
+            <div>
+                <label for="empresa">Empresa:</label>
+                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Elemento Arquitectura Interior">
+            </div>
+            <div>
+                <label for="codigoQR">Código QR (opcional):</label>
+                <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
+            </div>
+            <button id="generarQR">Generar QR</button>
+            <button id="generarUno">Generar Credencial</button>
+        </section>
+        <div id="output"></div>
+    </main>
+    <footer>
+        <p>© 2024 Elemento Arquitectura Interior</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
