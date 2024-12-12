@@ -54,6 +54,53 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Por favor, genera y visualiza el QR primero.');
             return;
         }
-        alert('Lógica para generar credencial...');
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 1000;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 5;
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+        const logo = new Image();
+        logo.src = 'logo.png'; // Asegúrate de que el logo esté en el directorio
+        logo.onload = function () {
+            ctx.drawImage(logo, 225, 30, 150, 150);
+
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 30px Arial';
+            ctx.fillText('Credencial de Acceso', canvas.width / 2, 220);
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('CASA TRES AGUAS', canvas.width / 2, 260);
+
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(200, 280, 200, 280);
+
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'left';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Nombre: ${document.getElementById('nombre').value}`, 60, 600);
+            ctx.fillText(`Puesto: ${document.getElementById('puesto').value}`, 60, 640);
+            ctx.fillText(`Empresa: ${document.getElementById('empresa').value}`, 60, 680);
+
+            const qrImgForCanvas = new Image();
+            qrImgForCanvas.src = qrPreviewDiv.querySelector('img').src; // Obtener el QR generado
+            qrImgForCanvas.onload = function () {
+                ctx.drawImage(qrImgForCanvas, canvas.width / 2 - 75, 750, 150, 150);
+
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = `Credencial-${codigoQR}.png`;
+                link.click();
+
+                alert('Credencial generada y descargada correctamente.');
+            };
+        };
     });
 });
