@@ -13,17 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Generar las iniciales del nombre y apellido
+        // Generar iniciales del nombre completo
         const nombres = nombre.split(" ");
-        const primerNombre = nombres[0]?.charAt(0) || ""; // Primera letra del nombre
-        const primerApellido = nombres[1]?.charAt(0) || ""; // Primera letra del apellido
-        const iniciales = `${primerNombre}${primerApellido}`.toUpperCase();
+        const inicialesNombre = nombres.map(word => word.charAt(0).toUpperCase()).join("");
 
-        // Generar el código ASCII de la primera letra del nombre
-        const codigoASCII = primerNombre.charCodeAt(0)?.toString() || "0";
+        // Inicial del puesto
+        const inicialPuesto = puesto.charAt(0).toUpperCase();
 
-        // Combinar las iniciales y el código ASCII para formar el QR
-        const codigoQR = `${iniciales}${codigoASCII.padStart(6, "0")}`.slice(0, 8);
+        // Código ASCII de la primera letra del nombre
+        const codigoASCII = nombres[0]?.charCodeAt(0)?.toString() || "0";
+
+        // Combinar iniciales y código ASCII
+        const codigoQR = `${inicialesNombre}${inicialPuesto}${codigoASCII.padStart(6, "0")}`.slice(0, 8);
 
         // Mostrar el código QR en el campo opcional
         codigoQRInput.value = codigoQR;
