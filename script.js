@@ -1,29 +1,43 @@
 // Espera a que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
    /**
- * Módulo 1: Generar Código QR
- * Este módulo genera un código QR basado en las iniciales del nombre, el puesto, y un código ASCII.
- */
-const generarQRBtn = document.getElementById("generarQR");
-generarQRBtn.addEventListener("click", () => {
-    const nombre = document.getElementById("nombre").value.trim();
-    const puesto = document.getElementById("puesto").value.trim();
+/**
+     * Módulo 1: Generar Código QR
+     */
+    generarQRBtn.addEventListener("click", () => {
+        const nombre = document.getElementById("nombre").value.trim();
+        const puesto = document.getElementById("puesto").value.trim();
 
-    // Verificar campos obligatorios
-    if (!nombre || !puesto) {
-        alert("Por favor, completa los campos de Nombre y Puesto.");
-        return;
-    }
+        if (!nombre || !puesto) {
+            alert("Por favor, completa los campos de Nombre y Puesto.");
+            return;
+        }
 
-    // Generar el código QR
-    const palabrasNombre = nombre.split(" ");
-    const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
-    const inicialPuesto = puesto.charAt(0).toUpperCase();
-    const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
-    const codigoASCII = nombre.charCodeAt(0).toString();
-    const totalLength = 8;
-    const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
-    const codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
+        // Generar el código QR
+        const palabrasNombre = nombre.split(" ");
+        const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
+        const inicialPuesto = puesto.charAt(0).toUpperCase();
+        const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
+        const codigoASCII = nombre.charCodeAt(0).toString();
+        const totalLength = 8;
+        const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
+        const codigoQR = `${iniciales}${"0".repeat(cerosNecesarios)}${codigoASCII}`;
+
+        document.getElementById("codigoQR").value = codigoQR;
+        qrContainer.innerHTML = ""; // Limpiar QR anterior
+
+        try {
+            new QRCode(qrContainer, {
+                text: codigoQR,
+                width: 150,
+                height: 150,
+            });
+        } catch (error) {
+            console.error("Error al generar el QR:", error);
+        }
+    });
+
+
 
     // Actualizar el valor del código QR en el formulario
     document.getElementById("codigoQR").value = codigoQR;
