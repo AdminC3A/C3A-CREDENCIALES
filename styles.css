@@ -122,3 +122,8 @@ button {
 .btn {
     margin: 5px;
 }
+#registrarTrabajador {
+    background-color: #ffc107;
+    color: #fff;
+    font-weight: bold;
+}
