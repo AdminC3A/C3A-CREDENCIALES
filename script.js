@@ -2,9 +2,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Selección de elementos del DOM
     const generarQRBtn = document.getElementById("generarQR");
+    const generarCredencialBtn = document.getElementById("generarCredencial");
     const cargarFotoArchivoBtn = document.getElementById("cargarFotoArchivo");
+    const cargarFotoCamaraBtn = document.getElementById("cargarFotoCamara");
+    const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
     const qrContainer = document.getElementById("qrCanvas"); // Contenedor del QR
     const fotoContainer = document.getElementById("fotoCanvas"); // Contenedor de la foto cargada
+    const credencialCanvas = document.getElementById("credencialCanvas"); // Canvas para la credencial
 
     let imagenSeleccionada = null; // Almacenar imagen cargada/capturada
 
@@ -34,21 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
         qrContainer.innerHTML = ""; // Limpiar QR anterior
 
         try {
-            const canvasQR = document.createElement("canvas");
-            canvasQR.width = 150; // Tamaño del QR
-            canvasQR.height = 150;
-            qrContainer.appendChild(canvasQR);
-
-            new QRCode(canvasQR, {
+            new QRCode(qrContainer, {
                 text: codigoQR,
                 width: 150,
                 height: 150,
             });
-
-            console.log(`Código QR generado: ${codigoQR}`);
         } catch (error) {
             console.error("Error al generar el QR:", error);
-            alert("Hubo un problema al generar el código QR. Por favor, intenta nuevamente.");
         }
     });
 
@@ -84,73 +80,49 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Los demás módulos permanecen intactos.
-});
-
     /**
- * Módulo 3: Cargar foto desde cámara
- */
-cargarFotoCamaraBtn.addEventListener("click", () => {
-    // Detectar si el usuario está en un dispositivo móvil
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+     * Módulo 3: Cargar foto desde cámara
+     */
+    cargarFotoCamaraBtn.addEventListener("click", () => {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                const video = document.createElement("video");
+                video.srcObject = stream;
+                video.play();
 
-    if (!isMobile) {
-        alert("Esta función solo está disponible en dispositivos móviles.");
-        return;
-    }
+                const captureButton = document.createElement("button");
+                captureButton.textContent = "Capturar";
+                document.body.append(video, captureButton);
 
-    // Acceder a la cámara
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-            const video = document.createElement("video");
-            video.srcObject = stream;
-            video.play();
+                captureButton.addEventListener("click", () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 150;
+                    canvas.height = 150;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const img = new Image();
+                    img.onload = () => {
+                        imagenSeleccionada = img;
+                        const ctxFoto = fotoContainer.getContext("2d");
+                        ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
+                        ctxFoto.beginPath();
+                        ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true); // Círculo
+                        ctxFoto.closePath();
+                        ctxFoto.clip();
+                        ctxFoto.drawImage(img, 0, 0, 150, 150); // Dibujar previsualización circular
+                    };
+                    img.src = canvas.toDataURL();
+                    stream.getTracks().forEach(track => track.stop()); // Detener cámara
+                    video.remove();
+                    captureButton.remove();
+                });
+            })
+            .catch((error) => console.error("Error al acceder a la cámara:", error));
+    });
 
-            const captureButton = document.createElement("button");
-            captureButton.textContent = "Capturar";
-            captureButton.style.display = "block";
-            captureButton.style.margin = "10px auto";
-
-            document.body.append(video, captureButton);
-
-            captureButton.addEventListener("click", () => {
-                const canvas = document.createElement("canvas");
-                canvas.width = 150;
-                canvas.height = 150;
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const img = new Image();
-                img.onload = () => {
-                    imagenSeleccionada = img;
-
-                    // Dibujar la foto en el contenedor circular
-                    const ctxFoto = fotoContainer.getContext("2d");
-                    ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
-                    ctxFoto.beginPath();
-                    ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true);
-                    ctxFoto.closePath();
-                    ctxFoto.clip();
-                    ctxFoto.drawImage(img, 0, 0, 150, 150);
-                };
-
-                img.src = canvas.toDataURL();
-                stream.getTracks().forEach(track => track.stop()); // Detener cámara
-                video.remove();
-                captureButton.remove();
-            });
-        })
-        .catch((error) => {
-            console.error("Error al acceder a la cámara:", error);
-            alert("No se pudo acceder a la cámara. Por favor, revisa los permisos.");
-        });
-});
-
- * Módulo 4: Generar la credencial
- * Genera una credencial ajustada al tamaño 7.4 cm x 10.5 cm (744 x 1050 px).
- */
+   // Módulo 4: Generar la credencial
 generarCredencialBtn.addEventListener("click", () => {
-    // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm
+    // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
     credencialCanvas.width = 744;
     credencialCanvas.height = 1050;
 
@@ -174,9 +146,9 @@ generarCredencialBtn.addEventListener("click", () => {
 
     // Dibujar el logo (2x2 cm -> 200x200 px)
     const logo = new Image();
-    logo.src = "logo.png"; // Asegúrate de que el archivo esté disponible en el directorio correcto
+    logo.src = "logo.png"; // Asegúrate de que el logo esté en el directorio correcto
     logo.onload = () => {
-        ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente
+        ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente (744 - 200)/2 = 272
 
         // Dibujar la foto (2x2 cm -> 200x200 px)
         if (imagenSeleccionada) {
@@ -199,7 +171,7 @@ generarCredencialBtn.addEventListener("click", () => {
         const qrImage = new Image();
         qrImage.src = qrContainer.querySelector("img")?.src || "";
         qrImage.onload = () => {
-            ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente
+            ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
             console.log("Credencial generada correctamente.");
         };
 
@@ -207,16 +179,11 @@ generarCredencialBtn.addEventListener("click", () => {
             console.warn("No se pudo cargar el QR en la credencial.");
         };
     };
-
-    logo.onerror = () => {
-        alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
-    };
 });
 
     /**
      * Módulo 5: Descargar la credencial
      */
-    const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
     autorizarDescargarBtn.addEventListener("click", () => {
         const link = document.createElement("a");
         link.href = credencialCanvas.toDataURL("image/png");
