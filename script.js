@@ -65,38 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-     * Módulo 2: Cargar foto desde archivo
-     */
-    const cargarFotoArchivoBtn = document.getElementById("cargarFotoArchivo");
-    cargarFotoArchivoBtn.addEventListener("click", () => {
-        const imagenInput = document.createElement("input");
-        imagenInput.type = "file";
-        imagenInput.accept = "image/*";
-        imagenInput.click();
-
-        imagenInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        imagenSeleccionada = img; // Guardar la imagen
-                        const ctxFoto = fotoContainer.getContext("2d");
-                        ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
-                        ctxFoto.beginPath();
-                        ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true); // Círculo
-                        ctxFoto.closePath();
-                        ctxFoto.clip();
-                        ctxFoto.drawImage(img, 0, 0, 150, 150); // Dibujar previsualización circular
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
+   // Espera a que el DOM esté completamente cargado
     /**
      * Módulo 3: Cargar foto desde cámara
      */
