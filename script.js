@@ -67,48 +67,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
    // Espera a que el DOM esté completamente cargado
     /**
-     * Módulo 3: Cargar foto desde cámara
-     */
-    const cargarFotoCamaraBtn = document.getElementById("cargarFotoCamara");
-    cargarFotoCamaraBtn.addEventListener("click", () => {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                const video = document.createElement("video");
-                video.srcObject = stream;
-                video.play();
+ * Módulo 3: Cargar foto desde cámara
+ */
+cargarFotoCamaraBtn.addEventListener("click", () => {
+    // Detectar si el usuario está en un dispositivo móvil
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-                const captureButton = document.createElement("button");
-                captureButton.textContent = "Capturar";
-                document.body.append(video, captureButton);
+    if (!isMobile) {
+        alert("Esta función solo está disponible en dispositivos móviles.");
+        return;
+    }
 
-                captureButton.addEventListener("click", () => {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = 150;
-                    canvas.height = 150;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    const img = new Image();
-                    img.onload = () => {
-                        imagenSeleccionada = img;
-                        const ctxFoto = fotoContainer.getContext("2d");
-                        ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
-                        ctxFoto.beginPath();
-                        ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true); // Círculo
-                        ctxFoto.closePath();
-                        ctxFoto.clip();
-                        ctxFoto.drawImage(img, 0, 0, 150, 150); // Dibujar previsualización circular
-                    };
-                    img.src = canvas.toDataURL();
-                    stream.getTracks().forEach(track => track.stop()); // Detener cámara
-                    video.remove();
-                    captureButton.remove();
-                });
-            })
-            .catch((error) => console.error("Error al acceder a la cámara:", error));
-    });
+    // Acceder a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            const video = document.createElement("video");
+            video.srcObject = stream;
+            video.play();
 
-    /**
-    /**
+            const captureButton = document.createElement("button");
+            captureButton.textContent = "Capturar";
+            captureButton.style.display = "block";
+            captureButton.style.margin = "10px auto";
+
+            document.body.append(video, captureButton);
+
+            captureButton.addEventListener("click", () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = 150;
+                canvas.height = 150;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const img = new Image();
+                img.onload = () => {
+                    imagenSeleccionada = img;
+
+                    // Dibujar la foto en el contenedor circular
+                    const ctxFoto = fotoContainer.getContext("2d");
+                    ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
+                    ctxFoto.beginPath();
+                    ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true);
+                    ctxFoto.closePath();
+                    ctxFoto.clip();
+                    ctxFoto.drawImage(img, 0, 0, 150, 150);
+                };
+
+                img.src = canvas.toDataURL();
+                stream.getTracks().forEach(track => track.stop()); // Detener cámara
+                video.remove();
+                captureButton.remove();
+            });
+        })
+        .catch((error) => {
+            console.error("Error al acceder a la cámara:", error);
+            alert("No se pudo acceder a la cámara. Por favor, revisa los permisos.");
+        });
+});
+
  * Módulo 4: Generar la credencial
  * Genera una credencial ajustada al tamaño 7.4 cm x 10.5 cm (744 x 1050 px).
  */
