@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 /**
- * Módulo 3: Cargar foto desde cámara
+ * Módulo 3: Cargar foto desde cámara -- MODULO VALIDADO
  */
 cargarFotoCamaraBtn.addEventListener("click", () => {
     // Detectar si el usuario está en un dispositivo móvil
@@ -141,7 +141,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
     });
 });
 
-    // Módulo 4: Generar la credencial
+    // Módulo 4: Generar la credencial - MODULO VALIDADO
 generarCredencialBtn.addEventListener("click", () => {
     // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
     credencialCanvas.width = 744;
