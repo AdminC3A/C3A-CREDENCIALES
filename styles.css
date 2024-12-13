@@ -47,8 +47,9 @@ input {
 
 .button-group {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
+    justify-content: space-between;
     margin-top: 10px;
 }
 
@@ -74,7 +75,7 @@ button {
     color: #fff;
 }
 
-.qr-preview {
+.qr-preview, .photo-preview {
     margin-top: 20px;
     padding: 10px;
     border: 1px dashed #ccc;
@@ -91,34 +92,33 @@ button {
     margin-top: 20px;
     color: #666;
 }
+
 .credencial-preview {
     margin-top: 20px;
     border: 1px solid #ddd;
     background-color: #fff;
     display: block;
     margin: 0 auto;
-    width: 600px;
-    height: 400px;
+    width: 744px; /* 7.4 cm */
+    height: 1050px; /* 10.5 cm */
 }
+
 .preview-container {
     text-align: center;
     margin-top: 10px;
 }
 
 .preview-box img {
-    max-width: 100%; /* La imagen no excederá el tamaño del contenedor */
-    max-height: 100%; /* Ajuste dentro del alto */
-    object-fit: cover; /* Rellena el cuadro respetando proporciones */
-    border-radius: 8px; /* Mantener bordes redondeados si aplica */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
 }
-
 
 .optional-buttons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: 10px;
-}
-
-.btn {
-    margin: 5px;
+    gap: 10px;
+    margin: 10px 0;
 }
