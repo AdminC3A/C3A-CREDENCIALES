@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 /**
- * Módulo 3: Cargar foto desde cámara -- MODULO VALIDADO
+ * Módulo 3: Cargar foto desde cámara
  */
 cargarFotoCamaraBtn.addEventListener("click", () => {
     // Detectar si el usuario está en un dispositivo móvil
@@ -141,7 +141,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
     });
 });
 
-    // Módulo 4: Generar la credencial - MODULO VALIDADO
+    // Módulo 4: Generar la credencial
 generarCredencialBtn.addEventListener("click", () => {
     // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
     credencialCanvas.width = 744;
@@ -215,94 +215,10 @@ generarCredencialBtn.addEventListener("click", () => {
     /**
      * Módulo 5: Descargar la credencial
      */
-   autorizarDescargarBtn.addEventListener("click", () => {
-    // Canvas combinado
-    const combinedCanvas = document.createElement("canvas");
-    combinedCanvas.width = 744 * 2; // Doble ancho para colocar las partes lado a lado
-    combinedCanvas.height = 1050; // Mismo alto para ambas partes
-    const combinedCtx = combinedCanvas.getContext("2d");
-
-    // Dibujar la parte delantera a la izquierda
-    combinedCtx.drawImage(credencialCanvas, 0, 0);
-
-    // Generar la parte trasera
-    const parteTraseraCanvas = document.createElement("canvas");
-    parteTraseraCanvas.width = 744;
-    parteTraseraCanvas.height = 1050;
-    const traseraCtx = parteTraseraCanvas.getContext("2d");
-    generarParteTrasera(traseraCtx);
-
-    // Dibujar la parte trasera a la derecha
-    combinedCtx.drawImage(parteTraseraCanvas, 744, 0);
-
-    // Descargar la imagen combinada
-    const link = document.createElement("a");
-    link.href = combinedCanvas.toDataURL("image/png");
-    link.download = `Credencial-Combinada-${document.getElementById("codigoQR").value}.png`;
-    link.click();
+    autorizarDescargarBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.href = credencialCanvas.toDataURL("image/png");
+        link.download = `Credencial-${document.getElementById("codigoQR").value}.png`;
+        link.click();
+    });
 });
-
-
-// MODULO 6: Seleccionar el botón de descargar parte trasera
-const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
-
-// Agregar evento al botón
-descargarParteTraseraBtn.addEventListener("click", () => {
-    // Crear un canvas para la parte trasera
-    const parteTraseraCanvas = document.createElement("canvas");
-    parteTraseraCanvas.width = 744; // Ancho estándar
-    parteTraseraCanvas.height = 1050; // Alto estándar
-    const ctx = parteTraseraCanvas.getContext("2d");
-
-    // Generar el contenido de la parte trasera
-    generarParteTrasera(ctx);
-
-    // Descargar la parte trasera
-    const codigoQR = document.getElementById("codigoQR").value.trim();
-    const link = document.createElement("a");
-    link.href = parteTraseraCanvas.toDataURL("image/png");
-    link.download = `CredencialBack-${codigoQR || "sinQR"}.png`;
-    link.click();
-});
-
-// Función para generar el contenido de la parte trasera
-function generarParteTrasera(ctx) {
-    // Fondo blanco
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, 744, 1050);
-
-    // Texto de advertencia
-    ctx.fillStyle = "#000";
-    ctx.font = "18px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("El Gafete de seguridad deberá portarse todo el tiempo", 744 / 2, 100);
-    ctx.fillText("y de manera visible durante el tiempo que se permanezca en obra.", 744 / 2, 130);
-    ctx.fillText("En caso de incumplimiento, la persona será expulsada y se tomarán las", 744 / 2, 160);
-    ctx.fillText("medidas disciplinarias necesarias.", 744 / 2, 190);
-
-    // No. IMSS
-    const numeroIMSS = "No. IMSS: 2296790174-9";
-    ctx.font = "20px Arial";
-    ctx.fillText(numeroIMSS, 744 / 2, 250);
-
-    // Línea de firma
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(100, 700);
-    ctx.lineTo(644, 700);
-    ctx.stroke();
-
-    // Texto de firma
-    ctx.font = "18px Arial";
-    ctx.fillText("Firma del Portador", 744 / 2, 730);
-
-    // Supervisión
-    ctx.fillText("Supervisión HSE BPD", 744 / 2, 770);
-
-    // Válidos
-    ctx.textAlign = "left";
-    ctx.font = "16px Arial";
-    ctx.fillText("Válido desde: 12/12/2024", 50, 970);
-    ctx.fillText("Válido hasta: 12/6/2025", 50, 1000);
-}

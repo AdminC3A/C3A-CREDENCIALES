@@ -97,10 +97,9 @@ button {
     background-color: #fff;
     display: block;
     margin: 0 auto;
-    width: 744px; /* Ancho ajustado a 7.4 cm */
-    height: 1050px; /* Alto ajustado a 10.5 cm */
+    width: 600px;
+    height: 400px;
 }
-
 .preview-container {
     text-align: center;
     margin-top: 10px;
@@ -122,9 +121,4 @@ button {
 
 .btn {
     margin: 5px;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
 }
