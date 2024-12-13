@@ -222,3 +222,60 @@ generarCredencialBtn.addEventListener("click", () => {
         link.click();
     });
 });
+// Módulo 6: Generar la parte trasera de la credencial
+function generarParteTrasera() {
+    // Capturar el número de IMSS desde el formulario
+    const numeroIMSS = document.getElementById("nss").value.trim();
+
+    // Crear un nuevo canvas para la parte trasera
+    const parteTraseraCanvas = document.createElement("canvas");
+    parteTraseraCanvas.width = 744; // 7.4 cm
+    parteTraseraCanvas.height = 1050; // 10.5 cm
+    const ctx = parteTraseraCanvas.getContext("2d");
+
+    // Fondo blanco
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, parteTraseraCanvas.width, parteTraseraCanvas.height);
+
+    // Texto de advertencia
+    ctx.fillStyle = "#000";
+    ctx.font = "18px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("El Gafete de seguridad deberá portarse todo el tiempo", parteTraseraCanvas.width / 2, 100);
+    ctx.fillText("y de manera visible durante el tiempo que se permanezca en obra.", parteTraseraCanvas.width / 2, 130);
+    ctx.fillText("En caso de incumplimiento, la persona será expulsada y se tomarán las", parteTraseraCanvas.width / 2, 160);
+    ctx.fillText("medidas disciplinarias necesarias.", parteTraseraCanvas.width / 2, 190);
+
+    // Número de IMSS dinámico
+    ctx.font = "20px Arial";
+    ctx.fillText(`No. IMSS: ${numeroIMSS || "Sin IMSS"}`, parteTraseraCanvas.width / 2, 250);
+
+    // Línea de firma
+    ctx.beginPath();
+    ctx.moveTo(100, 700);
+    ctx.lineTo(parteTraseraCanvas.width - 100, 700);
+    ctx.stroke();
+
+    // Texto de firma
+    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 730);
+    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 770);
+
+    // Validez
+    ctx.textAlign = "left";
+    ctx.font = "16px Arial";
+    ctx.fillText("Válido desde: 12/12/2024", 50, 970);
+    ctx.fillText("Válido hasta: 12/6/2025", 50, 1000);
+
+    return parteTraseraCanvas;
+}
+
+// Evento para descargar la parte trasera
+const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
+descargarParteTraseraBtn.addEventListener("click", () => {
+    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
+    const link = document.createElement("a");
+    link.href = parteTraseraCanvas.toDataURL("image/png");
+    link.download = "Parte-Trasera-Credencial.png";
+    link.click();
+});
+
