@@ -215,13 +215,33 @@ generarCredencialBtn.addEventListener("click", () => {
     /**
      * Módulo 5: Descargar la credencial
      */
-    autorizarDescargarBtn.addEventListener("click", () => {
-        const link = document.createElement("a");
-        link.href = credencialCanvas.toDataURL("image/png");
-        link.download = `Credencial-${document.getElementById("codigoQR").value}.png`;
-        link.click();
-    });
+   autorizarDescargarBtn.addEventListener("click", () => {
+    // Canvas combinado
+    const combinedCanvas = document.createElement("canvas");
+    combinedCanvas.width = 744 * 2; // Doble ancho para colocar las partes lado a lado
+    combinedCanvas.height = 1050; // Mismo alto para ambas partes
+    const combinedCtx = combinedCanvas.getContext("2d");
+
+    // Dibujar la parte delantera a la izquierda
+    combinedCtx.drawImage(credencialCanvas, 0, 0);
+
+    // Generar la parte trasera
+    const parteTraseraCanvas = document.createElement("canvas");
+    parteTraseraCanvas.width = 744;
+    parteTraseraCanvas.height = 1050;
+    const traseraCtx = parteTraseraCanvas.getContext("2d");
+    generarParteTrasera(traseraCtx);
+
+    // Dibujar la parte trasera a la derecha
+    combinedCtx.drawImage(parteTraseraCanvas, 744, 0);
+
+    // Descargar la imagen combinada
+    const link = document.createElement("a");
+    link.href = combinedCanvas.toDataURL("image/png");
+    link.download = `Credencial-Combinada-${document.getElementById("codigoQR").value}.png`;
+    link.click();
 });
+
 
 //MODULO 6 PARTE TRASERA
 function generarParteTrasera(ctx) {
