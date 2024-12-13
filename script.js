@@ -141,7 +141,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
     });
 });
 
-   // Módulo 4: Generar la credencial
+    // Módulo 4: Generar la credencial
 generarCredencialBtn.addEventListener("click", () => {
     // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
     credencialCanvas.width = 744;
@@ -156,8 +156,8 @@ generarCredencialBtn.addEventListener("click", () => {
     const empresa = document.getElementById("empresa").value.trim();
     const codigoQR = document.getElementById("codigoQR").value.trim();
 
-    if (!nombre || !puesto || !empresa || !codigoQR) {
-        alert("Por favor, completa todos los campos antes de generar la credencial.");
+    if (!nombre || !puesto || !empresa) {
+        alert("Por favor, completa los campos de Nombre, Puesto y Empresa.");
         return;
     }
 
@@ -178,7 +178,7 @@ generarCredencialBtn.addEventListener("click", () => {
             ctx.strokeStyle = "#000";
             ctx.lineWidth = 2;
             ctx.strokeRect(272, 250, 200, 200); // Cuadro vacío para la foto
-            console.warn("No se ha seleccionado una foto. Se dejará un espacio vacío.");
+            console.warn("No se ha seleccionado una foto. Se deja un cuadro en blanco.");
         }
 
         // Dibujar los datos personales (centrados)
@@ -190,25 +190,28 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 560);
 
         // Dibujar el QR (3x3 cm -> 300x300 px)
-        const qrImage = new Image();
-        qrImage.src = qrContainer.querySelector("img")?.src || "";
-        qrImage.onload = () => {
-            ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
-            console.log("Credencial generada correctamente.");
-        };
+        if (codigoQR) {
+            const qrImage = new Image();
+            qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
+            qrImage.onload = () => {
+                ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
+                console.log("Credencial generada correctamente con el QR.");
+            };
 
-        qrImage.onerror = () => {
-            console.warn("No se pudo cargar el QR en la credencial.");
-            alert("No se ha generado un código QR válido. Por favor, inténtalo nuevamente.");
-        };
+            qrImage.onerror = () => {
+                console.warn("No se pudo cargar el QR en la credencial.");
+            };
+        } else {
+            console.warn("No se generó el QR. Se deja el espacio vacío.");
+        }
     };
 
     logo.onerror = () => {
-        console.error("Error: No se pudo cargar el logo.");
-        alert("El archivo del logo no está disponible. Asegúrate de que el archivo logo.png exista en el directorio.");
+        alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
     };
 });
 
+  
     /**
      * Módulo 5: Descargar la credencial
      */
