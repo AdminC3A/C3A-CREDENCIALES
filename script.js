@@ -157,7 +157,7 @@ generarCredencialBtn.addEventListener("click", () => {
     const codigoQR = document.getElementById("codigoQR").value.trim();
 
     if (!nombre || !puesto || !empresa || !codigoQR) {
-        alert("Por favor, completa todos los campos.");
+        alert("Por favor, completa todos los campos antes de generar la credencial.");
         return;
     }
 
@@ -178,6 +178,7 @@ generarCredencialBtn.addEventListener("click", () => {
             ctx.strokeStyle = "#000";
             ctx.lineWidth = 2;
             ctx.strokeRect(272, 250, 200, 200); // Cuadro vacío para la foto
+            console.warn("No se ha seleccionado una foto. Se dejará un espacio vacío.");
         }
 
         // Dibujar los datos personales (centrados)
@@ -198,7 +199,13 @@ generarCredencialBtn.addEventListener("click", () => {
 
         qrImage.onerror = () => {
             console.warn("No se pudo cargar el QR en la credencial.");
+            alert("No se ha generado un código QR válido. Por favor, inténtalo nuevamente.");
         };
+    };
+
+    logo.onerror = () => {
+        console.error("Error: No se pudo cargar el logo.");
+        alert("El archivo del logo no está disponible. Asegúrate de que el archivo logo.png exista en el directorio.");
     };
 });
 
