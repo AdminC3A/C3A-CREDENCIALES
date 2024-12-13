@@ -216,11 +216,11 @@ generarCredencialBtn.addEventListener("click", () => {
      * Módulo 5: Descargar la credencial
      */
     autorizarDescargarBtn.addEventListener("click", () => {
-        const link = document.createElement("a");
-        link.href = credencialCanvas.toDataURL("image/png");
-        link.download = `Credencial-${document.getElementById("codigoQR").value}.png`;
-        link.click();
-    });
+    const codigoQR = document.getElementById("codigoQR").value.trim();
+    const link = document.createElement("a");
+    link.href = credencialCanvas.toDataURL("image/png");
+    link.download = `${codigoQR || "sinQR"}-CredencialFrontal.png`; // Código QR primero
+    link.click();
 });
 
 // Módulo 6: Generar la parte trasera de la credencial
@@ -271,12 +271,19 @@ function generarParteTrasera() {
 }
 
 // Evento para descargar la parte trasera
-const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
 descargarParteTraseraBtn.addEventListener("click", () => {
-    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
+    const codigoQR = document.getElementById("codigoQR").value.trim();
+    const parteTraseraCanvas = document.createElement("canvas");
+    parteTraseraCanvas.width = 744;
+    parteTraseraCanvas.height = 1050;
+    const ctx = parteTraseraCanvas.getContext("2d");
+
+    generarParteTrasera(ctx); // Generar la parte trasera en el canvas
+
     const link = document.createElement("a");
     link.href = parteTraseraCanvas.toDataURL("image/png");
-    link.download = "Parte-Trasera-Credencial.png";
+    link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Código QR primero
     link.click();
 });
+
 
