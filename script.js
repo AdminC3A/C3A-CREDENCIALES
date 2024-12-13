@@ -112,33 +112,73 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Módulo 4: Generar la credencial
-     */
-    const generarCredencialBtn = document.getElementById("generarCredencial");
-    generarCredencialBtn.addEventListener("click", () => {
-        credencialCanvas.width = 744; // 7.4 cm
-        credencialCanvas.height = 1050; // 10.5 cm
+    /**
+ * Módulo 4: Generar la credencial
+ * Genera una credencial ajustada al tamaño 7.4 cm x 10.5 cm (744 x 1050 px).
+ */
+generarCredencialBtn.addEventListener("click", () => {
+    // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm
+    credencialCanvas.width = 744;
+    credencialCanvas.height = 1050;
 
-        const ctx = credencialCanvas.getContext("2d");
-        ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+    const ctx = credencialCanvas.getContext("2d");
+    ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-        const nombre = document.getElementById("nombre").value.trim();
-        const puesto = document.getElementById("puesto").value.trim();
-        const empresa = document.getElementById("empresa").value.trim();
-        const codigoQR = document.getElementById("codigoQR").value.trim();
+    // Capturar datos del formulario
+    const nombre = document.getElementById("nombre").value.trim();
+    const puesto = document.getElementById("puesto").value.trim();
+    const empresa = document.getElementById("empresa").value.trim();
+    const codigoQR = document.getElementById("codigoQR").value.trim();
 
-        if (!nombre || !puesto || !empresa || !codigoQR) {
-            alert("Por favor, completa todos los campos.");
-            return;
+    if (!nombre || !puesto || !empresa || !codigoQR) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
+
+    // Fondo blanco para la credencial
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+
+    // Dibujar el logo (2x2 cm -> 200x200 px)
+    const logo = new Image();
+    logo.src = "logo.png"; // Asegúrate de que el archivo esté disponible en el directorio correcto
+    logo.onload = () => {
+        ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente
+
+        // Dibujar la foto (2x2 cm -> 200x200 px)
+        if (imagenSeleccionada) {
+            ctx.drawImage(imagenSeleccionada, 272, 250, 200, 200); // Centrado horizontalmente
+        } else {
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(272, 250, 200, 200); // Cuadro vacío para la foto
         }
 
-        // Fondo blanco para la credencial
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+        // Dibujar los datos personales (centrados)
+        ctx.fillStyle = "#000";
+        ctx.textAlign = "center";
+        ctx.font = "20px Arial";
+        ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 500);
+        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 530);
+        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 560);
 
-        // Dibujar elementos (logo, foto, datos, QR)
-        // Mantén esta sección igual a la que ya funciona correctamente.
-    });
+        // Dibujar el QR (3x3 cm -> 300x300 px)
+        const qrImage = new Image();
+        qrImage.src = qrContainer.querySelector("img")?.src || "";
+        qrImage.onload = () => {
+            ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente
+            console.log("Credencial generada correctamente.");
+        };
+
+        qrImage.onerror = () => {
+            console.warn("No se pudo cargar el QR en la credencial.");
+        };
+    };
+
+    logo.onerror = () => {
+        alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
+    };
+});
 
     /**
      * Módulo 5: Descargar la credencial
