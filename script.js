@@ -218,7 +218,7 @@ generarCredencialBtn.addEventListener("click", () => {
     autorizarDescargarBtn.addEventListener("click", () => {
         const link = document.createElement("a");
         link.href = credencialCanvas.toDataURL("image/png");
-        link.download = `Credencial-${document.getElementById("codigoQR").value}.png`;
+        link.download = `CredencialFrontal-${document.getElementById("codigoQR").value}.png`;
         link.click();
     });
 });
