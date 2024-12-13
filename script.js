@@ -1,7 +1,14 @@
 // Espera a que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
-   /**
-/**
+    // Selección de elementos del DOM
+    const generarQRBtn = document.getElementById("generarQR");
+    const cargarFotoArchivoBtn = document.getElementById("cargarFotoArchivo");
+    const qrContainer = document.getElementById("qrCanvas"); // Contenedor del QR
+    const fotoContainer = document.getElementById("fotoCanvas"); // Contenedor de la foto cargada
+
+    let imagenSeleccionada = null; // Almacenar imagen cargada/capturada
+
+    /**
      * Módulo 1: Generar Código QR
      */
     generarQRBtn.addEventListener("click", () => {
@@ -27,45 +34,59 @@ document.addEventListener("DOMContentLoaded", () => {
         qrContainer.innerHTML = ""; // Limpiar QR anterior
 
         try {
-            new QRCode(qrContainer, {
+            const canvasQR = document.createElement("canvas");
+            canvasQR.width = 150; // Tamaño del QR
+            canvasQR.height = 150;
+            qrContainer.appendChild(canvasQR);
+
+            new QRCode(canvasQR, {
                 text: codigoQR,
                 width: 150,
                 height: 150,
             });
+
+            console.log(`Código QR generado: ${codigoQR}`);
         } catch (error) {
             console.error("Error al generar el QR:", error);
+            alert("Hubo un problema al generar el código QR. Por favor, intenta nuevamente.");
         }
     });
 
+    /**
+     * Módulo 2: Cargar foto desde archivo
+     */
+    cargarFotoArchivoBtn.addEventListener("click", () => {
+        const imagenInput = document.createElement("input");
+        imagenInput.type = "file";
+        imagenInput.accept = "image/*";
+        imagenInput.click();
 
-
-    // Actualizar el valor del código QR en el formulario
-    document.getElementById("codigoQR").value = codigoQR;
-
-    // Limpiar cualquier QR anterior en el contenedor
-    qrContainer.innerHTML = "";
-
-    // Generar y mostrar el nuevo QR en el contenedor
-    try {
-        const canvasQR = document.createElement("canvas");
-        canvasQR.width = 150; // Tamaño del QR
-        canvasQR.height = 150;
-        qrContainer.appendChild(canvasQR);
-
-        const qrCode = new QRCode(canvasQR, {
-            text: codigoQR,
-            width: 150,
-            height: 150,
+        imagenInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        imagenSeleccionada = img; // Guardar la imagen
+                        const ctxFoto = fotoContainer.getContext("2d");
+                        ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
+                        ctxFoto.beginPath();
+                        ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true); // Círculo
+                        ctxFoto.closePath();
+                        ctxFoto.clip();
+                        ctxFoto.drawImage(img, 0, 0, 150, 150); // Dibujar previsualización circular
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
         });
+    });
 
-        console.log(`Código QR generado: ${codigoQR}`);
-    } catch (error) {
-        console.error("Error al generar el QR:", error);
-        alert("Hubo un problema al generar el código QR. Por favor, intenta nuevamente.");
-    }
+    // Los demás módulos permanecen intactos.
 });
 
-   // Espera a que el DOM esté completamente cargado
     /**
  * Módulo 3: Cargar foto desde cámara
  */
