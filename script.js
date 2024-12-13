@@ -227,18 +227,27 @@ generarCredencialBtn.addEventListener("click", () => {
  * Módulo 6: Generar Parte Trasera de la Credencial
  * Este módulo genera la parte trasera con el formato ajustado.
  */
-function generarParteTrasera() {
-    // Crear un nuevo canvas para la parte trasera
+const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
+
+descargarParteTraseraBtn.addEventListener("click", () => {
     const parteTraseraCanvas = document.createElement("canvas");
-    parteTraseraCanvas.width = 744; // Tamaño ajustado a 7.4 cm
-    parteTraseraCanvas.height = 1050; // Tamaño ajustado a 10.5 cm
+    parteTraseraCanvas.width = 744;
+    parteTraseraCanvas.height = 1050;
     const ctx = parteTraseraCanvas.getContext("2d");
 
-    ctx.clearRect(0, 0, parteTraseraCanvas.width, parteTraseraCanvas.height);
+    generarParteTrasera(ctx); // Generar la parte trasera en el canvas
 
-    // Fondo blanco
+    const codigoQR = document.getElementById("codigoQR").value.trim();
+    const link = document.createElement("a");
+    link.href = parteTraseraCanvas.toDataURL("image/png");
+    link.download = `CredencialBack-${codigoQR || "sinQR"}.png`;
+    link.click();
+});
+
+function generarParteTrasera(ctx) {
+    // Lógica para dibujar la parte trasera
     ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, parteTraseraCanvas.width, parteTraseraCanvas.height);
+    ctx.fillRect(0, 0, 744, 1050);
 
     // Texto de advertencia
     ctx.fillStyle = "#000";
@@ -246,60 +255,40 @@ function generarParteTrasera() {
     ctx.textAlign = "center";
     ctx.fillText(
         "El Gafete de seguridad deberá portarse todo el tiempo",
-        parteTraseraCanvas.width / 2,
+        744 / 2,
         100
     );
     ctx.fillText(
         "y de manera visible durante el tiempo que se permanezca en obra.",
-        parteTraseraCanvas.width / 2,
+        744 / 2,
         130
     );
     ctx.fillText(
         "En caso de incumplimiento, la persona será expulsada y se tomarán las",
-        parteTraseraCanvas.width / 2,
+        744 / 2,
         160
     );
-    ctx.fillText(
-        "medidas disciplinarias necesarias.",
-        parteTraseraCanvas.width / 2,
-        190
-    );
+    ctx.fillText("medidas disciplinarias necesarias.", 744 / 2, 190);
 
-    // No. IMSS
-    ctx.textAlign = "center";
+    // IMSS y firma
     ctx.font = "20px Arial";
-    const numeroIMSS = "No. IMSS: 2296790174-9"; // Ajustar el número IMSS
-    ctx.fillText(numeroIMSS, parteTraseraCanvas.width / 2, 250);
+    ctx.fillText("No. IMSS: 2296790174-9", 744 / 2, 250);
 
-    // Línea de firma
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(100, 700);
-    ctx.lineTo(parteTraseraCanvas.width - 100, 700);
+    ctx.lineTo(644, 700);
     ctx.stroke();
 
-    // Texto de firma del portador
-    ctx.font = "18px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 730);
+    ctx.fillText("Firma del Portador", 744 / 2, 730);
 
-    // Segunda línea de firma
-    ctx.beginPath();
-    ctx.moveTo(100, 770);
-    ctx.lineTo(parteTraseraCanvas.width - 100, 770);
-    ctx.stroke();
+    ctx.fillText("Supervisión HSE BPD", 744 / 2, 770);
 
-    // Texto de supervisión
-    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 800);
-
-    // Válidos
-    const validoDesde = "Válido desde: 12/12/2024";
-    const validoHasta = "Válido hasta: 12/6/2025";
-    ctx.font = "16px Arial";
+    // Validez
     ctx.textAlign = "left";
-    ctx.fillText(validoDesde, 50, parteTraseraCanvas.height - 80);
-    ctx.fillText(validoHasta, 50, parteTraseraCanvas.height - 50);
+    ctx.font = "16px Arial";
+    ctx.fillText("Válido desde: 12/12/2024", 50, 970);
+    ctx.fillText("Válido hasta: 12/6/2025", 50, 1000);
+}
 
     // Descargar parte trasera
     const link = document.createElement("a");
