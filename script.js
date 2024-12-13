@@ -289,3 +289,43 @@ descargarParteTraseraBtn.addEventListener("click", () => {
     link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Ajuste del nombre del archivo
     link.click();
 });
+// Módulo 7: Registrar Trabajador
+const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
+
+registrarTrabajadorBtn.addEventListener("click", async () => {
+    const webAppURL = "https://script.google.com/macros/s/AKfycbxTRHSTYWJu0nRwUgWSNM5sKkFTGVyn1YxQvKpfPL9rIjuCXFtf96n8RfVQClMlPhxHaw/exec"; // Reemplaza con tu URL real
+
+    // Capturar datos del formulario
+    const data = {
+        Nombre: document.getElementById("nombre").value.trim(),
+        Puesto: document.getElementById("puesto").value.trim(),
+        NSS: document.getElementById("nss").value.trim(),
+        FechaNacimiento: document.getElementById("fechaNacimiento").value.trim(),
+        Empresa: document.getElementById("empresa").value.trim(),
+        CodigoQR: document.getElementById("codigoQR").value.trim(),
+    };
+
+    // Validar que todos los campos necesarios estén completos
+    if (!data.Nombre || !data.Puesto || !data.NSS || !data.FechaNacimiento || !data.Empresa || !data.CodigoQR) {
+        alert("Por favor, completa todos los campos del formulario.");
+        return;
+    }
+
+    try {
+        // Enviar datos al servidor mediante POST
+        await fetch(webAppURL, {
+            method: "POST",
+            mode: "no-cors", // Configuración para evitar problemas de CORS
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        alert("Datos enviados correctamente. Verifica en Google Sheets.");
+    } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        alert("No se pudo enviar la información. Revisa la consola para más detalles.");
+    }
+});
+
