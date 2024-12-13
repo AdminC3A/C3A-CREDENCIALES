@@ -272,10 +272,18 @@ function generarParteTrasera() {
 // Evento para descargar la parte trasera
 const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
 descargarParteTraseraBtn.addEventListener("click", () => {
-    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
+    const codigoQR = document.getElementById("codigoQR").value.trim(); // Obtén el código QR del formulario
+    const parteTraseraCanvas = document.createElement("canvas");
+    parteTraseraCanvas.width = 744;
+    parteTraseraCanvas.height = 1050;
+    const ctx = parteTraseraCanvas.getContext("2d");
+
+    generarParteTrasera(ctx); // Generar la parte trasera en el canvas
+
     const link = document.createElement("a");
     link.href = parteTraseraCanvas.toDataURL("image/png");
-    link.download = "Parte-Trasera-Credencial.png";
+    link.download = `CredencialPosterior-${codigoQR || "sinQR"}.png`; // Nombre del archivo ajustado
     link.click();
 });
+
 
