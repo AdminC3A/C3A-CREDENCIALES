@@ -1,8 +1,5 @@
 // Espera a que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
-    const autorizarDescargarBtn = document.getElementById("autorizarDescargar");
-    const webAppURL = "https://script.google.com/macros/s/AKfycbxTRHSTYWJu0nRwUgWSNM5sKkFTGVyn1YxQvKpfPL9rIjuCXFtf96n8RfVQClMlPhxHaw/exec"; // Reemplázala con tu URL
-
     // Selección de elementos del DOM
     const generarQRBtn = document.getElementById("generarQR");
     const generarCredencialBtn = document.getElementById("generarCredencial");
@@ -216,50 +213,15 @@ generarCredencialBtn.addEventListener("click", () => {
 
   
     /**
- // Módulo 5: Descargar la credencial y enviar los datos
-    autorizarDescargarBtn.addEventListener("click", async () => {
-        try {
-            // Capturar los datos desde los campos del formulario
-            const data = {
-                Nombre: document.getElementById("nombre").value.trim(),
-                Puesto: document.getElementById("puesto").value.trim(),
-                NSS: document.getElementById("nss").value.trim(),
-                FechaNacimiento: document.getElementById("fechaNacimiento").value.trim(),
-                Empresa: document.getElementById("empresa").value.trim(),
-                CodigoQR: document.getElementById("codigoQR").value.trim(),
-            };
-
-            // Verificar si hay un Código QR generado
-            if (!data.CodigoQR) {
-                alert("El código QR no ha sido generado. Por favor, genera el código QR antes de continuar.");
-                return;
-            }
-
-            // Descargar la credencial (como ya se hacía)
-            const link = document.createElement("a");
-            link.href = credencialCanvas.toDataURL("image/png");
-            link.download = `${data.CodigoQR}-CredencialFrontal.png`;
-            link.click();
-
-            // Enviar los datos al Web App
-            await fetch(webAppURL, {
-                method: "POST",
-                mode: "no-cors", // Evitar problemas de CORS
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-
-            // Confirmación al usuario
-            alert("Datos enviados correctamente a Google Sheets.");
-        } catch (error) {
-            console.error("Error al enviar los datos:", error);
-            alert("Hubo un problema al enviar los datos. Por favor, revisa la consola para más detalles.");
-        }
+     * Módulo 5: Descargar la credencial
+     */
+    autorizarDescargarBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.href = credencialCanvas.toDataURL("image/png");
+        link.download = `CredencialFrontal-${document.getElementById("codigoQR").value}.png`;
+        link.click();
     });
 });
-
 // Módulo 6: Generar la parte trasera de la credencial
 function generarParteTrasera() {
     // Capturar el número de IMSS desde el formulario
