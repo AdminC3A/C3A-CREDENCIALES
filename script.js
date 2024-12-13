@@ -250,14 +250,14 @@ function generarParteTrasera() {
     ctx.font = "20px Arial";
     ctx.fillText(`No. IMSS: ${numeroIMSS || "Sin IMSS"}`, parteTraseraCanvas.width / 2, 250);
 
-    // Línea superior para Firma del Portador
+    // Línea superior para Firma del Portador (2 cm más arriba)
     ctx.beginPath();
-    ctx.moveTo(100, 650);
-    ctx.lineTo(parteTraseraCanvas.width - 100, 650);
+    ctx.moveTo(100, 630); // Subido de 650 a 630
+    ctx.lineTo(parteTraseraCanvas.width - 100, 630);
     ctx.stroke();
 
-    // Texto de firma superior
-    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 680);
+    // Texto de firma superior (2 cm más arriba)
+    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 660); // Subido de 680 a 660
 
     // Línea inferior para Supervisión HSE BPD
     ctx.beginPath();
