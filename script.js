@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
- /**
+/**
  * Módulo 3: Cargar foto desde cámara
  */
 cargarFotoCamaraBtn.addEventListener("click", () => {
@@ -93,61 +93,52 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
         return;
     }
 
-    // Acceder a la cámara solo en dispositivos móviles
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then((stream) => {
-            // Crear un elemento de video para mostrar la cámara
-            const video = document.createElement("video");
-            video.srcObject = stream;
-            video.play();
+    // Crear un elemento <input> para abrir la cámara nativa
+    const cameraInput = document.createElement("input");
+    cameraInput.type = "file";
+    cameraInput.accept = "image/*";
+    cameraInput.capture = "environment"; // Solicita cámara trasera
+    cameraInput.style.display = "none"; // Ocultar el input
 
-            // Crear botón para capturar la foto
-            const captureButton = document.createElement("button");
-            captureButton.textContent = "Capturar";
-            captureButton.style.display = "block";
-            captureButton.style.margin = "10px auto";
+    // Agregar el input temporalmente al documento
+    document.body.appendChild(cameraInput);
 
-            // Agregar el video y el botón al cuerpo del documento
-            document.body.append(video, captureButton);
+    // Simular clic para abrir la cámara
+    cameraInput.click();
 
-            // Manejar el evento de captura
-            captureButton.addEventListener("click", () => {
-                const canvas = document.createElement("canvas");
-                canvas.width = 150; // Tamaño ajustado
-                canvas.height = 150;
-                const ctx = canvas.getContext("2d");
-
-                // Capturar la imagen del video
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                // Crear una imagen a partir del canvas
+    // Manejar la captura de la imagen
+    cameraInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
+                    // Sustituir la imagen seleccionada previamente
                     imagenSeleccionada = img;
 
-                    // Dibujar la foto capturada en el contenedor circular
+                    // Dibujar la nueva imagen en el contenedor circular
                     const ctxFoto = fotoContainer.getContext("2d");
-                    ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height);
+                    ctxFoto.clearRect(0, 0, fotoContainer.width, fotoContainer.height); // Limpiar el canvas
                     ctxFoto.beginPath();
                     ctxFoto.arc(75, 75, 75, 0, Math.PI * 2, true); // Dibujar círculo
                     ctxFoto.closePath();
                     ctxFoto.clip();
                     ctxFoto.drawImage(img, 0, 0, 150, 150);
+
+                    alert("La imagen capturada ha reemplazado la imagen previamente cargada.");
                 };
 
-                // Establecer la imagen capturada como fuente
-                img.src = canvas.toDataURL();
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-                // Detener la cámara y limpiar elementos de video
-                stream.getTracks().forEach(track => track.stop());
-                video.remove();
-                captureButton.remove();
-            });
-        })
-        .catch((error) => {
-            console.error("Error al acceder a la cámara:", error);
-            alert("No se pudo acceder a la cámara. Por favor, revisa los permisos de tu dispositivo.");
-        });
+    // Eliminar el input después de su uso
+    cameraInput.addEventListener("blur", () => {
+        document.body.removeChild(cameraInput);
+    });
 });
 
    // Módulo 4: Generar la credencial
