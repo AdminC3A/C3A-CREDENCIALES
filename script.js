@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let imagenSeleccionada = null; // Almacenar imagen cargada/capturada
 
     /**
-     * Módulo 1: Generar Código QR
+     * Módulo 1: Generar Código QR - MODULO VALIDADO
      */
     generarQRBtn.addEventListener("click", () => {
         const nombre = document.getElementById("nombre").value.trim();
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Módulo 2: Cargar foto desde archivo
+     * Módulo 2: Cargar foto desde archivo - MODULO VALIDADO
      */
     cargarFotoArchivoBtn.addEventListener("click", () => {
         const imagenInput = document.createElement("input");
