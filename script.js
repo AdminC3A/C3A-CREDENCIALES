@@ -222,3 +222,70 @@ generarCredencialBtn.addEventListener("click", () => {
         link.click();
     });
 });
+
+//MODULO 6 PARTE TRASERA
+function generarParteTrasera(ctx) {
+    // Fondo blanco
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, 744, 1050);
+
+    // Texto de advertencia
+    ctx.fillStyle = "#000";
+    ctx.font = "18px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(
+        "El Gafete de seguridad deberá portarse todo el tiempo",
+        744 / 2,
+        100
+    );
+    ctx.fillText(
+        "y de manera visible durante el tiempo que se permanezca en obra.",
+        744 / 2,
+        130
+    );
+    ctx.fillText(
+        "En caso de incumplimiento, la persona será expulsada y se tomarán las",
+        744 / 2,
+        160
+    );
+    ctx.fillText(
+        "medidas disciplinarias necesarias.",
+        744 / 2,
+        190
+    );
+
+    // No. IMSS
+    ctx.textAlign = "center";
+    ctx.font = "20px Arial";
+    const numeroIMSS = "No. IMSS: 2296790174-9"; // Ajustar el número IMSS
+    ctx.fillText(numeroIMSS, 744 / 2, 250);
+
+    // Línea de firma
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(100, 700);
+    ctx.lineTo(744 - 100, 700);
+    ctx.stroke();
+
+    // Texto de firma del portador
+    ctx.font = "18px Arial";
+    ctx.fillText("Firma del Portador", 744 / 2, 730);
+
+    // Segunda línea de firma
+    ctx.beginPath();
+    ctx.moveTo(100, 770);
+    ctx.lineTo(744 - 100, 770);
+    ctx.stroke();
+
+    // Texto de supervisión
+    ctx.fillText("Supervisión HSE BPD", 744 / 2, 800);
+
+    // Válidos
+    const validoDesde = "Válido desde: 12/12/2024";
+    const validoHasta = "Válido hasta: 12/6/2025";
+    ctx.font = "16px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText(validoDesde, 50, 1050 - 80);
+    ctx.fillText(validoHasta, 50, 1050 - 50);
+}
