@@ -213,15 +213,48 @@ generarCredencialBtn.addEventListener("click", () => {
 
   
     /**
-     * Módulo 5: Descargar la credencial
-     */
-    autorizarDescargarBtn.addEventListener("click", () => {
+ * Módulo 5: Descargar la credencial y enviar datos al Web App
+ */
+autorizarDescargarBtn.addEventListener("click", async () => {
+    // URL de tu Web App en Google Apps Script
+    const webAppURL = "https://script.google.com/macros/s/AKfycbxTRHSTYWJu0nRwUgWSNM5sKkFTGVyn1YxQvKpfPL9rIjuCXFtf96n8RfVQClMlPhxHaw/exec";
+
+    // Capturar los datos del formulario
+    const data = {
+        Nombre: document.getElementById("nombre").value.trim(),
+        Puesto: document.getElementById("puesto").value.trim(),
+        NSS: document.getElementById("nss").value.trim(),
+        FechaNacimiento: document.getElementById("fechaNacimiento").value.trim(),
+        Empresa: document.getElementById("empresa").value.trim(),
+        CodigoQR: document.getElementById("codigoQR").value.trim(),
+    };
+
+    try {
+        // Enviar los datos al Web App
+        await fetch(webAppURL, {
+            method: "POST",
+            mode: "no-cors", // Configuración para evitar problemas de CORS
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        console.log("Datos enviados correctamente al Web App.");
+
+        // Descargar la credencial como imagen
         const link = document.createElement("a");
         link.href = credencialCanvas.toDataURL("image/png");
-        link.download = `CredencialFrontal-${document.getElementById("codigoQR").value}.png`;
+        link.download = `${document.getElementById("codigoQR").value}-CredencialFrontal.png`;
         link.click();
-    });
+
+        alert("Credencial generada y datos enviados correctamente.");
+    } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        alert("No se pudo enviar la información. Revisa la consola para más detalles.");
+    }
 });
+
 // Módulo 6: Generar la parte trasera de la credencial
 function generarParteTrasera() {
     // Capturar el número de IMSS desde el formulario
