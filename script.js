@@ -185,16 +185,16 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
         ctx.font = "40px Arial";
-        ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 500);
-        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 530);
-        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 560);
+        ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 600);
+        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 630);
+        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 660);
 
         // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
             qrImage.onload = () => {
-                ctx.drawImage(qrImage, 222, 600, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
+                ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
                 console.log("Credencial generada correctamente con el QR.");
             };
 
