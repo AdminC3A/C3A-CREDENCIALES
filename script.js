@@ -171,9 +171,9 @@ generarCredencialBtn.addEventListener("click", () => {
     logo.onload = () => {
         ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente (744 - 200)/2 = 272
 
-        // Dibujar la foto (2x2 cm -> 200x200 px)
+        // Dibujar la foto (3x3 cm -> 200x200 px)
         if (imagenSeleccionada) {
-            ctx.drawImage(imagenSeleccionada, 272, 250, 300, 300); // Centrado horizontalmente
+            ctx.drawImage(imagenSeleccionada, 222, 250, 300, 300); // Centrado horizontalmente
         } else {
             ctx.strokeStyle = "#000";
             ctx.lineWidth = 2;
@@ -184,7 +184,7 @@ generarCredencialBtn.addEventListener("click", () => {
         // Dibujar los datos personales (centrados)
         ctx.fillStyle = "#000";
         ctx.textAlign = "center";
-        ctx.font = "40px Arial";
+        ctx.font = "38px Arial";
         ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 600);
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 630);
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 660);
