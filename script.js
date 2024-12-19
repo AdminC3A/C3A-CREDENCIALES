@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const palabrasNombre = nombre.split(" ");
         const inicialesNombre = palabrasNombre.map(palabra => palabra.charAt(0).toUpperCase()).join("");
         const inicialPuesto = puesto.charAt(0).toUpperCase();
-        const iniciales = (inicialesNombre + inicialPuesto).substring(0, 3);
+        const iniciales = (inicialesNombre + inicialPuesto).substring(0, 4);
         const codigoASCII = nombre.charCodeAt(0).toString();
         const totalLength = 8;
         const cerosNecesarios = totalLength - (iniciales.length + codigoASCII.length);
