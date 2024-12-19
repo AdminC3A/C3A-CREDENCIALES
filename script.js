@@ -186,8 +186,8 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.textAlign = "center";
         ctx.font = "38px Arial";
         ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 600);
-        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 630);
-        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 660);
+        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
+        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
         // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
