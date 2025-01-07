@@ -293,10 +293,11 @@ descargarParteTraseraBtn.addEventListener("click", () => {
 const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
 
 registrarTrabajadorBtn.addEventListener("click", async () => {
-    const webAppURL = "https://script.google.com/macros/s/AKfycbyI9xkrwqgdoTdBrjcmJuLdZO-zf7BlTf6h9lIPqfxPJhKe1wpVkidbWEMlNEGBW_Y/exec"; // Reemplaza con tu URL real
+    const webAppURL = "https://script.google.com/macros/s/AKfycbwpMGoKpPqwFPaSKXxAuHigZD4RLoIXHEoqNF5EHv1S9TufseZ05i8yTqyThM6Yby1F/exec"; // Reemplaza con tu URL real
 
     // Capturar datos del formulario
     const data = {
+        operation: "credenciales", // Operación específica para registrar credenciales
         Nombre: document.getElementById("nombre").value.trim(),
         Puesto: document.getElementById("puesto").value.trim(),
         NSS: document.getElementById("nss").value.trim(),
@@ -322,10 +323,10 @@ registrarTrabajadorBtn.addEventListener("click", async () => {
             body: JSON.stringify(data),
         });
 
-        alert("Datos enviados correctamente. Verifica en Google Sheets.");
+        // Notificar éxito al usuario
+        alert("Datos enviados correctamente. Verifica en la hoja Registradas.");
     } catch (error) {
         console.error("Error al enviar los datos:", error);
         alert("No se pudo enviar la información. Revisa la consola para más detalles.");
     }
 });
-
