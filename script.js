@@ -253,47 +253,35 @@ function generarParteTrasera() {
 
     // Línea superior para Firma del Portador
     ctx.beginPath();
-    ctx.moveTo(100, 510); // Coordenadas ajustadas
+    ctx.moveTo(100, 510);
     ctx.lineTo(parteTraseraCanvas.width - 100, 510);
     ctx.stroke();
 
     // Texto de firma superior
     ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 540);
 
-    // Agregar la primera leyenda después de la firma
+    // Agregar la primera leyenda dividida en 6 líneas justificadas
     ctx.font = "16px Arial";
-    ctx.fillText(
-        "Me comprometo a seguir todas y cada una de las determinaciones referentes a las",
-        parteTraseraCanvas.width / 2,
-        590
-    );
-    ctx.fillText(
-        "NOM de Seguridad, Higiene y Ecología, así como el Manual de Políticas y Procedimientos",
-        parteTraseraCanvas.width / 2,
-        610
-    );
-    ctx.fillText(
-        "del Proyecto en Obra, en caso de no cumplirlas, me responsabilizo de acatar las sanciones que se me imputen.",
-        parteTraseraCanvas.width / 2,
-        630
-    );
-
-    // Agregar la nota sobre aceptación implícita
-    ctx.font = "14px Arial";
-    ctx.fillText(
-        "En caso de no estar firmada, la credencial se dará por entendido que se aceptan las presentes cláusulas impresas.",
-        parteTraseraCanvas.width / 2,
-        660
-    );
+    const leyendaNOM = [
+        "Me comprometo a seguir todas y cada una de las determinaciones",
+        "referentes a las NOM de Seguridad, Higiene y Ecología, así como",
+        "el Manual de Políticas y Procedimientos del Proyecto en Obra.",
+        "En caso de no cumplirlas, me responsabilizo de acatar las sanciones",
+        "que se me imputen. En caso de no estar firmada, la credencial se dará",
+        "por entendido que se aceptan las presentes cláusulas impresas."
+    ];
+    leyendaNOM.forEach((line, index) => {
+        ctx.fillText(line, parteTraseraCanvas.width / 2, 590 + index * 20); // Espaciado de 20px entre líneas
+    });
 
     // Línea inferior para Supervisión HSE BPD
     ctx.beginPath();
-    ctx.moveTo(100, 750);
-    ctx.lineTo(parteTraseraCanvas.width - 100, 750);
+    ctx.moveTo(100, 820); // Coordenadas ajustadas para bajar la firma de supervisión
+    ctx.lineTo(parteTraseraCanvas.width - 100, 820);
     ctx.stroke();
 
     // Texto de supervisión
-    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 780);
+    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 850);
 
     // Validez
     ctx.textAlign = "left";
@@ -307,12 +295,16 @@ function generarParteTrasera() {
 // Evento para descargar la parte trasera
 const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
 descargarParteTraseraBtn.addEventListener("click", () => {
-    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
-    const codigoQR = document.getElementById("codigoQR").value.trim(); // Capturar el código QR
-    const link = document.createElement("a");
-    link.href = parteTraseraCanvas.toDataURL("image/png");
-    link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Ajuste del nombre del archivo
-    link.click();
+    try {
+        const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
+        const codigoQR = document.getElementById("codigoQR").value.trim(); // Capturar el código QR
+        const link = document.createElement("a");
+        link.href = parteTraseraCanvas.toDataURL("image/png");
+        link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Ajuste del nombre del archivo
+        link.click();
+    } catch (error) {
+        console.error("Error al generar o descargar la parte trasera:", error);
+    }
 });
 
 
