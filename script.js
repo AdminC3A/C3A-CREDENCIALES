@@ -288,12 +288,12 @@ function generarParteTrasera() {
 
     // Línea inferior para Supervisión HSE BPD
     ctx.beginPath();
-    ctx.moveTo(100, 750);
-    ctx.lineTo(parteTraseraCanvas.width - 100, 750);
+    ctx.moveTo(100, 820); // Coordenadas ajustadas para bajar la firma de supervisión
+    ctx.lineTo(parteTraseraCanvas.width - 100, 820);
     ctx.stroke();
 
     // Texto de supervisión
-    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 780);
+    ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 850);
 
     // Validez
     ctx.textAlign = "left";
