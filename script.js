@@ -222,6 +222,7 @@ generarCredencialBtn.addEventListener("click", () => {
         link.click();
     });
 });
+
 // Módulo 6: Generar la parte trasera de la credencial
 function generarParteTrasera() {
     // Capturar el número de IMSS desde el formulario
@@ -302,6 +303,18 @@ function generarParteTrasera() {
 
     return parteTraseraCanvas;
 }
+
+// Evento para descargar la parte trasera
+const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
+descargarParteTraseraBtn.addEventListener("click", () => {
+    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
+    const codigoQR = document.getElementById("codigoQR").value.trim(); // Capturar el código QR
+    const link = document.createElement("a");
+    link.href = parteTraseraCanvas.toDataURL("image/png");
+    link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Ajuste del nombre del archivo
+    link.click();
+});
+
 
 // Módulo 7: Registrar Trabajador
 const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
