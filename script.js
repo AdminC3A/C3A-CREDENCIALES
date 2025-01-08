@@ -250,16 +250,40 @@ function generarParteTrasera() {
     ctx.font = "20px Arial";
     ctx.fillText(`No. IMSS: ${numeroIMSS || "Sin IMSS"}`, parteTraseraCanvas.width / 2, 250);
 
-   // Línea superior para Firma del Portador (subida 8 cm adicionales)
+    // Línea superior para Firma del Portador
     ctx.beginPath();
-    ctx.moveTo(100, 510); // Subido de 590 a 510
+    ctx.moveTo(100, 510); // Coordenadas ajustadas
     ctx.lineTo(parteTraseraCanvas.width - 100, 510);
     ctx.stroke();
 
-    // Texto de firma superior (subido 8 cm adicionales)
-    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 540); // Subido de 620 a 540
+    // Texto de firma superior
+    ctx.fillText("Firma del Portador", parteTraseraCanvas.width / 2, 540);
 
+    // Agregar la primera leyenda después de la firma
+    ctx.font = "16px Arial";
+    ctx.fillText(
+        "Me comprometo a seguir todas y cada una de las determinaciones referentes a las",
+        parteTraseraCanvas.width / 2,
+        590
+    );
+    ctx.fillText(
+        "NOM de Seguridad, Higiene y Ecología, así como el Manual de Políticas y Procedimientos",
+        parteTraseraCanvas.width / 2,
+        610
+    );
+    ctx.fillText(
+        "del Proyecto en Obra, en caso de no cumplirlas, me responsabilizo de acatar las sanciones que se me imputen.",
+        parteTraseraCanvas.width / 2,
+        630
+    );
 
+    // Agregar la nota sobre aceptación implícita
+    ctx.font = "14px Arial";
+    ctx.fillText(
+        "En caso de no estar firmada, la credencial se dará por entendido que se aceptan las presentes cláusulas impresas.",
+        parteTraseraCanvas.width / 2,
+        660
+    );
 
     // Línea inferior para Supervisión HSE BPD
     ctx.beginPath();
@@ -279,16 +303,6 @@ function generarParteTrasera() {
     return parteTraseraCanvas;
 }
 
-// Evento para descargar la parte trasera
-const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
-descargarParteTraseraBtn.addEventListener("click", () => {
-    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
-    const codigoQR = document.getElementById("codigoQR").value.trim(); // Capturar el código QR
-    const link = document.createElement("a");
-    link.href = parteTraseraCanvas.toDataURL("image/png");
-    link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Ajuste del nombre del archivo
-    link.click();
-});
 // Módulo 7: Registrar Trabajador
 const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
 
