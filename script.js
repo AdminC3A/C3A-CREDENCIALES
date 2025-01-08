@@ -267,7 +267,7 @@ function generarParteTrasera() {
         "referentes a las NOM de Seguridad, Higiene y Ecología, así como",
         "el Manual de Políticas y Procedimientos del Proyecto en Obra.",
         "En caso de no cumplirlas, me responsabilizo de acatar las sanciones",
-        "que se me imputen. En caso de no estar firmada, la credencial se dará",
+        "que se me imputen. En caso de no estar firmada la credencial, se dará",
         "por entendido que se aceptan las presentes cláusulas impresas."
     ];
     leyendaNOM.forEach((line, index) => {
