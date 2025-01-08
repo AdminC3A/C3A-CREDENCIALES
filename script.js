@@ -262,21 +262,14 @@ function generarParteTrasera() {
 
     // Agregar la primera leyenda después de la firma
     ctx.font = "16px Arial";
-    ctx.fillText(
+    const leyendaNOM = [
         "Me comprometo a seguir todas y cada una de las determinaciones referentes a las",
-        parteTraseraCanvas.width / 2,
-        590
-    );
-    ctx.fillText(
         "NOM de Seguridad, Higiene y Ecología, así como el Manual de Políticas y Procedimientos",
-        parteTraseraCanvas.width / 2,
-        610
-    );
-    ctx.fillText(
-        "del Proyecto en Obra, en caso de no cumplirlas, me responsabilizo de acatar las sanciones que se me imputen.",
-        parteTraseraCanvas.width / 2,
-        630
-    );
+        "del Proyecto en Obra. En caso de no cumplirlas, me responsabilizo de acatar las sanciones que se me imputen."
+    ];
+    leyendaNOM.forEach((line, index) => {
+        ctx.fillText(line, parteTraseraCanvas.width / 2, 590 + index * 20); // Espaciado de 20px entre líneas
+    });
 
     // Agregar la nota sobre aceptación implícita
     ctx.font = "14px Arial";
@@ -304,16 +297,6 @@ function generarParteTrasera() {
     return parteTraseraCanvas;
 }
 
-// Evento para descargar la parte trasera
-const descargarParteTraseraBtn = document.getElementById("descargarParteTrasera");
-descargarParteTraseraBtn.addEventListener("click", () => {
-    const parteTraseraCanvas = generarParteTrasera(); // Generar la parte trasera
-    const codigoQR = document.getElementById("codigoQR").value.trim(); // Capturar el código QR
-    const link = document.createElement("a");
-    link.href = parteTraseraCanvas.toDataURL("image/png");
-    link.download = `${codigoQR || "sinQR"}-CredencialPosterior.png`; // Ajuste del nombre del archivo
-    link.click();
-});
 
 
 // Módulo 7: Registrar Trabajador
