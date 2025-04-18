@@ -189,7 +189,7 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
-       // Dibujar el QR (3x3 cm -> 300x300 px)
+      // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
@@ -203,11 +203,11 @@ generarCredencialBtn.addEventListener("click", () => {
                 const qrSize = 300;
 
                 // Círculos alineados verticalmente
-                const circleX = qrX + qrSize + 20; // Posición X de los círculos, al lado del QR
+                const circleX = qrX + qrSize + 40; // Se separan 5mm de distancia lateral
                 const circlePositions = [
-                    { y: qrY, color: 'green' }, // Círculo verde (parte superior alineada con el QR)
+                    { y: qrY + 5, color: 'green' }, // Círculo verde (bajado 5mm)
                     { y: qrY + qrSize / 2, color: 'yellow' }, // Círculo amarillo (centrado con el QR)
-                    { y: qrY + qrSize, color: 'red' } // Círculo rojo (parte inferior alineada con el QR)
+                    { y: qrY + qrSize - 5, color: 'red' } // Círculo rojo (subido 5mm)
                 ];
 
                 // Dibujar los círculos sin borde negro
