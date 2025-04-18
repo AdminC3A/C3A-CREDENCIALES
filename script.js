@@ -189,13 +189,30 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
-        // Dibujar el QR (3x3 cm -> 300x300 px)
+         // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
             qrImage.onload = () => {
                 ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
-                console.log("Credencial generada correctamente con el QR.");
+
+                // Ahora agregamos los círculos debajo del QR
+                const circleRadius = 15; // Radio de los círculos
+                const circleY = 1010; // Posición Y de los círculos
+
+                // Círculos pequeños
+                const circleXStart = 207; // Posición X para el primer círculo
+                const colors = ['green', 'yellow', 'red']; // Colores de los círculos
+
+                // Dibujar los círculos
+                colors.forEach((color, index) => {
+                    ctx.beginPath();
+                    ctx.arc(circleXStart + (index * 30), circleY, circleRadius, 0, 2 * Math.PI);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                });
+
+                console.log("Credencial generada correctamente con el QR y círculos.");
             };
 
             qrImage.onerror = () => {
@@ -210,7 +227,6 @@ generarCredencialBtn.addEventListener("click", () => {
         alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
     };
 });
-
   
     /**
      * Módulo 5: Descargar la credencial
@@ -331,7 +347,7 @@ registrarTrabajadorBtn.addEventListener("click", async () => {
         alert("Por favor, completa todos los campos del formulario.");
         return;
     }
-
+ 
     try {
         // Enviar datos al servidor mediante POST
         await fetch(webAppURL, {
