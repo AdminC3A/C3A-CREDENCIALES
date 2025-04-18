@@ -205,9 +205,9 @@ generarCredencialBtn.addEventListener("click", () => {
                 // Círculos alineados verticalmente
                 const circleX = qrX + qrSize + 60; // Se separan 5mm más de distancia lateral hacia la derecha
                 const circlePositions = [
-                    { y: qrY + 20, color: 'green' }, // Círculo verde (bajado 20mm)
+                    { y: qrY + 50, color: 'green' }, // Círculo verde (movido mm)
                     { y: qrY + qrSize / 2, color: 'yellow' }, // Círculo amarillo (centrado con el QR)
-                    { y: qrY + qrSize - 20, color: 'red' } // Círculo rojo (subido 20mm)
+                    { y: qrY + qrSize - 50, color: 'red' } // Círculo rojo (movido mm)
                 ];
 
                 // Dibujar los círculos sin borde negro
