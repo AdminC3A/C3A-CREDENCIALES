@@ -189,15 +189,15 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
-        // Dibujar el QR (3x3 cm -> 300x300 px)
+       // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
             qrImage.onload = () => {
                 ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
 
-                // Tamaño de los círculos reducido al 50%
-                const circleRadius = 20; // Tamaño reducido
+                // Tamaño de los círculos aumentado al 25% más grande (ahora 25px de radio)
+                const circleRadius = 25; // Aumento del 25%
                 const qrX = 222;
                 const qrY = 700;
                 const qrSize = 300;
@@ -210,17 +210,12 @@ generarCredencialBtn.addEventListener("click", () => {
                     { y: qrY + qrSize, color: 'red' } // Círculo rojo (parte inferior alineada con el QR)
                 ];
 
-                // Dibujo de los círculos
+                // Dibujar los círculos sin borde negro
                 circlePositions.forEach(position => {
                     ctx.beginPath();
                     ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
                     ctx.fillStyle = position.color;
                     ctx.fill();
-
-                    // Añadir borde negro a los círculos
-                    ctx.lineWidth = 4;
-                    ctx.strokeStyle = "#000"; // Borde negro
-                    ctx.stroke();
                 });
 
                 console.log("Credencial generada correctamente con el QR y círculos ajustados.");
