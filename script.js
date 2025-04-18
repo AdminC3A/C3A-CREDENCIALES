@@ -150,6 +150,11 @@ generarCredencialBtn.addEventListener("click", () => {
     const ctx = credencialCanvas.getContext("2d");
     ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
+    // Borde negro alrededor de la credencial
+    ctx.strokeStyle = "#000"; // Color negro
+    ctx.lineWidth = 5; // Grosor del borde
+    ctx.strokeRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+
     // Capturar datos del formulario
     const nombre = document.getElementById("nombre").value.trim();
     const puesto = document.getElementById("puesto").value.trim();
@@ -171,15 +176,38 @@ generarCredencialBtn.addEventListener("click", () => {
     logo.onload = () => {
         ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente (744 - 200)/2 = 272
 
-        // Dibujar la foto (3x3 cm -> 200x200 px)
+        // Dibujar la línea negra debajo del logo
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2; // Grosor de la línea
+        ctx.beginPath();
+        ctx.moveTo(0, 220); // Inicia desde la izquierda
+        ctx.lineTo(744, 220); // Dibuja hasta el borde derecho
+        ctx.stroke();
+
+        // Dibujar la foto con esquinas redondeadas (3x3 cm -> 200x200 px)
+        const photoX = 222;
+        const photoY = 250;
+        const photoSize = 200;
+        const radius = 20; // Radio de las esquinas redondeadas
+
+        ctx.save(); // Guardar el estado actual del contexto
+        ctx.beginPath();
+        ctx.moveTo(photoX + radius, photoY); // Empezamos en la esquina superior izquierda, desplazada por el radio
+        ctx.arcTo(photoX + photoSize, photoY, photoX + photoSize, photoY + photoSize, radius); // Arriba a la derecha
+        ctx.arcTo(photoX + photoSize, photoY + photoSize, photoX, photoY + photoSize, radius); // Abajo a la derecha
+        ctx.arcTo(photoX, photoY + photoSize, photoX, photoY, radius); // Abajo a la izquierda
+        ctx.arcTo(photoX, photoY, photoX + radius, photoY, radius); // Arriba a la izquierda
+        ctx.closePath();
+        ctx.clip(); // Hacer que la foto se dibuje dentro del área redondeada
         if (imagenSeleccionada) {
-            ctx.drawImage(imagenSeleccionada, 222, 250, 300, 300); // Centrado horizontalmente
+            ctx.drawImage(imagenSeleccionada, photoX, photoY, photoSize, photoSize); // Centrado horizontalmente
         } else {
             ctx.strokeStyle = "#000";
             ctx.lineWidth = 2;
-            ctx.strokeRect(272, 250, 200, 200); // Cuadro vacío para la foto
+            ctx.strokeRect(photoX, photoY, photoSize, photoSize); // Cuadro vacío para la foto
             console.warn("No se ha seleccionado una foto. Se deja un cuadro en blanco.");
         }
+        ctx.restore(); // Restaurar el estado del contexto
 
         // Dibujar los datos personales (centrados)
         ctx.fillStyle = "#000";
@@ -189,36 +217,12 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
-      // Dibujar el QR (3x3 cm -> 300x300 px)
+        // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
             qrImage.onload = () => {
                 ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
-
-                // Tamaño de los círculos aumentado al 25% más grande (ahora 25px de radio)
-                const circleRadius = 25; // Aumento del 25%
-                const qrX = 222;
-                const qrY = 700;
-                const qrSize = 300;
-
-                // Círculos alineados verticalmente
-                const circleX = qrX + qrSize + 60; // Se separan 5mm más de distancia lateral hacia la derecha
-                const circlePositions = [
-                    { y: qrY + 50, color: 'green' }, // Círculo verde (movido mm)
-                    { y: qrY + qrSize / 2, color: 'yellow' }, // Círculo amarillo (centrado con el QR)
-                    { y: qrY + qrSize - 50, color: 'red' } // Círculo rojo (movido mm)
-                ];
-
-                // Dibujar los círculos sin borde negro
-                circlePositions.forEach(position => {
-                    ctx.beginPath();
-                    ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
-                    ctx.fillStyle = position.color;
-                    ctx.fill();
-                });
-
-                console.log("Credencial generada correctamente con el QR y círculos ajustados.");
             };
 
             qrImage.onerror = () => {
@@ -233,6 +237,7 @@ generarCredencialBtn.addEventListener("click", () => {
         alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
     };
 });
+
     
     /**
      * Módulo 5: Descargar la credencial
