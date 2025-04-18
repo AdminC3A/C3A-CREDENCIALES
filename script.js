@@ -189,20 +189,25 @@ generarCredencialBtn.addEventListener("click", () => {
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
-         // Dibujar el QR (3x3 cm -> 300x300 px)
+        // Dibujar el QR (3x3 cm -> 300x300 px)
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
             qrImage.onload = () => {
                 ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
 
-                // Ahora agregamos los círculos debajo del QR
-                const circleRadius = 15; // Radio de los círculos
-                const circleY = 1010; // Posición Y de los círculos
+                // Dibujar los círculos al lado derecho del QR
+                const circleRadius = 20; // Aumentamos el tamaño de los círculos
+                const circleY = 850; // Posición Y de los círculos, alineados con el QR
 
-                // Círculos pequeños
-                const circleXStart = 207; // Posición X para el primer círculo
+                // Círculos pequeños en un marco negro, alineados a la derecha
+                const circleXStart = 532; // Posición X para el primer círculo (a la derecha del QR)
                 const colors = ['green', 'yellow', 'red']; // Colores de los círculos
+
+                // Dibujo del marco negro
+                ctx.strokeStyle = "#000"; // Color negro para el marco
+                ctx.lineWidth = 3; // Grosor del marco
+                ctx.strokeRect(circleXStart - 10, circleY - 10, 90, 30); // Cuadro alrededor de los círculos
 
                 // Dibujar los círculos
                 colors.forEach((color, index) => {
@@ -212,7 +217,7 @@ generarCredencialBtn.addEventListener("click", () => {
                     ctx.fill();
                 });
 
-                console.log("Credencial generada correctamente con el QR y círculos.");
+                console.log("Credencial generada correctamente con el QR y círculos al lado derecho.");
             };
 
             qrImage.onerror = () => {
@@ -227,7 +232,6 @@ generarCredencialBtn.addEventListener("click", () => {
         alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
     };
 });
-  
     /**
      * Módulo 5: Descargar la credencial
      */
