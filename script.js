@@ -196,33 +196,34 @@ generarCredencialBtn.addEventListener("click", () => {
             qrImage.onload = () => {
                 ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
 
-                // Dibujar los círculos al lado derecho del QR, alineados verticalmente
-                const circleRadius = 40; // Doblamos el tamaño de los círculos
-                const circleYStart = 900; // Posición inicial Y para los círculos, alineados verticalmente
+                // Tamaño de los círculos reducido al 50%
+                const circleRadius = 20; // Tamaño reducido
+                const qrX = 222;
+                const qrY = 700;
+                const qrSize = 300;
 
-                // Círculos pequeños en un marco negro, alineados verticalmente
-                const circleX = 532; // Posición X para los círculos (a la derecha del QR)
-                const colors = ['green', 'yellow', 'red']; // Colores de los círculos
+                // Círculos alineados verticalmente
+                const circleX = qrX + qrSize + 20; // Posición X de los círculos, al lado del QR
+                const circlePositions = [
+                    { y: qrY, color: 'green' }, // Círculo verde (parte superior alineada con el QR)
+                    { y: qrY + qrSize / 2, color: 'yellow' }, // Círculo amarillo (centrado con el QR)
+                    { y: qrY + qrSize, color: 'red' } // Círculo rojo (parte inferior alineada con el QR)
+                ];
 
-                // Dibujo del marco negro alrededor de los círculos
-                ctx.strokeStyle = "#000"; // Color negro para el marco
-                ctx.lineWidth = 3; // Grosor del marco
-                ctx.strokeRect(circleX - 10, circleYStart - 10, 50, 120); // Cuadro alrededor de los círculos
-
-                // Dibujar los círculos verticalmente
-                colors.forEach((color, index) => {
+                // Dibujo de los círculos
+                circlePositions.forEach(position => {
                     ctx.beginPath();
-                    ctx.arc(circleX, circleYStart + (index * 50), circleRadius, 0, 2 * Math.PI);
-                    ctx.fillStyle = color;
+                    ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
+                    ctx.fillStyle = position.color;
                     ctx.fill();
 
-                    // Añadir borde negro al círculo
-                    ctx.lineWidth = 4; // Grosor del borde
-                    ctx.strokeStyle = "#000"; // Color del borde
+                    // Añadir borde negro a los círculos
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = "#000"; // Borde negro
                     ctx.stroke();
                 });
 
-                console.log("Credencial generada correctamente con el QR y círculos verticales.");
+                console.log("Credencial generada correctamente con el QR y círculos ajustados.");
             };
 
             qrImage.onerror = () => {
