@@ -308,8 +308,8 @@ function generarParteTrasera() {
     // Validez
     ctx.textAlign = "left";
     ctx.font = "16px Arial";
-    ctx.fillText("Válido desde: 12/12/2024", 50, 970);
-    ctx.fillText("Válido hasta: 12/6/2025", 50, 1000);
+    ctx.fillText("Válido desde: 01/06/2025", 50, 970);
+    ctx.fillText("Válido hasta: 30/11/2026", 50, 1000);
 
     return parteTraseraCanvas;
 }
@@ -372,6 +372,7 @@ registrarTrabajadorBtn.addEventListener("click", async () => {
         alert("No se pudo enviar la información. Revisa la consola para más detalles.");
     }
 });
+
 
 
 
