@@ -335,7 +335,7 @@ descargarParteTraseraBtn.addEventListener("click", () => {
 const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
 
 registrarTrabajadorBtn.addEventListener("click", async () => {
-    const webAppURL = "https://script.google.com/macros/s/AKfycbwmkizxXdEmsR-J3sTx2kW64eDYArw_iG59lGpcr-7qpPXngsaXsaLBplSXx4_eYg7xTw/exec"; // Reemplaza con tu URL real
+    const webAppURL = "https://script.google.com/macros/s/AKfycbzmSaQf4b7QsygJ2g27xQ-N6rRhQHBJkut8dX7giKO4VJvowgDeb-IOYl0XyxmedJnPFQ/exec"; // Reemplaza con tu URL real
 
     // Capturar datos del formulario
     const data = {
@@ -372,6 +372,7 @@ registrarTrabajadorBtn.addEventListener("click", async () => {
         alert("No se pudo enviar la información. Revisa la consola para más detalles.");
     }
 });
+
 
 
 
