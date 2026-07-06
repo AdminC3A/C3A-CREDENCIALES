@@ -182,11 +182,16 @@ generarCredencialBtn.addEventListener("click", () => {
         }
 
         // Dibujar los datos personales (centrados)
-        ctx.fillStyle = "#000";
         ctx.textAlign = "center";
         ctx.font = "38px Arial";
+
+        // Nombre y Puesto en negro
+        ctx.fillStyle = "#000000";
         ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 600);
         ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
+
+        // Empresa en blanco
+        ctx.fillStyle = "#FFFFFF";
         ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
       // Dibujar el QR (3x3 cm -> 300x300 px)
