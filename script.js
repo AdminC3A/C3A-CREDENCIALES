@@ -177,7 +177,7 @@ generarCredencialBtn.addEventListener("click", () => {
         } else {
             ctx.strokeStyle = "#000";
             ctx.lineWidth = 2;
-            ctx.strokeRect(272, 250, 200, 200); // Cuadro vacío para la foto
+            ctx.strokeRect(222, 250, 300, 300); // Cuadro vacío para la foto (300x300, igual que la foto y el QR)
             console.warn("No se ha seleccionado una foto. Se deja un cuadro en blanco.");
         }
 
@@ -350,11 +350,13 @@ registrarTrabajadorBtn.addEventListener("click", async () => {
         NSS: document.getElementById("nss").value.trim(),
         FechaNacimiento: document.getElementById("fechaNacimiento").value.trim(),
         Empresa: document.getElementById("empresa").value.trim(),
+        TipoSangre: document.getElementById("tipoSangre").value.trim(),
+        ContactoE: document.getElementById("contactoEmergencia").value.trim(),
         CodigoQR: document.getElementById("codigoQR").value.trim(),
     };
 
     // Validar que todos los campos necesarios estén completos
-    if (!data.Nombre || !data.Puesto || !data.NSS || !data.FechaNacimiento || !data.Empresa || !data.CodigoQR) {
+    if (!data.Nombre || !data.Puesto || !data.NSS || !data.FechaNacimiento || !data.Empresa || !data.TipoSangre || !data.ContactoE || !data.CodigoQR) {
         alert("Por favor, completa todos los campos del formulario.");
         return;
     }

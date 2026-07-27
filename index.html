@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <h1>Elemento Arquitectura Interior © 2025</h1>
+        <h1>Casa Tres Aguas © 2025</h1>
     </header>
     <main>
         <section class="card">
@@ -33,25 +33,53 @@
             </div>
             <div class="form-group">
                 <label for="empresa">Empresa:</label>
-                <input type="text" id="empresa" placeholder="Ingresa la empresa" value="Grupo GCLB">
+                <input type="text" id="empresa" list="listaEmpresas" placeholder="Selecciona o escribe la empresa" value="Grupo GCLB" autocomplete="off">
+                <datalist id="listaEmpresas">
+                    <option value="Oro Construcciones"></option>
+                    <option value="Elemento Arquitectura Interior"></option>
+                    <option value="Grupo GCLB"></option>
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="tipoSangre">Tipo de Sangre:</label>
+                <input type="text" id="tipoSangre" placeholder="Ej. O+, A-, AB+">
+            </div>
+            <div class="form-group">
+                <label for="contactoEmergencia">Contacto de Emergencia:</label>
+                <input type="text" id="contactoEmergencia" placeholder="Nombre y teléfono">
             </div>
             <div class="form-group">
                 <label for="codigoQR">Código QR (Dar click para generar):</label>
                 <input type="text" id="codigoQR" placeholder="Ingresa el código QR">
             </div>
 
-            <!-- Botones numerados -->
-            <div class="button-group">
-    <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
-    <div class="optional-buttons">
-        <button id="cargarFotoArchivo" class="btn btn-secondary">Cargar Foto Archivo</button>
-        <button id="cargarFotoCamara" class="btn btn-secondary">Cargar Foto Cámara</button>
-    </div>
-    <button id="generarCredencial" class="btn btn-secondary">2. Generar Credencial</button>
-    <button id="autorizarDescargar" class="btn btn-success">3. Descargar parte frontal</button>
-<button id="descargarParteTrasera" class="btn btn-secondary">4. Descargar Parte Trasera</button>
- <button id="registrarTrabajador" class="btn btn-secondary">5. Registrar Trabajador</button>
-       </div>
+            <!-- Botones agrupados por sección -->
+            <div class="acciones">
+                <div class="accion-seccion">
+                    <h3 class="seccion-titulo">Código QR</h3>
+                    <button id="generarQR" class="btn btn-primary">1. Generar QR</button>
+                </div>
+
+                <div class="accion-seccion">
+                    <h3 class="seccion-titulo">Foto (opcional)</h3>
+                    <div class="btn-fila">
+                        <button id="cargarFotoArchivo" class="btn btn-secondary">Cargar Foto Archivo</button>
+                        <button id="cargarFotoCamara" class="btn btn-secondary">Cargar Foto Cámara</button>
+                    </div>
+                </div>
+
+                <div class="accion-seccion">
+                    <h3 class="seccion-titulo">Credencial</h3>
+                    <button id="generarCredencial" class="btn btn-secondary">2. Generar Credencial</button>
+                    <button id="autorizarDescargar" class="btn btn-success">3. Descargar Parte Frontal</button>
+                    <button id="descargarParteTrasera" class="btn btn-secondary">4. Descargar Parte Trasera</button>
+                </div>
+
+                <div class="accion-seccion">
+                    <h3 class="seccion-titulo">Registro</h3>
+                    <button id="registrarTrabajador" class="btn btn-secondary">5. Registrar Trabajador</button>
+                </div>
+            </div>
 
 <!-- Contenedores para visualización -->
 <div id="imagenQRPreview" class="preview-container">
@@ -62,13 +90,13 @@
 </div>
 
 <canvas id="credencialCanvas" class="credencial-preview"></canvas>
-          
+
         </section>
 
         <p id="status">Por favor, llena los datos para continuar.</p>
     </main>
     <footer>
-        <p>© 2025 Elemento Arquitectura Interior</p>
+        <p>© 2025 Casa Tres Aguas</p>
     </footer>
 </body>
 </html>

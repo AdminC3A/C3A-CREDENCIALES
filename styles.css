@@ -45,16 +45,51 @@ input {
     border-radius: 4px;
 }
 
-.button-group {
+/* Botones agrupados por sección */
+.acciones {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.accion-seccion {
+    margin-bottom: 18px;
+}
+
+.seccion-titulo {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-fila {
     display: flex;
-    flex-wrap: wrap; /* Permite que los botones se acomoden en varias filas */
-    justify-content: space-between; /* Espacio uniforme entre botones */
-    gap: 10px; /* Espacio entre los botones */
+    gap: 10px;
 }
 
 button {
-    flex: 1 1 auto; /* Los botones se ajustarán al ancho disponible */
-    min-width: 100px; /* Ancho mínimo para los botones */
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.btn-fila button {
+    flex: 1;
+    margin-bottom: 0;
 }
 
 
@@ -112,16 +147,6 @@ button {
     border-radius: 8px; /* Mantener bordes redondeados si aplica */
 }
 
-
-.optional-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.btn {
-    margin: 5px;
-}
 #registrarTrabajador {
     background-color: #ffc107;
     color: #fff;
