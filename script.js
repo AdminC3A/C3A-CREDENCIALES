@@ -141,7 +141,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
     });
 });
 
-    // Módulo 4: Generar la credencial
+    // Módulo 4: Generar la credencial (FRENTE REDISEÑADO)
 generarCredencialBtn.addEventListener("click", () => {
     // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
     credencialCanvas.width = 744;
@@ -161,81 +161,128 @@ generarCredencialBtn.addEventListener("click", () => {
         return;
     }
 
+    // Colores de marca (fáciles de cambiar)
+    const AZUL = "#0056b3";
+    const AZUL_CLARO = "#e6f0fb";
+
     // Fondo blanco para la credencial
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    // Dibujar el logo (2x2 cm -> 200x200 px)
-    const logo = new Image();
-    logo.src = "logo.png"; // Asegúrate de que el logo esté en el directorio correcto
-    logo.onload = () => {
-        ctx.drawImage(logo, 272, 20, 200, 200); // Centrado horizontalmente (744 - 200)/2 = 272
+    // Encabezado azul superior
+    ctx.fillStyle = AZUL;
+    ctx.fillRect(0, 0, 744, 155);
 
-        // Dibujar la foto (3x3 cm -> 200x200 px)
-        if (imagenSeleccionada) {
-            ctx.drawImage(imagenSeleccionada, 222, 250, 300, 300); // Centrado horizontalmente
-        } else {
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(222, 250, 300, 300); // Cuadro vacío para la foto (300x300, igual que la foto y el QR)
-            console.warn("No se ha seleccionado una foto. Se deja un cuadro en blanco.");
-        }
+    // Barra azul inferior
+    ctx.fillStyle = AZUL;
+    ctx.fillRect(0, 1035, 744, 15);
 
-        // Dibujar los datos personales (centrados)
+    // Texto del encabezado
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 34px Arial";
+    ctx.fillText("Casa Tres Aguas", 150, 78);
+    ctx.font = "18px Arial";
+    ctx.fillText("Gafete de seguridad en obra", 150, 112);
+
+    // Foto circular
+    const cx = 372, cy = 315, r = 130;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    if (imagenSeleccionada) {
+        ctx.drawImage(imagenSeleccionada, cx - r, cy - r, r * 2, r * 2);
+    } else {
+        ctx.fillStyle = "#eef3f9";
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+        ctx.fillStyle = "#8899aa";
         ctx.textAlign = "center";
-        ctx.font = "38px Arial";
+        ctx.font = "26px Arial";
+        ctx.fillText("FOTO", cx, cy + 8);
+    }
+    ctx.restore();
 
-        // Nombre y Puesto en negro
-        ctx.fillStyle = "#000000";
-        ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 600);
-        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
+    // Anillo azul alrededor de la foto
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = AZUL;
+    ctx.stroke();
 
-        // Empresa en blanco
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
+    // Nombre (grande y en negritas)
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#111111";
+    ctx.font = "bold 44px Arial";
+    ctx.fillText(nombre, 372, 510);
 
-      // Dibujar el QR (3x3 cm -> 300x300 px)
-        if (codigoQR) {
-            const qrImage = new Image();
-            qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
-            qrImage.onload = () => {
-                ctx.drawImage(qrImage, 222, 700, 300, 300); // Centrado horizontalmente (744 - 300)/2 = 222
+    // Puesto (píldora azul claro)
+    ctx.font = "bold 28px Arial";
+    const puestoTxt = puesto.toUpperCase();
+    const pillH = 44;
+    const pillW = ctx.measureText(puestoTxt).width + 44;
+    const pillX = 372 - pillW / 2;
+    const pillY = 545;
+    const rad = pillH / 2;
+    ctx.beginPath();
+    ctx.moveTo(pillX + rad, pillY);
+    ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + pillH, rad);
+    ctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, rad);
+    ctx.arcTo(pillX, pillY + pillH, pillX, pillY, rad);
+    ctx.arcTo(pillX, pillY, pillX + pillW, pillY, rad);
+    ctx.closePath();
+    ctx.fillStyle = AZUL_CLARO;
+    ctx.fill();
+    ctx.fillStyle = AZUL;
+    ctx.fillText(puestoTxt, 372, pillY + 31);
 
-                // Tamaño de los círculos aumentado al 25% más grande (ahora 25px de radio)
-                const circleRadius = 25; // Aumento del 25%
-                const qrX = 222;
-                const qrY = 700;
-                const qrSize = 300;
+    // Empresa (gris)
+    ctx.fillStyle = "#555555";
+    ctx.font = "26px Arial";
+    ctx.fillText(empresa, 372, 640);
 
-                // Círculos alineados verticalmente
-                const circleX = qrX + qrSize + 60; // Se separan 5mm más de distancia lateral hacia la derecha
-                const circlePositions = [
-                    { y: qrY + 50, color: 'green' }, // Círculo verde (movido mm)
-                    { y: qrY + qrSize / 2, color: 'yellow' }, // Círculo amarillo (centrado con el QR)
-                    { y: qrY + qrSize - 50, color: 'red' } // Círculo rojo (movido mm)
-                ];
+    // QR + semáforos
+    const qrX = 170, qrY = 660, qrSize = 300;
+    if (codigoQR) {
+        const qrImage = new Image();
+        qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
+        qrImage.onload = () => {
+            ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
 
-                // Dibujar los círculos sin borde negro
-                circlePositions.forEach(position => {
-                    ctx.beginPath();
-                    ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
-                    ctx.fillStyle = position.color;
-                    ctx.fill();
-                });
+            const circleRadius = 25;
+            const circleX = qrX + qrSize + 70;
+            const circlePositions = [
+                { y: qrY + 50, color: 'green' },
+                { y: qrY + qrSize / 2, color: 'yellow' },
+                { y: qrY + qrSize - 50, color: 'red' }
+            ];
+            circlePositions.forEach(position => {
+                ctx.beginPath();
+                ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
+                ctx.fillStyle = position.color;
+                ctx.fill();
+            });
 
-                console.log("Credencial generada correctamente con el QR y círculos ajustados.");
-            };
+            console.log("Credencial (frente) generada correctamente.");
+        };
+        qrImage.onerror = () => {
+            console.warn("No se pudo cargar el QR en la credencial.");
+        };
+    } else {
+        console.warn("No se generó el QR. Se deja el espacio vacío.");
+    }
 
-            qrImage.onerror = () => {
-                console.warn("No se pudo cargar el QR en la credencial.");
-            };
-        } else {
-            console.warn("No se generó el QR. Se deja el espacio vacío.");
-        }
+    // Logo (se dibuja encima del encabezado; si falta, no rompe la credencial)
+    const logo = new Image();
+    logo.src = "logo.png";
+    logo.onload = () => {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(34, 32, 92, 92);           // Caja blanca detrás del logo
+        ctx.drawImage(logo, 38, 36, 84, 84);
     };
-
     logo.onerror = () => {
-        alert("No se pudo cargar el logo. Asegúrate de que el archivo logo.png está disponible.");
+        console.warn("No se pudo cargar logo.png; se omite el logo (la credencial se genera igual).");
     };
 });
     
@@ -252,8 +299,11 @@ generarCredencialBtn.addEventListener("click", () => {
 
 // Módulo 6: Generar la parte trasera de la credencial
 function generarParteTrasera() {
-    // Capturar el número de IMSS desde el formulario
+    // Capturar datos desde el formulario
     const numeroIMSS = document.getElementById("nss").value.trim();
+    const tipoSangre = document.getElementById("tipoSangre").value.trim();
+    const contactoNombre = document.getElementById("contactoNombre").value.trim();
+    const contactoTel = document.getElementById("contactoTelefono").value.trim();
 
     // Crear un nuevo canvas para la parte trasera
     const parteTraseraCanvas = document.createElement("canvas");
@@ -277,6 +327,31 @@ function generarParteTrasera() {
     // Número de IMSS dinámico
     ctx.font = "20px Arial";
     ctx.fillText(`No. IMSS: ${numeroIMSS || "Sin IMSS"}`, parteTraseraCanvas.width / 2, 250);
+
+    // Datos de emergencia (resaltados en ámbar)
+    const resaltar = (texto, y) => {
+        const padX = 14, h = 30, rad = 6;
+        const w = ctx.measureText(texto).width + padX * 2;
+        const x = parteTraseraCanvas.width / 2 - w / 2;
+        const top = y - 21;
+        ctx.beginPath();
+        ctx.moveTo(x + rad, top);
+        ctx.arcTo(x + w, top, x + w, top + h, rad);
+        ctx.arcTo(x + w, top + h, x, top + h, rad);
+        ctx.arcTo(x, top + h, x, top, rad);
+        ctx.arcTo(x, top, x + w, top, rad);
+        ctx.closePath();
+        ctx.fillStyle = "#FAEEDA"; // fondo ámbar claro
+        ctx.fill();
+        ctx.fillStyle = "#633806"; // texto ámbar oscuro
+        ctx.fillText(texto, parteTraseraCanvas.width / 2, y);
+    };
+    resaltar(`Tipo de Sangre: ${tipoSangre || "N/D"}`, 292);
+    resaltar(`Contacto de Emergencia: ${contactoNombre || "N/D"}`, 335);
+    resaltar(`Teléfono: ${contactoTel || "N/D"}`, 378);
+
+    // Restaurar color negro para el resto del texto
+    ctx.fillStyle = "#000";
 
     // Línea superior para Firma del Portador
     ctx.beginPath();
@@ -340,7 +415,7 @@ descargarParteTraseraBtn.addEventListener("click", () => {
 const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
 
 registrarTrabajadorBtn.addEventListener("click", async () => {
-    const webAppURL = "https://script.google.com/macros/s/AKfycbzT9HZ-Ea-7ZD-VDdbbM7HsbezsXp0w_XaTQlP9iovbx7c1GIYjkpcl_5nc-RGktf5M/exec"; // Reemplaza con tu URL real
+    const webAppURL = "https://script.google.com/macros/s/AKfycbwprIAv9hLASZAtBkYKCtJlBSGtpsizkuLuRpu2gg_tD2kBz-VoK0W54ZbsdpPkeLc1/exec"; // Reemplaza con tu URL real
 
     // Capturar datos del formulario
     const data = {
@@ -351,12 +426,13 @@ registrarTrabajadorBtn.addEventListener("click", async () => {
         FechaNacimiento: document.getElementById("fechaNacimiento").value.trim(),
         Empresa: document.getElementById("empresa").value.trim(),
         TipoSangre: document.getElementById("tipoSangre").value.trim(),
-        ContactoE: document.getElementById("contactoEmergencia").value.trim(),
+        ContactoNombre: document.getElementById("contactoNombre").value.trim(),
+        ContactoTel: document.getElementById("contactoTelefono").value.trim(),
         CodigoQR: document.getElementById("codigoQR").value.trim(),
     };
 
     // Validar que todos los campos necesarios estén completos
-    if (!data.Nombre || !data.Puesto || !data.NSS || !data.FechaNacimiento || !data.Empresa || !data.TipoSangre || !data.ContactoE || !data.CodigoQR) {
+    if (!data.Nombre || !data.Puesto || !data.NSS || !data.FechaNacimiento || !data.Empresa || !data.TipoSangre || !data.ContactoNombre || !data.ContactoTel || !data.CodigoQR) {
         alert("Por favor, completa todos los campos del formulario.");
         return;
     }
