@@ -237,8 +237,8 @@ generarCredencialBtn.addEventListener("click", () => {
     ctx.fillStyle = AZUL;
     ctx.fillText(puestoTxt, 372, pillY + 31);
 
-    // Empresa (gris)
-    ctx.fillStyle = "#555555";
+    // Empresa (gris) AQUI SE CAMBIA EL FONDO BLANCO PARA EMPRESA
+    ctx.fillStyle = "#FFFFFF";
     ctx.font = "26px Arial";
     ctx.fillText(empresa, 372, 640);
 
