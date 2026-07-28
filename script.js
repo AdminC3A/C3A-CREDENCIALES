@@ -415,7 +415,7 @@ descargarParteTraseraBtn.addEventListener("click", () => {
 const registrarTrabajadorBtn = document.getElementById("registrarTrabajador");
 
 registrarTrabajadorBtn.addEventListener("click", async () => {
-    const webAppURL = "https://script.google.com/macros/s/AKfycbwprIAv9hLASZAtBkYKCtJlBSGtpsizkuLuRpu2gg_tD2kBz-VoK0W54ZbsdpPkeLc1/exec"; // Reemplaza con tu URL real
+    const webAppURL = "https://script.google.com/macros/s/AKfycbzOaevBtNX7WVFk97cBK_alE4NCWDVDSYIe63vQpUPZ5cWyQs_2aer9ZIeYmvwz2RJJ/exec"; // Reemplaza con tu URL real
 
     // Capturar datos del formulario
     const data = {
