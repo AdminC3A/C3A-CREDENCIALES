@@ -385,11 +385,19 @@ function generarParteTrasera() {
     // Texto de supervisión
     ctx.fillText("Supervisión HSE BPD", parteTraseraCanvas.width / 2, 850);
 
-    // Validez
+   // Validez
     ctx.textAlign = "left";
     ctx.font = "16px Arial";
-    ctx.fillText("Válido desde: 01/06/2025", 50, 970);
-    ctx.fillText("Válido hasta: 30/11/2026", 50, 1000);
+
+    // "Válido desde" = fecha de expedición (el día en que se genera la credencial)
+    const hoy = new Date();
+    const dd = String(hoy.getDate()).padStart(2, "0");
+    const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoy.getFullYear();
+    const fechaExpedicion = `${dd}/${mm}/${aaaa}`;
+
+    ctx.fillText(`Válido desde: ${fechaExpedicion}`, 50, 970);
+    ctx.fillText("Válido hasta: 31/12/2026", 50, 1000);
 
     return parteTraseraCanvas;
 }
