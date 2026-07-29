@@ -278,8 +278,6 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
             console.warn("No se pudo cargar logo.png; se omite el logo (la credencial se genera igual).");
         };
     });
-
-
     
     /**
      * Módulo 5: Descargar la credencial
