@@ -141,150 +141,145 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
     });
 });
 
-    // Módulo 4: Generar la credencial (FRENTE REDISEÑADO)
-generarCredencialBtn.addEventListener("click", () => {
-    // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
-    credencialCanvas.width = 744;
-    credencialCanvas.height = 1050;
+  // Módulo 4: Generar la credencial (FRENTE REDISEÑADO - ESCALA DE GRISES / AHORRO DE TINTA)
+    generarCredencialBtn.addEventListener("click", () => {
+        // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
+        credencialCanvas.width = 744;
+        credencialCanvas.height = 1050;
 
-    const ctx = credencialCanvas.getContext("2d");
-    ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+        const ctx = credencialCanvas.getContext("2d");
+        ctx.clearRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    // Capturar datos del formulario
-    const nombre = document.getElementById("nombre").value.trim();
-    const puesto = document.getElementById("puesto").value.trim();
-    const empresa = document.getElementById("empresa").value.trim();
-    const codigoQR = document.getElementById("codigoQR").value.trim();
+        // Capturar datos del formulario
+        const nombre = document.getElementById("nombre").value.trim();
+        const puesto = document.getElementById("puesto").value.trim();
+        const empresa = document.getElementById("empresa").value.trim();
+        const codigoQR = document.getElementById("codigoQR").value.trim();
 
-    if (!nombre || !puesto || !empresa) {
-        alert("Por favor, completa los campos de Nombre, Puesto y Empresa.");
-        return;
-    }
+        if (!nombre || !puesto || !empresa) {
+            alert("Por favor, completa los campos de Nombre, Puesto y Empresa.");
+            return;
+        }
 
-    // Colores de marca (fáciles de cambiar)
-    const AZUL = "#0056b3";
-    const AZUL_CLARO = "#e6f0fb";
+        // Colores en escala de grises (fáciles de cambiar)
+        const GRIS_MEDIO = "#888888";  // reborde de la foto y texto del puesto
+        const GRIS_CLARO = "#eeeeee";  // fondo de la píldora del puesto
+        const GRIS_FRANJA = "#e0e0e0"; // franja del encabezado (poca tinta)
 
-    // Fondo blanco para la credencial
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
+        // Fondo blanco para la credencial
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-    // Encabezado azul superior
-    ctx.fillStyle = AZUL;
-    ctx.fillRect(0, 0, 744, 155);
+        // Encabezado: franja gris claro (ahorra tinta)
+        ctx.fillStyle = GRIS_FRANJA;
+        ctx.fillRect(0, 0, 744, 155);
 
-    // Barra azul inferior
-    ctx.fillStyle = AZUL;
-    ctx.fillRect(0, 1035, 744, 15);
+        // Barra inferior gris claro
+        ctx.fillStyle = GRIS_FRANJA;
+        ctx.fillRect(0, 1035, 744, 15);
 
-    // Texto del encabezado
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 34px Arial";
-    ctx.fillText("Casa Tres Aguas", 150, 78);
-    ctx.font = "18px Arial";
-    ctx.fillText("Gafete de seguridad en obra", 150, 112);
+        // Texto del encabezado (gris oscuro sobre franja clara)
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#333333";
+        ctx.font = "bold 34px Arial";
+        ctx.fillText("Casa Tres Aguas", 150, 78);
+        ctx.fillStyle = "#555555";
+        ctx.font = "18px Arial";
+        ctx.fillText("Gafete de seguridad en obra", 150, 112);
 
-    // Foto circular
-    const cx = 372, cy = 315, r = 130;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.clip();
-    if (imagenSeleccionada) {
-        ctx.drawImage(imagenSeleccionada, cx - r, cy - r, r * 2, r * 2);
-    } else {
-        ctx.fillStyle = "#eef3f9";
-        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-        ctx.fillStyle = "#8899aa";
+        // Foto CUADRADA 300x300 (tamaño anterior) con reborde en gris
+        const fx = 222, fy = 170, fs = 300;
+        if (imagenSeleccionada) {
+            ctx.drawImage(imagenSeleccionada, fx, fy, fs, fs);
+        } else {
+            ctx.fillStyle = "#eeeeee";
+            ctx.fillRect(fx, fy, fs, fs);
+            ctx.fillStyle = "#999999";
+            ctx.textAlign = "center";
+            ctx.font = "26px Arial";
+            ctx.fillText("FOTO", fx + fs / 2, fy + fs / 2 + 8);
+        }
+        // Reborde de 8px (mismo grosor que tenía el círculo)
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = GRIS_MEDIO;
+        ctx.strokeRect(fx, fy, fs, fs);
+
+        // Nombre (grande y en negritas)
         ctx.textAlign = "center";
+        ctx.fillStyle = "#111111";
+        ctx.font = "bold 44px Arial";
+        ctx.fillText(nombre, 372, 520);
+
+        // Puesto (píldora gris claro)
+        ctx.font = "bold 28px Arial";
+        const puestoTxt = puesto.toUpperCase();
+        const pillH = 44;
+        const pillW = ctx.measureText(puestoTxt).width + 44;
+        const pillX = 372 - pillW / 2;
+        const pillY = 555;
+        const rad = pillH / 2;
+        ctx.beginPath();
+        ctx.moveTo(pillX + rad, pillY);
+        ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + pillH, rad);
+        ctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, rad);
+        ctx.arcTo(pillX, pillY + pillH, pillX, pillY, rad);
+        ctx.arcTo(pillX, pillY, pillX + pillW, pillY, rad);
+        ctx.closePath();
+        ctx.fillStyle = GRIS_CLARO;
+        ctx.fill();
+        ctx.fillStyle = GRIS_MEDIO;
+        ctx.fillText(puestoTxt, 372, pillY + 31);
+
+        // Empresa (en blanco / invisible por decisión interna)
+        ctx.fillStyle = "#FFFFFF";
         ctx.font = "26px Arial";
-        ctx.fillText("FOTO", cx, cy + 8);
-    }
-    ctx.restore();
+        ctx.fillText(empresa, 372, 645);
 
-    // Anillo azul alrededor de la foto
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = AZUL;
-    ctx.stroke();
+        // QR + semáforos
+        const qrX = 170, qrY = 665, qrSize = 300;
+        if (codigoQR) {
+            const qrImage = new Image();
+            qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
+            qrImage.onload = () => {
+                ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
 
-    // Nombre (grande y en negritas)
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#111111";
-    ctx.font = "bold 44px Arial";
-    ctx.fillText(nombre, 372, 510);
+                const circleRadius = 25;
+                const circleX = qrX + qrSize + 70;
+                const circlePositions = [
+                    { y: qrY + 50, color: 'green' },
+                    { y: qrY + qrSize / 2, color: 'yellow' },
+                    { y: qrY + qrSize - 50, color: 'red' }
+                ];
+                circlePositions.forEach(position => {
+                    ctx.beginPath();
+                    ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
+                    ctx.fillStyle = position.color;
+                    ctx.fill();
+                });
 
-    // Puesto (píldora azul claro)
-    ctx.font = "bold 28px Arial";
-    const puestoTxt = puesto.toUpperCase();
-    const pillH = 44;
-    const pillW = ctx.measureText(puestoTxt).width + 44;
-    const pillX = 372 - pillW / 2;
-    const pillY = 545;
-    const rad = pillH / 2;
-    ctx.beginPath();
-    ctx.moveTo(pillX + rad, pillY);
-    ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + pillH, rad);
-    ctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, rad);
-    ctx.arcTo(pillX, pillY + pillH, pillX, pillY, rad);
-    ctx.arcTo(pillX, pillY, pillX + pillW, pillY, rad);
-    ctx.closePath();
-    ctx.fillStyle = AZUL_CLARO;
-    ctx.fill();
-    ctx.fillStyle = AZUL;
-    ctx.fillText(puestoTxt, 372, pillY + 31);
+                console.log("Credencial (frente) generada correctamente.");
+            };
+            qrImage.onerror = () => {
+                console.warn("No se pudo cargar el QR en la credencial.");
+            };
+        } else {
+            console.warn("No se generó el QR. Se deja el espacio vacío.");
+        }
 
-    // Empresa (gris) AQUI SE CAMBIA EL FONDO BLANCO PARA EMPRESA
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "26px Arial";
-    ctx.fillText(empresa, 372, 640);
-
-    // QR + semáforos
-    const qrX = 170, qrY = 660, qrSize = 300;
-    if (codigoQR) {
-        const qrImage = new Image();
-        qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
-        qrImage.onload = () => {
-            ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
-
-            const circleRadius = 25;
-            const circleX = qrX + qrSize + 70;
-            const circlePositions = [
-                { y: qrY + 50, color: 'green' },
-                { y: qrY + qrSize / 2, color: 'yellow' },
-                { y: qrY + qrSize - 50, color: 'red' }
-            ];
-            circlePositions.forEach(position => {
-                ctx.beginPath();
-                ctx.arc(circleX, position.y, circleRadius, 0, 2 * Math.PI);
-                ctx.fillStyle = position.color;
-                ctx.fill();
-            });
-
-            console.log("Credencial (frente) generada correctamente.");
+        // Logo (se dibuja encima del encabezado; si falta, no rompe la credencial)
+        const logo = new Image();
+        logo.src = "logo.png";
+        logo.onload = () => {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(34, 32, 92, 92); // Caja blanca detrás del logo
+            ctx.drawImage(logo, 38, 36, 84, 84);
         };
-        qrImage.onerror = () => {
-            console.warn("No se pudo cargar el QR en la credencial.");
+        logo.onerror = () => {
+            console.warn("No se pudo cargar logo.png; se omite el logo (la credencial se genera igual).");
         };
-    } else {
-        console.warn("No se generó el QR. Se deja el espacio vacío.");
-    }
+    });
 
-    // Logo (se dibuja encima del encabezado; si falta, no rompe la credencial)
-    const logo = new Image();
-    logo.src = "logo.png";
-    logo.onload = () => {
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(34, 32, 92, 92);           // Caja blanca detrás del logo
-        ctx.drawImage(logo, 38, 36, 84, 84);
-    };
-    logo.onerror = () => {
-        console.warn("No se pudo cargar logo.png; se omite el logo (la credencial se genera igual).");
-    };
-});
+
     
     /**
      * Módulo 5: Descargar la credencial
