@@ -178,7 +178,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
             ctx.fillText("FOTO", fx + fs / 2, fy + fs / 2 + 8);
         }
         ctx.lineWidth = 3;
-        ctx.strokeStyle = "#333333";
+        ctx.strokeStyle = "#FFFFFF";
         ctx.strokeRect(fx, fy, fs, fs);
 
         // Nombre y Puesto (texto negro, con etiqueta)
