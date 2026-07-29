@@ -140,10 +140,10 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
         document.body.removeChild(cameraInput);
     });
 });
-
-  // Módulo 4: Generar la credencial (FRENTE REDISEÑADO - ESCALA DE GRISES / AHORRO DE TINTA)
+    
+// Módulo 4: Generar la credencial (DISEÑO CLÁSICO - SIN COLOR, SIN LEYENDA)
     generarCredencialBtn.addEventListener("click", () => {
-        // Tamaño del canvas ajustado a 7.4 cm x 10.5 cm (744 x 1050 px)
+        // Tamaño del canvas 7.4 cm x 10.5 cm (744 x 1050 px)
         credencialCanvas.width = 744;
         credencialCanvas.height = 1050;
 
@@ -161,34 +161,12 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
             return;
         }
 
-        // Colores en escala de grises (fáciles de cambiar)
-        const GRIS_MEDIO = "#888888";  // reborde de la foto y texto del puesto
-        const GRIS_CLARO = "#eeeeee";  // fondo de la píldora del puesto
-        const GRIS_FRANJA = "#e0e0e0"; // franja del encabezado (poca tinta)
-
-        // Fondo blanco para la credencial
+        // Fondo blanco
         ctx.fillStyle = "#fff";
         ctx.fillRect(0, 0, credencialCanvas.width, credencialCanvas.height);
 
-        // Encabezado: franja gris claro (ahorra tinta)
-        ctx.fillStyle = GRIS_FRANJA;
-        ctx.fillRect(0, 0, 744, 155);
-
-        // Barra inferior gris claro
-        ctx.fillStyle = GRIS_FRANJA;
-        ctx.fillRect(0, 1035, 744, 15);
-
-        // Texto del encabezado (gris oscuro sobre franja clara)
-        ctx.textAlign = "left";
-        ctx.fillStyle = "#333333";
-        ctx.font = "bold 34px Arial";
-        ctx.fillText("Casa Tres Aguas", 150, 78);
-        ctx.fillStyle = "#555555";
-        ctx.font = "18px Arial";
-        ctx.fillText("Gafete de seguridad en obra", 150, 112);
-
-        // Foto CUADRADA 300x300 (tamaño anterior) con reborde en gris
-        const fx = 222, fy = 170, fs = 300;
+        // Foto CUADRADA 300x300 con reborde delgado gris oscuro
+        const fx = 222, fy = 250, fs = 300;
         if (imagenSeleccionada) {
             ctx.drawImage(imagenSeleccionada, fx, fy, fs, fs);
         } else {
@@ -199,44 +177,23 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
             ctx.font = "26px Arial";
             ctx.fillText("FOTO", fx + fs / 2, fy + fs / 2 + 8);
         }
-        // Reborde de 8px (mismo grosor que tenía el círculo)
-        ctx.lineWidth = 8;
-        ctx.strokeStyle = GRIS_MEDIO;
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#333333";
         ctx.strokeRect(fx, fy, fs, fs);
 
-        // Nombre (grande y en negritas)
+        // Nombre y Puesto (texto negro, con etiqueta)
         ctx.textAlign = "center";
-        ctx.fillStyle = "#111111";
-        ctx.font = "bold 44px Arial";
-        ctx.fillText(nombre, 372, 520);
-
-        // Puesto (píldora gris claro)
-        ctx.font = "bold 28px Arial";
-        const puestoTxt = puesto.toUpperCase();
-        const pillH = 44;
-        const pillW = ctx.measureText(puestoTxt).width + 44;
-        const pillX = 372 - pillW / 2;
-        const pillY = 555;
-        const rad = pillH / 2;
-        ctx.beginPath();
-        ctx.moveTo(pillX + rad, pillY);
-        ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + pillH, rad);
-        ctx.arcTo(pillX + pillW, pillY + pillH, pillX, pillY + pillH, rad);
-        ctx.arcTo(pillX, pillY + pillH, pillX, pillY, rad);
-        ctx.arcTo(pillX, pillY, pillX + pillW, pillY, rad);
-        ctx.closePath();
-        ctx.fillStyle = GRIS_CLARO;
-        ctx.fill();
-        ctx.fillStyle = GRIS_MEDIO;
-        ctx.fillText(puestoTxt, 372, pillY + 31);
+        ctx.font = "38px Arial";
+        ctx.fillStyle = "#000000";
+        ctx.fillText(`Nombre: ${nombre}`, credencialCanvas.width / 2, 600);
+        ctx.fillText(`Puesto: ${puesto}`, credencialCanvas.width / 2, 640);
 
         // Empresa (en blanco / invisible por decisión interna)
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "26px Arial";
-        ctx.fillText(empresa, 372, 645);
+        ctx.fillText(`Empresa: ${empresa}`, credencialCanvas.width / 2, 680);
 
         // QR + semáforos
-        const qrX = 170, qrY = 665, qrSize = 300;
+        const qrX = 222, qrY = 700, qrSize = 300;
         if (codigoQR) {
             const qrImage = new Image();
             qrImage.src = qrContainer.querySelector("canvas")?.toDataURL() || "";
@@ -244,7 +201,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
                 ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
 
                 const circleRadius = 25;
-                const circleX = qrX + qrSize + 70;
+                const circleX = qrX + qrSize + 60;
                 const circlePositions = [
                     { y: qrY + 50, color: 'green' },
                     { y: qrY + qrSize / 2, color: 'yellow' },
@@ -257,7 +214,7 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
                     ctx.fill();
                 });
 
-                console.log("Credencial (frente) generada correctamente.");
+                console.log("Credencial (frente clásico) generada correctamente.");
             };
             qrImage.onerror = () => {
                 console.warn("No se pudo cargar el QR en la credencial.");
@@ -266,16 +223,14 @@ cargarFotoCamaraBtn.addEventListener("click", () => {
             console.warn("No se generó el QR. Se deja el espacio vacío.");
         }
 
-        // Logo (se dibuja encima del encabezado; si falta, no rompe la credencial)
+        // Logo centrado arriba (2x2 cm -> 200x200). Si falta, no rompe la credencial.
         const logo = new Image();
         logo.src = "logo.png";
         logo.onload = () => {
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(34, 32, 92, 92); // Caja blanca detrás del logo
-            ctx.drawImage(logo, 38, 36, 84, 84);
+            ctx.drawImage(logo, 272, 20, 200, 200);
         };
         logo.onerror = () => {
-            console.warn("No se pudo cargar logo.png; se omite el logo (la credencial se genera igual).");
+            console.warn("No se pudo cargar logo.png; se omite el logo.");
         };
     });
     
